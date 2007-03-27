@@ -1,0 +1,1 @@
+convert -delay 200 fitting_1.png  fitting_2.png  fitting_3.png  fitting_4.png  fitting_5.png  fitting_6.png  fitting_7.png  fitting_8.png fitting_9.png fitting_10.png fitting_11.png fitting_12.png fitting_13.png fitting_14.png fitting_15.png fitting_16.png fitting_17.png fitting_18.png fitting_19.png fitting.gif

@@ -1,0 +1,4 @@
+latex csiro
+dvips -o csiro.ps csiro
+ps2pdf csiro.ps
+acroread csiro.pdf

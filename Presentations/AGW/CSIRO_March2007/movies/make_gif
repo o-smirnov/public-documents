@@ -1,0 +1,2 @@
+convert -delay 150 I_1.png  I_2.png  I_3.png  I_4.png  I_5.png  I_6.png  I_7.png  I_8.png I_9.png I_10.png I_11.png I_12.png I_13.png I_14.png I_15.png I_16.png I_17.png I_18.png I_19.png I_20.png I_21.png I_22.png I_23.png I_24.png I_25.png I.gif
+convert -delay 150 Q_1.png  Q_2.png  Q_3.png  Q_4.png  Q_5.png  Q_6.png  Q_7.png  Q_8.png Q_9.png Q_10.png Q_11.png Q_12.png Q_13.png Q_14.png Q_15.png Q_16.png Q_17.png Q_18.png Q_19.png Q_20.png Q_21.png Q_22.png Q_23.png Q_24.png Q_25.png Q.gif

@@ -1,0 +1,4 @@
+latex csiro_movies
+dvips -o csiro_movies.ps csiro_movies
+ps2pdf csiro_movies.ps
+acroread csiro_movies.pdf
