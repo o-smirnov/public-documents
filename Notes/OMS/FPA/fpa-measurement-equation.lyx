@@ -1,4 +1,4 @@
-#LyX 1.4.4 created this file. For more info see http://www.lyx.org/
+#LyX 1.4.3 created this file. For more info see http://www.lyx.org/
 \lyxformat 245
 \begin_document
 \begin_header
@@ -9,7 +9,7 @@
 \graphics default
 \paperfontsize default
 \spacing single
-\papersize default
+\papersize a4paper
 \use_geometry false
 \use_amsmath 1
 \cite_engine basic
@@ -30,13 +30,11 @@
 \begin_body
 
 \begin_layout Title
-The ME of an FPA/AA
+The (Generalized) ME Of An Array Of Receptors
 \end_layout
 
 \begin_layout Author
-J.
- Noordam & O.
- Smirnov
+By a gang of lumberjacks
 \end_layout
 
 \begin_layout Section
@@ -49,13 +47,7 @@ For a sky consisting of a single point source:
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\mathbf{V}_{pq}=\mathbf{J}_{p}\mathbf{B}\mathbf{J}_{q}\label{eq:me0}\end{equation}
-
-\end_inset
-
-
-\begin_inset Formula \[
-\]
+\mathbf{V}_{pq}=\mathbf{J}_{p}\mathbf{B}\mathbf{J}_{q}^{*}\label{eq:me0}\end{equation}
 
 \end_inset
 
@@ -119,7 +111,11 @@ U-iV & I-Q\end{array}\right),\]
 \begin_layout Standard
 The 
 \series bold
-J
+
+\begin_inset Formula $\mathbf{J}$
+\end_inset
+
+
 \series default
  term can be further decomposed into more 
 \begin_inset Quotes eld
@@ -129,7 +125,7 @@ physical
 \begin_inset Quotes erd
 \end_inset
 
- components:
+ components, for example:
 \end_layout
 
 \begin_layout Standard
@@ -181,7 +177,7 @@ uv
 \begin_inset Formula $K_{p}$
 \end_inset
 
-is the phase term.
+ is the phase term.
  Boldface is used to emphasize 
 \begin_inset Formula $2\times2$
 \end_inset
@@ -218,8 +214,8 @@ Cross-talk
 \begin_inset Formula $\mathbf{G}_{p}$
 \end_inset
 
-is a product of several Jones terms associated with instrumental gain, polarizat
-ion leakage, etc.
+ is a product of several Jones terms associated with instrumental gain,
+ polarization leakage, etc.
  The important thing to realize is that the traditional ME can represent
  leakage by a 
 \begin_inset Formula $2\times2$
@@ -227,11 +223,32 @@ ion leakage, etc.
 
  matrix 
 \emph on
-because leakage is restricted to the two receptors associated with one antenna.
+only because leakage is restricted to the two receptors associated with
+ one antenna.
 
 \emph default
  If our instrument exhibited cross-talk between, say, dipole X of antenna
  1 and dipole Y of antenna 2, then the ME above would no longer be valid.
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+Here's an idle thought: can this already happen in existing interferometers?
+ The 
+\begin_inset Formula $4\times4$
+\end_inset
+
+ Mueller matrix can represent leakage between antennas 
+\begin_inset Formula $p,q$
+\end_inset
+
+, but of course does not account for leakage from any other antennas.
+ This may be worth pursuing in the context of the Generalized ME.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -256,7 +273,8 @@ closed system
 \end_inset
 
 ) is then no longer valid.
- On the other hand, the response of a receptor is still linear w.r.t.
+ On the other hand, as long as the voltage response of a receptor is still
+ linear w.r.t.
  the sky, some some kind of Jones-like formalism may be derived.
 \end_layout
 
@@ -265,13 +283,13 @@ Let's assume an arbitrary set of
 \begin_inset Formula $n$
 \end_inset
 
- recepetors (e.g.
+ receptors (e.g.
  dipoles) in arbitrary orientations.
  The voltage response 
 \begin_inset Formula $v_{p}$
 \end_inset
 
-of dipole 
+ of dipole 
 \begin_inset Formula $p$
 \end_inset
 
@@ -299,17 +317,17 @@ column
 
 \begin_layout Standard
 \begin_inset Formula \[
-v_{p}=g_{x,p}\varepsilon_{x}+g_{y,p}\varepsilon_{y}\]
+v_{p}=j_{x,p}\varepsilon_{x}+j_{y,p}\varepsilon_{y}.\]
 
 \end_inset
 
-.
+
 \end_layout
 
 \begin_layout Standard
 If we represent the voltage response of the full array by the column vector
  
-\begin_inset Formula $\vec{V}=(v_{1}\ldots v_{n})$
+\begin_inset Formula $\vec{v}=(v_{1}\ldots v_{n})$
 \end_inset
 
 , then 
@@ -317,10 +335,10 @@ If we represent the voltage response of the full array by the column vector
 
 \begin_layout Standard
 \begin_inset Formula \[
-\vec{V}=\left(\begin{array}{cc}
-g_{x,1} & g_{y,1}\\
+\vec{v}=\left(\begin{array}{cc}
+j_{x,1} & j_{y,1}\\
 \vdots & \vdots\\
-g_{x,n} & g_{y,n}\end{array}\right)\vec{\varepsilon}\]
+j_{x,n} & j_{y,n}\end{array}\right)\vec{\varepsilon}\]
 
 \end_inset
 
@@ -333,20 +351,20 @@ and the
 \end_inset
 
  correlation matrix 
-\series bold
-X
-\series default
+\begin_inset Formula $\mathbf{X}$
+\end_inset
+
  is (ignoring smearing):
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \[
-\mathbf{X}=\left\langle \vec{V}\vec{V}^{*}\right\rangle =\left(\begin{array}{cc}
-g_{x,1} & g_{y,1}\\
+\mathbf{X}=\left\langle \bar{v}\bar{v}^{*}\right\rangle =\left(\begin{array}{cc}
+j_{x,1} & j_{y,1}\\
 \vdots & \vdots\\
-g_{x,n} & g_{y,n}\end{array}\right)\mathbf{B}\left(\begin{array}{ccc}
-\bar{g}_{x,1} & \cdots & \bar{g}_{x,n}\\
-\bar{g}_{y,1} & \cdots & \bar{g}_{y,n}\end{array}\right)=\mathbf{\mathcal{G}B}\mathbf{\mathcal{G}}^{*}.\]
+j_{x,n} & j_{y,n}\end{array}\right)\mathbf{B}\left(\begin{array}{ccc}
+\bar{j}_{x,1} & \cdots & \bar{j}_{x,n}\\
+\bar{j}_{y,1} & \cdots & \bar{j}_{y,n}\end{array}\right)=\mathbf{\mathcal{J}B}\mathbf{\mathcal{J}}^{*}.\]
 
 \end_inset
 
@@ -359,7 +377,7 @@ The
 \end_inset
 
  
-\begin_inset Formula $\mathbf{\mathcal{G}}$
+\begin_inset Formula $\mathcal{J}$
 \end_inset
 
  matrix is sort of like a 
@@ -372,7 +390,7 @@ Jones
 
  matrix for the entire array.
  If we ignore image-plane effects (apart from the beam response) for the
- time being, then it can be decomposed into more 
+ time being, then it can be decomposed into a few more 
 \begin_inset Quotes eld
 \end_inset
 
@@ -385,7 +403,7 @@ physical
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\vec{V}=\left(\begin{array}{ccc}
+\vec{v}=\left(\begin{array}{ccc}
 d_{11} & \ldots & d_{1n}\\
  & \ddots\\
 d_{n1} & \ldots & d_{nn}\end{array}\right)\left(\begin{array}{ccc}
@@ -436,15 +454,16 @@ The
 \end_inset
 
  
-\series bold
-D
-\series default
- matrix gives us the mutual coupling a.k.a.
+\begin_inset Formula $\mathbf{D}$
+\end_inset
+
+ matrix gives us the leakage a.k.a.
+ mutual coupling a.k.a.
  crosstalk between the receptors (the actual receiver gains can be rolled
  into the 
-\series bold
-D
-\series default
+\begin_inset Formula $\mathbf{D}$
+\end_inset
+
  matrix, or split out into a diagonal matrix of their own).
 \end_layout
 
@@ -521,16 +540,17 @@ Z
 \series bold
 B
 \series default
- is replaced by 
+ is then replaced by 
 \begin_inset Formula $\mathbf{Z}\mathbf{B}\mathbf{Z}^{*}.$
 \end_inset
 
-
+ Quite fortunately, for a focal plane array within a smallish dish, we can
+ probably safely assume this is the case.
 \end_layout
 
 \begin_layout Standard
-If image-plane effects vary over the array, then a matrix formalism is no
- longer sufficient for equation (
+If image-plane effects do vary over the array, then a matrix formalism is
+ no longer sufficient for equation (
 \begin_inset LatexCommand \ref{eq:array-me}
 
 \end_inset
@@ -548,18 +568,202 @@ If image-plane effects vary over the array, then a matrix formalism is no
 \begin_inset Formula $p\times2\times2$
 \end_inset
 
- tensor.
+ tensor!
 \end_layout
 
 \begin_layout Standard
-In the short term, we can get around this by decomposing (
+Another way to look at this conundrum is as follows.
+ As long as every two dipoles are co-located and form a closed system (as
+ is the case for traditional interferometers), the voltage response of the
+ two dipoles depends only on the EM field at the dipoles' location.
+ The correlation between antennas 
+\begin_inset Formula $p$
+\end_inset
+
+ and 
+\begin_inset Formula $q$
+\end_inset
+
+ can then be fully described in terms of the EM field at locations 
+\begin_inset Formula $p$
+\end_inset
+
+ and 
+\begin_inset Formula $q$
+\end_inset
+
+.
+ This allows us to write an ME as in eq.
+ (
+\begin_inset LatexCommand \ref{eq:me0}
+
+\end_inset
+
+).
+ In the presense of significant leakage between more than two dipoles, the
+ voltage responce of each will now depend on the EM field at several locations.
+ In effect, the 
+\begin_inset Formula $\mathbf{D}$
+\end_inset
+
+ term 
+\begin_inset Quotes eld
+\end_inset
+
+scrambles up
+\begin_inset Quotes erd
+\end_inset
+
+ image plane effects between all receptor locations, so we can no longer
+ use a matrix formalism! 
+\end_layout
+
+\begin_layout Subsubsection
+The short-term solution
+\end_layout
+
+\begin_layout Standard
+In the short term, we can get around this as follows.
+ Consider the 
+\begin_inset Formula $\mathbf{KEBE^{*}K^{*}}$
+\end_inset
+
+ part of eq.
+ (
+\begin_inset LatexCommand \ref{eq:array-response}
+
+\end_inset
+
+), and proceed as follows:
+\end_layout
+
+\begin_layout Itemize
+Pair up the receptors in some reasonable manner, and designate each pair
+ as 
+\begin_inset Quotes eld
+\end_inset
+
+pseudoantenna
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $p$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Assume that the image-plane effect 
+\begin_inset Formula $\mathbf{Z}_{p}$
+\end_inset
+
+ is the same for both receptors in the pair
+\emph default
+ (this is probably safe, provided the paired receptors are physically close.)
+\end_layout
+
+\begin_layout Itemize
+Now compute a series of 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ correlation matrices for each pair of 
+\begin_inset Quotes eld
+\end_inset
+
+pseudoantennas
+\begin_inset Quotes erd
+\end_inset
+
+, using the traditional form of the ME:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{V}_{pq}=\mathbf{G}_{p}\mathbf{E}_{p}\mathbf{Z}_{p}\mathbf{B}\mathbf{Z}_{q}^{*}\mathbf{K}_{q}^{*}\mathbf{E}_{q}^{*}\mathbf{G}_{q}^{*}\label{eq:pseudo-me}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The only difference w.r.t.
+ eq.
+ (
+\begin_inset LatexCommand \ref{eq:me}
+
+\end_inset
+
+) is that 
+\begin_inset Formula $\mathbf{K}_{p}$
+\end_inset
+
+ is now a diagonal matrix, not a scalar (since the dipoles are not co-located).
+ Since it doesn't commute, we have to put it in its proper physical place.
+ Also, we've split out 
+\begin_inset Formula $\mathbf{Z}_{p}$
+\end_inset
+
+ into a separate Jones term.
+ 
+\end_layout
+
+\begin_layout Standard
+Eq.
+ (
+\begin_inset LatexCommand \ref{eq:pseudo-me}
+
+\end_inset
+
+) can be implemented in MeqTrees in the usual way, just like the traditional
+ ME, with 
+\begin_inset Formula $n(n+1)/2$
+\end_inset
+
+ per-baseline subtrees (
+\begin_inset Formula $n+1,$
+\end_inset
+
+ since we need the autocorrelations as well).
+ Then we need to implement a fairly straightforward node that collects the
+ per-baseline correlation matrices 
+\begin_inset Formula $\mathbf{V}_{pq}$
+\end_inset
+
+ into a single 
+\begin_inset Formula $n\times n$
+\end_inset
+
+ (hermitian) matrix 
+\begin_inset Formula $\mathbf{X}'$
+\end_inset
+
+.
+ This can then be multiplied by 
+\begin_inset Formula $\mathbf{D}$
+\end_inset
+
+ using the existing MatrixMultiply node.
+\end_layout
+
+\begin_layout Subsubsection
+The long view
+\end_layout
+
+\begin_layout Standard
+To properly incorporate image-plane effects into equation (
 \begin_inset LatexCommand \ref{eq:array-me}
 
 \end_inset
 
-) into various sums.
- However, by using tensor notation, we can at least rewrite the equation
- in a closed form, and perhaps gain some new insights into the problem.
+), we need to go to tensor notation.
+ This can perhaps lead to some new insights into the problem, so I'll explore
+ it in the next section.
  
 \end_layout
 
@@ -622,8 +826,9 @@ rank
 \end_inset
 
 .
- The distinction between upper and lower indices is important, but not for
- our purposes, so we will not elaborate on it.
+ The distinction between upper and lower indices is in principle quite significa
+nt, but not terribly so for our purposes, so we will not elaborate on it
+ further.
  
 \end_layout
 
@@ -635,7 +840,7 @@ range
  of each index is implicit in the expression.
  Where indices have different ranges, it is useful to follow some kind of
  convention, i.e.
- use different groups of letters for indices with different ranges.
+ use different groups of letters for indices associated with different ranges.
  
 \end_layout
 
@@ -773,22 +978,30 @@ A common convention is to use Greek letters for the summation indices, e.g.
 \begin_inset Formula $A_{\theta}^{i}B_{j}^{\theta}.$
 \end_inset
 
- This makes the expressions easier to read, but the convention is not always
- easily to follow consistently.
+ This makes the expressions easier to read, but this convention is not always
+ easy to follow consistently.
 \end_layout
 
 \begin_layout Standard
 Transposition, in tensor notation, simply swaps the upper and lower indices.
  
-\begin_inset Formula $\left(A_{j}^{i}\right)^{t}=A_{i}^{j}.$
+\begin_inset Formula $[A^{t}]_{j}^{i}=A_{i}^{j}.$
 \end_inset
 
- The conjugate transpose of 
+ To save superscript 
+\begin_inset Quotes eld
+\end_inset
+
+real estate
+\begin_inset Quotes erd
+\end_inset
+
+, we'll write the conjugate transpose of 
 \begin_inset Formula $A_{j}^{i}$
 \end_inset
 
- can be written as 
-\begin_inset Formula $(A_{j}^{i})^{*}=\bar{A}_{i}^{j}.$
+ as simply 
+\begin_inset Formula $\bar{A}_{i}^{j}.$
 \end_inset
 
 
@@ -805,7 +1018,7 @@ commute
 \begin_inset Formula $A_{k}^{i}B_{j}^{k}=C_{j}^{i}$
 \end_inset
 
-can be rewritten as 
+ can be rewritten as 
 \begin_inset Formula $B_{j}^{k}A_{k}^{i}$
 \end_inset
 
@@ -814,6 +1027,7 @@ can be rewritten as
 \begin_inset Formula $B_{k}^{i}A_{j}^{k}\neq B_{j}^{k}A_{k}^{i}.$
 \end_inset
 
+ Note how the relative position of the summation index changes.
  In one case we're summing over columns of 
 \begin_inset Formula $B$
 \end_inset
@@ -839,7 +1053,8 @@ Rewriting the traditional ME in tensor notation
 \end_layout
 
 \begin_layout Standard
-As an exercise, let's rewrite the traditional ME (
+As an exercise, let's rewrite the traditional ME of eq.
+ (
 \begin_inset LatexCommand \ref{eq:me0}
 
 \end_inset
@@ -913,7 +1128,7 @@ The correlation matrix for antenna pair
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-[V_{pq}]_{j}^{i}=\left([J_{p}]_{\alpha}^{i}\varepsilon^{\alpha}\right)\left([J_{q}]_{\beta}^{j}\varepsilon^{\beta}\right)^{*}=[J_{p}]_{\alpha}^{i}(\varepsilon^{\alpha}\bar{\varepsilon}_{\beta})[J_{q}]_{j}^{\beta}=[J_{p}]_{\alpha}^{i}B_{\beta}^{\alpha}[\bar{J}_{q}]_{j}^{\beta}\label{eq:me0-tensor}\end{equation}
+[V_{pq}]_{j}^{i}=\left([J_{p}]_{\alpha}^{i}\varepsilon^{\alpha}\right)\left([J_{q}]_{\beta}^{j}\varepsilon^{\beta}\right)^{*}=[J_{p}]_{\alpha}^{i}(\varepsilon^{\alpha}\bar{\varepsilon}_{\beta})[\bar{J}_{q}^{}]_{j}^{\beta}=[J_{p}]_{\alpha}^{i}B_{\beta}^{\alpha}[\bar{J}_{q}^{}]_{j}^{\beta}\label{eq:me0-tensor}\end{equation}
 
 \end_inset
 
@@ -927,8 +1142,8 @@ which is exactly equation (
 \end_inset
 
 ), rewritten using Einstein notation.
- Not surprisingly, it looks somewhat bulky --- matrix multiplication, after
- all, is an even more compact notation for this particular operation.
+ Not surprisingly, it looks somewhat more bulky --- matrix multiplication,
+ after all, is a more compact notation for this particular operation.
 \end_layout
 
 \begin_layout Standard
@@ -958,7 +1173,7 @@ What is this
 \begin_inset Formula $J_{p}\otimes J_{q}^{*},$
 \end_inset
 
- giving us the alternative 
+ giving us the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -986,9 +1201,9 @@ hiding
 \begin_inset Formula $q$
 \end_inset
 
- indices inside of square brackets, since they don't take part in any tensor
+ indices inside square brackets, since they don't take part in any tensor
  operations above.
- Upon further consideration, this distinction is completely artificial!
+ Upon further consideration, this distinction proves to be completely artificial.
  We can treat them as 
 \emph on
 free
@@ -1008,7 +1223,8 @@ free
 \end_inset
 
  is the number of antennas.
- All the correlations can then be represented by a (2,2) type tensor 
+ All the correlation matrices, as a whole, will be represented by a (2,2)
+ type tensor 
 \begin_inset Formula $X_{jp}^{iq},$
 \end_inset
 
@@ -1035,6 +1251,14 @@ X_{jp}^{iq}=J_{\alpha p}^{i}B_{\beta}^{\alpha}\bar{J}_{j}^{\beta q}\label{eq:me0
 \end_layout
 
 \begin_layout Standard
+...which now represents all of the correlations in the array, 
+\emph on
+en masse
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
 This may seem like just a 
 \begin_inset Quotes eld
 \end_inset
@@ -1052,15 +1276,7 @@ Note that the correlation tensor
 \begin_inset Formula $X$
 \end_inset
 
- is 
-\begin_inset Quotes eld
-\end_inset
-
-hermitian
-\begin_inset Quotes erd
-\end_inset
-
-, in the sense that 
+ is hermitian, in the sense that 
 \begin_inset Formula $X_{jp}^{iq}=\bar{X}_{iq}^{jp}.$
 \end_inset
 
@@ -1070,11 +1286,11 @@ hermitian
 
 \end_inset
 
-), by swapping the indices around, and knowing that 
+), by swapping the indices around (and knowing that 
 \begin_inset Formula $B$
 \end_inset
 
- is hermitian.
+ is hermitian.)
 \end_layout
 
 \begin_layout Subsection
@@ -1099,7 +1315,7 @@ First, let's set up some indexing conventions.
 \end_inset
 
  for free indices that run from 1 to 2 (i.e.
- those that refer to 
+ those that refer to the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1115,12 +1331,12 @@ y
 \begin_inset Quotes erd
 \end_inset
 
-), and 
+ components), and 
 \begin_inset Formula $\alpha,\beta,\gamma,...$
 \end_inset
 
  for summation indices in the same range.
- For free indices that refer to receptor (and run from 1 to 
+ For free indices that refer to receptors (and run from 1 to 
 \begin_inset Formula $N$
 \end_inset
 
@@ -1153,7 +1369,7 @@ source
 \begin_inset Formula $\varepsilon^{i}.$
 \end_inset
 
- Image-plane effects are described by (2,1) tensor, 
+ Image-plane effects are described by a (2,1) tensor, 
 \begin_inset Formula $Z_{j}^{pi}.$
 \end_inset
 
@@ -1205,12 +1421,12 @@ Let's take this in small steps.
 \begin_inset Formula $\alpha$
 \end_inset
 
- here.) If we consider one receptor (i.e.
- a fixed 
+ here.) If we consider just one receptor (i.e.
+ fix the value of 
 \begin_inset Formula $p$
 \end_inset
 
-), this is simply
+), this is simply the familiar
 \end_layout
 
 \begin_layout Standard
@@ -1263,7 +1479,7 @@ Now, if we put the receptor index
 \begin_inset Formula $p$
 \end_inset
 
- back in, we get the tensor expression:
+ back in the equations, we get the tensor expression:
 \end_layout
 
 \begin_layout Standard
@@ -1288,7 +1504,7 @@ Note that we're now summing over
 \end_layout
 
 \begin_layout Standard
-Finally, cross-talk 
+Finally, leakage 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1309,7 +1525,7 @@ ideal
 \begin_inset Quotes erd
 \end_inset
 
- voltage vector, then cross-talk multiplies that by an 
+ voltage vector, then leakage multiplies that by an 
 \begin_inset Formula $N\times N$
 \end_inset
 
@@ -1326,7 +1542,7 @@ v^{p}=D_{\sigma}^{p}v'^{\sigma}.\]
 \end_layout
 
 \begin_layout Standard
-The final equation for the voltage response of the array is:
+The final equation for the voltage response of the array is then:
 \end_layout
 
 \begin_layout Standard
@@ -1391,7 +1607,7 @@ Note that we need to use a different set of summation indices within each
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-X_{q}^{p}=D_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{Z}_{\tau\gamma}^{\delta}\bar{K}_{\tau}\bar{E}_{\tau}^{\gamma}\bar{D}_{q}^{\tau}.\label{eq:gme0}\end{equation}
+X_{q}^{p}=D_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{Z}_{\tau\gamma}^{\delta}\bar{K}_{\tau}^{}\bar{E}_{\tau}^{\gamma}\bar{D}_{q}^{\tau}.\label{eq:gme0}\end{equation}
 
 \end_inset
 
@@ -1403,11 +1619,111 @@ This is the full tensor form of the generalized ME for an array.
 \end_layout
 
 \begin_layout Subsection
+And what about 
+\begin_inset Formula $\mathcal{J}$
+\end_inset
+
+?
+\end_layout
+
+\begin_layout Standard
+The GME of eq.
+ (
+\begin_inset LatexCommand \ref{eq:gme0}
+
+\end_inset
+
+) looks a lot more complicated than the earlier equation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{X}=\left(\begin{array}{cc}
+j_{x,1} & j_{y,1}\\
+\vdots & \vdots\\
+j_{x,n} & j_{y,n}\end{array}\right)\mathbf{B}\left(\begin{array}{ccc}
+\bar{j}_{x,1} & \cdots & \bar{j}_{x,n}\\
+\bar{j}_{y,1} & \cdots & \bar{j}_{y,n}\end{array}\right)=\mathbf{\mathcal{J}B}\mathbf{\mathcal{J}}^{*}.\]
+
+\end_inset
+
+So, have we forgotten about 
+\begin_inset Formula $\mathcal{J}$
+\end_inset
+
+? Of course, it's still present in the GME, in the more verbose tensor form
+ of
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+D_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If you track down the free indices in this tensor expression --- 
+\begin_inset Formula $p$
+\end_inset
+
+ and 
+\begin_inset Formula $\alpha$
+\end_inset
+
+, you'll see that the product is a (1,1) tensor, 
+\begin_inset Formula $J_{\alpha}^{p},$
+\end_inset
+
+ which corresponds to our 
+\begin_inset Formula $N\times2$
+\end_inset
+
+ matrix.
+ So we can rewrite the GME in a more compact form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+X_{q}^{p}=J_{\alpha}^{p}B_{\beta}^{\alpha}\bar{J}_{q}^{\beta}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can't compute 
+\begin_inset Formula $J_{i}^{p}$
+\end_inset
+
+ directly, so we need to break it down into a product of physically meaningful
+ terms, for which we can at least plug in some realistic numbers.
+ Note that this is exactly the same situation as for the matrix ME: even
+ though each 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ coherency in theory reduces to only two Jones matrices (
+\begin_inset Formula $\mathbf{V}_{pq}=\mathbf{J}_{p}\mathbf{B}\mathbf{J}_{q}^{*}$
+\end_inset
+
+), in real life we almost always compute each 
+\begin_inset Formula $\mathbf{J}$
+\end_inset
+
+ as a product of physically comprehensible terms.
+\end_layout
+
+\begin_layout Subsection
 Full-sky GME
 \end_layout
 
 \begin_layout Standard
-In real life, we're observing a sum over the sky.
+When observing a real sky, each receptor is exposed to the integral of the
+ EM field arriving from all possible directions.
  In eq.
  (
 \begin_inset LatexCommand \ref{eq:gme0}
@@ -1419,10 +1735,24 @@ In real life, we're observing a sum over the sky.
 \end_inset
 
  depend on direction 
-\begin_inset Formula $\vec{\varsigma}=(l,m)$
+\begin_inset Formula $\vec{\varsigma}.$
 \end_inset
 
-.
+
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+Does 
+\begin_inset Formula $D$
+\end_inset
+
+ depend on direction as well? If so, it may have to go inside the integral
+ too.
+\end_layout
+
+\end_inset
+
  For a full-sky GME, we need to rewrite the above as
 \end_layout
 
@@ -1483,7 +1813,368 @@ The physical meaning of
 \begin_inset Formula $\mathcal{X}$
 \end_inset
 
- is simply the ideal correlation matrix, without cross-talk.
+ is simply the ideal correlation matrix, without leakage.
+\end_layout
+
+\begin_layout Subsection
+Back to the classics
+\end_layout
+
+\begin_layout Standard
+As another useful exercise, let's see how the GME of eq.
+ (
+\begin_inset LatexCommand \ref{eq:gme0}
+
+\end_inset
+
+) reduces to the classical matrix ME of eq.
+ (
+\begin_inset LatexCommand \ref{eq:me}
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Let's consider a system of two antennas, 
+\begin_inset Quotes eld
+\end_inset
+
+a
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+b
+\begin_inset Quotes erd
+\end_inset
+
+, with two dipoles each.
+ The 
+\begin_inset Formula $p$
+\end_inset
+
+ index then has four possible values.
+ Instead of making it range from from 1 to 4, let's (purely artifically)
+ designate its range of values with the symbols 
+\begin_inset Formula $x_{a},y_{a},x_{b},y_{b.}$
+\end_inset
+
+ These correspond to the four dipoles.
+ We assume that each XY dipole pair forms a closed system.
+ What this means, effectively, is that for 
+\begin_inset Formula $p\in\{ x_{a},y_{a}\}$
+\end_inset
+
+, 
+\begin_inset Formula $D_{q}^{p}\neq0$
+\end_inset
+
+ only for 
+\begin_inset Formula $q\in\{ x_{a},y_{a}\}$
+\end_inset
+
+, and the same for 
+\begin_inset Formula $p\in\{ x_{b},y_{b}\}$
+\end_inset
+
+ (in other words, 
+\begin_inset Formula $D$
+\end_inset
+
+ is block-diagonal).
+ We can therefore ignore all terms in eq.
+ (
+\begin_inset LatexCommand \ref{eq:gme0}
+
+\end_inset
+
+) that have other combinations of receptor indices.
+\end_layout
+
+\begin_layout Standard
+Furthermore, in such a system each pair of dipoles is co-located.
+ This implies that 
+\begin_inset Formula $K^{x_{a}}=K^{y_{a}}\equiv[K_{a}$
+\end_inset
+
+] and 
+\begin_inset Formula $Z_{j}^{x_{a}i}=Z_{j}^{y_{a}i}\equiv{[Z}_{a}]_{j}^{i}$
+\end_inset
+
+, and the same for 
+\begin_inset Formula $b$
+\end_inset
+
+.
+ We use square brackets to emphasize that 
+\begin_inset Formula $a$
+\end_inset
+
+ is not a tensor index anymore, but simply a 
+\begin_inset Quotes eld
+\end_inset
+
+label
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The voltage response of antenna 
+\begin_inset Formula $a$
+\end_inset
+
+ is a column 2-vector, 
+\begin_inset Formula $[v_{a}]^{p}=(v^{x_{a}},v^{y_{a}})$
+\end_inset
+
+.
+ According to eq.
+ (
+\begin_inset LatexCommand \ref{eq:v-tensor}
+
+\end_inset
+
+):
+\begin_inset Formula \[
+{[v}_{a}]^{p}=D_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}\varepsilon^{\alpha},\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where the 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ summation index must formally still go over all 4 possible values.
+ However, since there's no leakage across antennas, 
+\begin_inset Formula $D_{\sigma}^{p}=0$
+\end_inset
+
+ (and the whole term becomes 0) for 
+\begin_inset Formula $\sigma=x_{b},y_{b}$
+\end_inset
+
+.
+ This means that we only need to sum over 
+\begin_inset Formula $\sigma=x_{a},y_{a}.$
+\end_inset
+
+ Furthermore, since the 
+\begin_inset Formula $a$
+\end_inset
+
+ dipoles are co-located, 
+\begin_inset Formula $Z_{j}^{\sigma i}\equiv[Z_{a}]_{j}^{i}$
+\end_inset
+
+ and 
+\begin_inset Formula $K^{\sigma}\equiv[K]_{a}$
+\end_inset
+
+.
+ This means that within the 
+\begin_inset Formula $\sigma=x_{a},y_{a}$
+\end_inset
+
+ summation range, we can consider the 
+\begin_inset Formula $Z$
+\end_inset
+
+ term to be a 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ matrix, and 
+\begin_inset Formula $K$
+\end_inset
+
+ to be a scalar.
+ The equation then becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+[v_{a}]^{p}=D_{\sigma}^{p}E_{\beta}^{\sigma}{[K}_{a}]{[Z}_{a}]_{\alpha}^{\beta}\varepsilon^{\alpha}.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This of course is equivalent to a matrix product, which we can write in
+ matrix/vector notation as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\vec{v}_{a}=D_{a}E_{a}K_{a}Z_{a}\vec{\varepsilon}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Doing the same for antenna 
+\begin_inset Formula $b$
+\end_inset
+
+, we arrive at the traditional matrix ME:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+X_{ab}=\left\langle v_{a}\bar{v}_{b}^{*}\right\rangle {=D}_{a}E_{a}K_{a}Z_{a}BZ_{b}^{*}K_{b}^{*}E_{b}^{*}D_{b}^{*}.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+MeqTrees and tensor notation
+\end_layout
+
+\begin_layout Standard
+Assuming we want to implement GMEs in MeqTrees (see the conclusion for a
+ discussion of actual usefulness), what needs to be done?
+\end_layout
+
+\begin_layout Itemize
+There is already intrinsic tensor support in the data structures, although
+ upper and lower indices are not distinguished.
+ The distinction can be added with relatively little pain --- and this will
+ also make the transpose operation even more efficient than it already is.
+ 
+\end_layout
+
+\begin_layout Itemize
+Einstein summation is a beautifully simple operation, and would be a pleasure
+ to implement.
+ Besides, 
+\begin_inset Quotes eld
+\end_inset
+
+MeqEinstein
+\begin_inset Quotes erd
+\end_inset
+
+ is too good a name for a self-respecting software system to go without.
+\end_layout
+
+\begin_layout Section*
+Conclusion
+\end_layout
+
+\begin_layout Standard
+The tensor form of the GME is worth exploring for at least two reasons.
+\end_layout
+
+\begin_layout Standard
+Firstly, the machinery of tensor calculus has been refined by mathematicians
+ for well over a century, and we can now bring it to bear on the problem.
+ While at present we can only feel our way forward here, there's every reason
+ to expect valuable new insights down the road.
+\end_layout
+
+\begin_layout Standard
+The second reason (and perhaps the first of these valuable new insights)
+ is purely operational.
+ Any tensor equation we're likely to need will be a function of frequency,
+ time, 
+\begin_inset Formula $lm$
+\end_inset
+
+, etc.
+ In computational terms, this involves iteration over various grids.
+ Rearranging the terms of the equation to compute the coarser-gridded values
+ first can result in savings of order of magnitude in FLOPS.
+ We already (explictly and implicitly) do this in MeqTrees, by trying to
+ bring, e.g., time and frequency dependence into expressions as 
+\begin_inset Quotes eld
+\end_inset
+
+late
+\begin_inset Quotes erd
+\end_inset
+
+ as possible.
+ One of the great boons of the matrix ME is that it tells us exactly what
+ terms can and cannot be rearranged, following the rules of matrix (non)commutat
+ion.
+ 
+\end_layout
+
+\begin_layout Standard
+Recall that the terms in an Einstein sum always commute --- moving the terms
+ around corresponds to nested summations being done in different order,
+ but does not change the result.
+ As a purely hypothetical example, we can rewrite the GME
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+X_{q}^{p}=D_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{Z}_{\tau\gamma}^{\delta}\bar{K}_{\tau}\bar{E}_{\tau}^{\gamma}\bar{D}_{q}^{\tau}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+X_{q}^{p}={(D_{\sigma}^{p}\bar{D}_{q}^{\tau})E}_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{Z}_{\tau\gamma}^{\delta}\bar{K}_{\tau}\bar{E}_{\tau}^{\gamma}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Formula $(D_{\sigma}^{p}\bar{D}_{q}^{\tau})$
+\end_inset
+
+ product is a (2,2) type tensor, which we can write as, e.g., 
+\begin_inset Formula $D_{\sigma q}^{p\tau}$
+\end_inset
+
+.
+ If, say, 
+\begin_inset Formula $D$
+\end_inset
+
+ does not depend on frequency or time, then this is simply 
+\begin_inset Formula $N^{4}$
+\end_inset
+
+ numbers.
+ By computing it first, we may save a lot of iteration over frequency and
+ time.
+ In fact, it may even be worth recasting the matrix ME in tensor form, to
+ see if we can save some cycles in a similar manner!
+\end_layout
+
+\begin_layout Standard
+While the above example may prove to be false in real life, it does suggest
+ that Einstein notation may prove to be a powerful tool for optimizing calculati
+ons.
 \end_layout
 
 \end_body
