@@ -30,11 +30,11 @@
 \begin_body
 
 \begin_layout Title
-The (Generalized) ME Of An Array Of Receptors
+The Generalized Measurement Equation Of a Generic Array Of Radio Receptors
 \end_layout
 
 \begin_layout Author
-By a gang of lumberjacks
+By a gang of underpaid lumberjacks
 \end_layout
 
 \begin_layout Section
@@ -125,7 +125,12 @@ physical
 \begin_inset Quotes erd
 \end_inset
 
- components, for example:
+ components, representing effects along the signal path to antenna 
+\begin_inset Formula $p$
+\end_inset
+
+.
+ For example:
 \end_layout
 
 \begin_layout Standard
@@ -215,20 +220,36 @@ Cross-talk
 \end_inset
 
  is a product of several Jones terms associated with instrumental gain,
- polarization leakage, etc.
- The important thing to realize is that the traditional ME can represent
- leakage by a 
-\begin_inset Formula $2\times2$
+ polarization leakage, cross-talk between receptors, etc.
+ The important thing to realize is that the matrix ME of eq.
+ (
+\begin_inset LatexCommand \ref{eq:me}
+
 \end_inset
 
- matrix 
+) 
 \emph on
-only because leakage is restricted to the two receptors associated with
+assumes that cross-talk is restricted to the two receptors associated with
  one antenna.
 
 \emph default
  If our instrument exhibited cross-talk between, say, dipole X of antenna
- 1 and dipole Y of antenna 2, then the ME above would no longer be valid.
+ 1 and dipole Y of antenna 2, then eq.
+ (
+\begin_inset LatexCommand \ref{eq:me}
+
+\end_inset
+
+) above would no longer be valid, because cross-talk would 
+\begin_inset Quotes eld
+\end_inset
+
+scramble up
+\begin_inset Quotes erd
+\end_inset
+
+ signals arriving along the lines of sight of multiple antennas.
+ 
 \begin_inset Foot
 status open
 
@@ -238,11 +259,11 @@ Here's an idle thought: can this already happen in existing interferometers?
 \begin_inset Formula $4\times4$
 \end_inset
 
- Mueller matrix can represent leakage between antennas 
+ Mueller matrix can represent cross-talk between antennas 
 \begin_inset Formula $p,q$
 \end_inset
 
-, but of course does not account for leakage from any other antennas.
+, but of course does not account for cross-talk from any other antennas.
  This may be worth pursuing in the context of the Generalized ME.
 \end_layout
 
@@ -251,13 +272,67 @@ Here's an idle thought: can this already happen in existing interferometers?
 
 \end_layout
 
+\begin_layout Standard
+Unfortunately, we already know of one manifestation of cross-talk between
+ more than two elements --- mutual coupling in a dense array.
+ 
+\end_layout
+
+\begin_layout Standard
+Note that in any linear system, the abstract form of the ME (eq.
+ 
+\begin_inset LatexCommand \ref{eq:me0}
+
+\end_inset
+
+) still applies.
+ Regardless of cross-talk, there always exists a per-antenna 
+\begin_inset Formula $\mathbf{J}_{p}$
+\end_inset
+
+ matrix describing how the antenna converts the 
+\begin_inset Quotes eld
+\end_inset
+
+source
+\begin_inset Quotes erd
+\end_inset
+
+ EM field into voltages.
+ Just because it exists does not mean we can easily derive it, however.
+ In the presense of cross-antenna cross-talk, we can no longer factor 
+\begin_inset Formula $\mathbf{J}_{p}$
+\end_inset
+
+ into a matrix product describing propagation effects along the line of
+ sight for antenna 
+\begin_inset Formula $p$
+\end_inset
+
+ (as we do in eq.
+ 
+\begin_inset LatexCommand \ref{eq:me}
+
+\end_inset
+
+), since we must take into account all the 
+\begin_inset Quotes eld
+\end_inset
+
+cross-talking
+\begin_inset Quotes erd
+\end_inset
+
+ signals arriving at other antennas.
+\end_layout
+
 \begin_layout Section
 Generalized arrays
 \end_layout
 
 \begin_layout Standard
-In an aperture or focal plane array, leakage (i.e.
- mutual coupling) affects more than two receptors at a time.
+In an aperture or focal plane array, mutual coupling affects more than two
+ receptors at a time.
  In other words, no two receptors form a 
 \begin_inset Quotes eld
 \end_inset
@@ -389,8 +464,22 @@ Jones
 \end_inset
 
  matrix for the entire array.
- If we ignore image-plane effects (apart from the beam response) for the
- time being, then it can be decomposed into a few more 
+ In fact, for any given receptor pair, this equation is equivalent to the
+ matrix ME of eq.
+ (
+\begin_inset LatexCommand \ref{eq:me0}
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+The problem is, we cannot derive the 
+\begin_inset Formula $\mathcal{J}$
+\end_inset
+
+ matrix directly, unless we decompose it into more 
 \begin_inset Quotes eld
 \end_inset
 
@@ -398,7 +487,9 @@ physical
 \begin_inset Quotes erd
 \end_inset
 
- terms:
+ terms that we can understand.
+ If we ignore image-plane effects (apart from the beam response) for the
+ time being, then one possible decomposition is as follows:
 \end_layout
 
 \begin_layout Standard
@@ -457,10 +548,9 @@ The
 \begin_inset Formula $\mathbf{D}$
 \end_inset
 
- matrix gives us the leakage a.k.a.
- mutual coupling a.k.a.
- crosstalk between the receptors (the actual receiver gains can be rolled
- into the 
+ matrix gives us the cross-talk a.k.a.
+ mutual coupling between the receptors (the actual receiver gains can be
+ rolled into the 
 \begin_inset Formula $\mathbf{D}$
 \end_inset
 
@@ -549,8 +639,8 @@ B
 \end_layout
 
 \begin_layout Standard
-If image-plane effects do vary over the array, then a matrix formalism is
- no longer sufficient for equation (
+If image-plane effects do vary across receptors, then a matrix formalism
+ is no longer sufficient for equation (
 \begin_inset LatexCommand \ref{eq:array-me}
 
 \end_inset
@@ -594,14 +684,14 @@ Another way to look at this conundrum is as follows.
 
 .
  This allows us to write an ME as in eq.
- (
-\begin_inset LatexCommand \ref{eq:me0}
+ 
+\begin_inset LatexCommand \eqref{eq:me}
 
 \end_inset
 
-).
- In the presense of significant leakage between more than two dipoles, the
- voltage responce of each will now depend on the EM field at several locations.
+.
+ In the presense of significant cross-talk between more than two dipoles,
+ the voltage responce of each will now depend on the EM field at other locations.
  In effect, the 
 \begin_inset Formula $\mathbf{D}$
 \end_inset
@@ -875,8 +965,17 @@ is simply written as
 \begin_inset Formula $x^{i}y_{i}.$
 \end_inset
 
- By contrast, an index appearing in the same position (both above, or both
- below) is not summed over: 
+ Note that the 
+\begin_inset Formula $i$
+\end_inset
+
+ in 
+\begin_inset Formula $x^{i}$
+\end_inset
+
+ is not an exponent, but simply an index! (Exponents and tensor notation
+ do not mix well.) By contrast, an index appearing in the same position (both
+ above, or both below) is not summed over: 
 \begin_inset Formula $x_{i}y_{i}$
 \end_inset
 
@@ -914,7 +1013,8 @@ upper-lower is sum, upper-upper and lower-lower is not
 
 \begin_layout Standard
 This allows for very compact representation of tensor operations.
- For example, matrix multiplication is written as
+ For example, matrix multiplication is just a particular kind of Einstein
+ summation, which can be written as
 \end_layout
 
 \begin_layout Standard
@@ -965,7 +1065,7 @@ is a (0,1) tensor,
 \end_inset
 
  (a.k.a.
- just a row vector), since 
+ just a humble row vector), since 
 \begin_inset Formula $l$
 \end_inset
 
@@ -1053,7 +1153,7 @@ Rewriting the traditional ME in tensor notation
 \end_layout
 
 \begin_layout Standard
-As an exercise, let's rewrite the traditional ME of eq.
+As an exercise, let's rewrite the matrix ME of eq.
  (
 \begin_inset LatexCommand \ref{eq:me0}
 
@@ -1306,6 +1406,12 @@ Let's put tensor notation to work to incorporate image-plane effects into
 \end_inset
 
 ).
+ Before we start, we should note that we'll be constructing only one of
+ many possible models for signal propagation effects.
+ We'd like to preempt any arguments about the validity or applicability
+ of this particular model, by stating out front that we claim no such thing.
+ The point of the exercise to show how tensor notation can be used to derive
+ generalized measurement equations from certain assumptions about the physics.
 \end_layout
 
 \begin_layout Standard
@@ -1504,7 +1610,7 @@ Note that we're now summing over
 \end_layout
 
 \begin_layout Standard
-Finally, leakage 
+Finally, cross-talk 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1525,7 +1631,7 @@ ideal
 \begin_inset Quotes erd
 \end_inset
 
- voltage vector, then leakage multiplies that by an 
+ voltage vector, then we need to multiply it by an 
 \begin_inset Formula $N\times N$
 \end_inset
 
@@ -1619,11 +1725,11 @@ This is the full tensor form of the generalized ME for an array.
 \end_layout
 
 \begin_layout Subsection
-And what about 
-\begin_inset Formula $\mathcal{J}$
+Decomposing the 
+\begin_inset Formula $J$
 \end_inset
 
-?
+ tensor
 \end_layout
 
 \begin_layout Standard
@@ -1647,12 +1753,12 @@ j_{x,n} & j_{y,n}\end{array}\right)\mathbf{B}\left(\begin{array}{ccc}
 
 \end_inset
 
-So, have we forgotten about 
+So, have we forgotten about the 
 \begin_inset Formula $\mathcal{J}$
 \end_inset
 
-? Of course, it's still present in the GME, in the more verbose tensor form
- of
+ matrix? Of course, it's still present in the GME, in the more verbose tensor
+ form of
 \end_layout
 
 \begin_layout Standard
@@ -1686,8 +1792,8 @@ If you track down the free indices in this tensor expression ---
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \[
-X_{q}^{p}=J_{\alpha}^{p}B_{\beta}^{\alpha}\bar{J}_{q}^{\beta}\]
+\begin_inset Formula \begin{equation}
+X_{q}^{p}=J_{\alpha}^{p}B_{\beta}^{\alpha}\bar{J}_{q}^{\beta}\label{eq:gme-J}\end{equation}
 
 \end_inset
 
@@ -1695,7 +1801,14 @@ X_{q}^{p}=J_{\alpha}^{p}B_{\beta}^{\alpha}\bar{J}_{q}^{\beta}\]
 \end_layout
 
 \begin_layout Standard
-We can't compute 
+This is an old friend, the matrix ME of eq.
+ 
+\begin_inset LatexCommand \eqref{eq:me0}
+
+\end_inset
+
+, written in tensor notation.
+ We can't compute 
 \begin_inset Formula $J_{i}^{p}$
 \end_inset
 
@@ -1706,7 +1819,7 @@ We can't compute
 \begin_inset Formula $2\times2$
 \end_inset
 
- coherency in theory reduces to only two Jones matrices (
+ coherency in theory depends on only two Jones matrices (
 \begin_inset Formula $\mathbf{V}_{pq}=\mathbf{J}_{p}\mathbf{B}\mathbf{J}_{q}^{*}$
 \end_inset
 
@@ -1714,7 +1827,221 @@ We can't compute
 \begin_inset Formula $\mathbf{J}$
 \end_inset
 
- as a product of physically comprehensible terms.
+ as a product of several physically comprehensible terms.
+\end_layout
+
+\begin_layout Standard
+As already implied above, the decomposition of 
+\begin_inset Formula $J$
+\end_inset
+
+ given by eq.
+ (
+\begin_inset LatexCommand \ref{eq:gme0}
+
+\end_inset
+
+) is only one of many possible models.
+ We have shown that generalizing the concept of Jones matrices to tensors
+ allows one to formulate a measurement equation in terms of physical effects
+ that, while still linear, cannot be described in the traditional matrix
+ ME formalism.
+ Just like the matrix ME can have different formulations (i.e.
+ different sets of Jones matrices) depending on the instrument we're trying
+ to model, the GME can have different formulations that represent 
+\begin_inset Formula $J$
+\end_inset
+
+ by different combinations of tensors.
+ 
+\end_layout
+
+\begin_layout Standard
+This class of tensors appears to be in need of a name (seeing as how the
+ 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ matrices used in the matrix ME have a name, 
+\begin_inset Quotes eld
+\end_inset
+
+Jones
+\begin_inset Quotes erd
+\end_inset
+
+.) For now, we shall call them T-tensors (where 
+\begin_inset Quotes eld
+\end_inset
+
+T
+\begin_inset Quotes erd
+\end_inset
+
+ can stand for 
+\begin_inset Quotes eld
+\end_inset
+
+Tree
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+Timba
+\begin_inset Quotes erd
+\end_inset
+
+ according to taste.)
+\end_layout
+
+\begin_layout Standard
+While it may take a lot of additional work to develop working formulations
+ of the GME and come up with generally useful T-tensors, the following obvious
+ rules for the type and rank of T-tensors may already be noted:
+\end_layout
+
+\begin_layout Itemize
+A T-tensor that translates the EM field vector into another vector (e.g.,
+ Faraday rotation) must necessarily have an upper and a lower index in the
+ range 
+\begin_inset Formula $\{1,2\}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+A T-tensor that translates both components of the EM field equally (scalar
+ operation, e.g.
+ phase delay) does not need any 
+\begin_inset Formula $\{1,2\}$
+\end_inset
+
+ indices.
+\end_layout
+
+\begin_layout Itemize
+A T-tensor transforming the EM field vector into a scalar (e.g., beam response
+ of a dipole), must have an lower index of 
+\begin_inset Formula $\{1,2\}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+A T-tensor for an effect that is different across receptors must have an
+ index with a range of 
+\begin_inset Formula $\{1...N\}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+A T-tensor for an effect that ties groups of dipoles together must have
+ two indices (upper and lower) with a range of 
+\begin_inset Formula $\{1...N\}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Some examples of applying these rules:
+\end_layout
+
+\begin_layout Itemize
+Faraday rotation translates vectors, so it must have an upper and a lower
+ 
+\begin_inset Formula $\{1,2\}$
+\end_inset
+
+ index.
+ If different across receptors, it must also have a 
+\begin_inset Formula $\{1...N$
+\end_inset
+
+} index.
+ This suggests that the tensor looks like 
+\begin_inset Formula $F_{j}^{pi}$
+\end_inset
+
+ (or 
+\begin_inset Formula $F_{pj}^{i}$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Itemize
+Phase delay operates on the EM vector as a scalar.
+ It is different across receptors, hence its T-tensor looks like 
+\begin_inset Formula $K^{p}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Beam responce translates the EM vector into a scalar voltage, and must therefore
+ have a lower 
+\begin_inset Formula $\{1,2\}$
+\end_inset
+
+ index.
+ It is usually different across receptors, hence its T-tensor looks like
+ 
+\begin_inset Formula $E_{i}^{p}.$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Cross-talk translates a set of receptor voltages into another set of voltages,
+ so it needs two 
+\begin_inset Formula $\{1...N\}$
+\end_inset
+
+ indices.
+ Its T-tensor looks like 
+\begin_inset Formula $D_{q}^{p}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+If mutual coupling affects the arriving EM field at each receptor (rather
+ than just the voltages), then it may need two 
+\begin_inset Formula $\{1,2\}$
+\end_inset
+
+ indices and two 
+\begin_inset Formula $\{1...N\}$
+\end_inset
+
+ indices, giving us a rank-4 tensor, 
+\begin_inset Formula $D_{qj}^{pi}$
+\end_inset
+
+.
+ Alternatively, this may be rolled into the beam responce 
+\begin_inset Formula $E$
+\end_inset
+
+, giving us scalar voltage as a function of the EM field vector at each
+ dipole.
+ Such a T-tensor will be of rank 3: 
+\begin_inset Formula $E_{j}^{pi}$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
@@ -1770,12 +2097,12 @@ which, projected into
 \begin_inset Formula $lm$
 \end_inset
 
- coordinates gives us:
+ coordinates, gives us:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \[
-X_{q}^{p}=D_{\sigma}^{p}\left(\intop\intop_{lm}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{Z}_{\tau\gamma}^{\delta}\bar{K}_{\tau}\bar{E}_{\tau}^{\gamma}\frac{dldm}{n}\right)\bar{D}_{q}^{\tau}\]
+X_{q}^{p}=D_{\sigma}^{p}\left(\underset{{\scriptstyle lm}}{\iint}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{Z}_{\tau\gamma}^{\delta}\bar{K}_{\tau}\bar{E}_{\tau}^{\gamma}\frac{dldm}{n}\right)\bar{D}_{q}^{\tau}\]
 
 \end_inset
 
@@ -1784,7 +2111,7 @@ X_{q}^{p}=D_{\sigma}^{p}\left(\intop\intop_{lm}E_{\beta}^{\sigma}K^{\sigma}Z_{\a
 
 \begin_layout Standard
 \begin_inset Formula \[
-\left(n=\sqrt{1-l^{2}-m^{2}}\right)\]
+{\scriptstyle \left(n=\sqrt{1-l^{2}-m^{2}}\right)}\]
 
 \end_inset
 
@@ -1813,7 +2140,7 @@ The physical meaning of
 \begin_inset Formula $\mathcal{X}$
 \end_inset
 
- is simply the ideal correlation matrix, without leakage.
+ is simply the ideal correlation matrix, without cross-talk.
 \end_layout
 
 \begin_layout Subsection
@@ -1821,7 +2148,15 @@ Back to the classics
 \end_layout
 
 \begin_layout Standard
-As another useful exercise, let's see how the GME of eq.
+As another useful exercise, let's see how under the 
+\begin_inset Quotes eld
+\end_inset
+
+no cross-antenna cross-talk
+\begin_inset Quotes erd
+\end_inset
+
+ assumption, the GME of eq.
  (
 \begin_inset LatexCommand \ref{eq:gme0}
 
@@ -1957,7 +2292,7 @@ where the
 \end_inset
 
  summation index must formally still go over all 4 possible values.
- However, since there's no leakage across antennas, 
+ However, since there's no cross-talk between antennas, 
 \begin_inset Formula $D_{\sigma}^{p}=0$
 \end_inset
 
@@ -2172,9 +2507,9 @@ The
 \end_layout
 
 \begin_layout Standard
-While the above example may prove to be false in real life, it does suggest
- that Einstein notation may prove to be a powerful tool for optimizing calculati
-ons.
+While the above example may prove to be false in real life, it does raise
+ the tantalizing suggestion that Einstein notation can be a powerful tool
+ for optimizing tensor calculations.
 \end_layout
 
 \end_body
