@@ -30,24 +30,310 @@
 \begin_body
 
 \begin_layout Title
-The Generalized Measurement Equation Of a Generic Array Of Radio Receptors
+The Generalized Measurement Equation Of a Radio Interferometer Array
 \end_layout
 
 \begin_layout Author
-By a gang of underpaid lumberjacks
+O.
+ M.
+ Smirnov & J.E.Noordam
 \end_layout
 
-\begin_layout Section
-Traditional ME of a radiointerferometer
+\begin_layout Address
+Netherlands Foundation For Research in Astronomy (NWO/ASTRON)
+\end_layout
+
+\begin_layout Address
+Postbus 2, 7990AA Dwingeloo, The Netherlands
 \end_layout
 
 \begin_layout Standard
-For a sky consisting of a single point source:
+
+\newpage
+
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+The Measurement Equation (ME), or the interferometer equation, was developed
+ in Hamaker () (collectively referred to as the 
+\begin_inset Quotes eld
+\end_inset
+
+ME Papers
+\begin_inset Quotes erd
+\end_inset
+
+ from here on.) The latter of these presents it in its most elegant form,
+ that of a matrix equation:
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+The ME Papers use a slightly different set of symbols.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\mathbf{V}_{pq}=\mathbf{J}_{p}\mathbf{B}\mathbf{J}_{q}^{*}\label{eq:me0}\end{equation}
+\mathbf{V}_{pq}=\mathbf{J}_{p}\mathbf{X}_{pq}\mathbf{J}_{q}^{*}\label{eq:hamaker-me}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+All terms in bold are 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ matrices.
+ The 
+\series bold
+V
+\series default
+ term (
+\emph on
+visibility
+\emph default
+) gives the response of the interferometer composed of antennas 
+\begin_inset Formula $p$
+\end_inset
+
+ and 
+\begin_inset Formula $q$
+\end_inset
+
+.
+ The 
+\series bold
+X
+\series default
+ term represents the 
+\emph on
+coherency matrix
+\emph default
+, which (under certain assumptions that we'll explore below) is in a Fourier
+ Transform (FT) relationship with sky brightness and polarization.
+ Finally, the 
+\series bold
+J
+\series default
+ terms (also known as 
+\emph on
+Jones matrices
+\emph default
+) represent the signal propagation effects associated with each antenna.
+ We will refer to this equation as the 
+\begin_inset Quotes eld
+\end_inset
+
+matrix ME
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Radioastronomical 
+\emph on
+simulation
+\emph default
+ involves going from a model sky brightness distribution to 
+\series bold
+V
+\series default
+'s.
+ 
+\emph on
+Calibration
+\emph default
+ usually refers to using observed 
+\series bold
+V
+\series default
+'s (and some knowledge of the sky) to estimate the 
+\series bold
+J
+\series default
+'s.
+ Finally, 
+\emph on
+imaging
+\emph default
+ inverts the equation, to derive an image of the sky from the observed 
+\series bold
+V
+\series default
+'s.
+\end_layout
+
+\begin_layout Standard
+Note that the ME papers do not deal with instrumental effects that vary
+ across the field of view (
+\emph on
+image-plane
+\emph default
+ effects); this issue is becoming important in current observations, and
+ will be discussed in this paper.
+ Even so, the matrix ME formalism has facilitated breakthroughs in all three
+ pursuits, since it can describe the entire instrument and observation in
+ a closed form.
+ Furthermore, it quite naturally incorporates source polarization and instrument
+al polarization effects, which have always been a thorn in the side of radioastr
+onomers.
+ Note that although at present only two calibration packages --- AIPS++
+ () and MeqTrees () --- implement an explicit matrix ME, all existing packages
+ use this equation implicitly, albeit usually in a simplified (usually scalar)
+ form.
+\end_layout
+
+\begin_layout Standard
+With the advent of new instruments and new observational regimes, certain
+ assumptions underlying the matrix ME and/or its habitual interpretation
+ no longer hold.
+ Even in cases where the matrix ME still applies, a direct implementation
+ may be computationally prohibitive, so a simplified form of the equation
+ (with additional assumptions) may need to be used.
+ The first part of this paper examines these assumptions and explores their
+ limitations, the second part discusses the specific problem of image-plane
+ effects, and the third part attempts to remove some of the limitations
+ and generalize the ME to arbitrary arrays of radio receptors.
+\end_layout
+
+\begin_layout Section
+Deriving the matrix ME for a single point source
+\end_layout
+
+\begin_layout Standard
+To explore the assumptions underlying the matrix ME, it's important to see
+ how it can be derived from first principles.
+ Two fundamental assumptions are implicit in the ME papers:
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+The linearity assumption.
+
+\series default
+ Everything that happens to the EM field, from the time it 
+\begin_inset Quotes eld
+\end_inset
+
+leaves
+\begin_inset Quotes erd
+\end_inset
+
+ the source and until it becomes a voltage at the input of an A/D converter,
+ can be described by linear transformations.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+The binary assumption.
+
+\series default
+ An antenna is composed of two receptors, which we'll call 
+\begin_inset Formula $X$
+\end_inset
+
+ and 
+\begin_inset Formula $Y$
+\end_inset
+
+ (e.g.
+ two dipoles, or two circular receptors, or perhaps even a mix of the two.)
+ Note that single-receptor antennas can be trivially made to fit this assumption
+ by attributing a gain of 0 (see below) to the 
+\begin_inset Quotes eld
+\end_inset
+
+missing
+\begin_inset Quotes erd
+\end_inset
+
+ receptor.
+ New instrument designs such as Aperture Arrays (AA's) and Focal Plane Arrays
+ (FPA's) have many receptors.
+\end_layout
+
+\begin_layout Standard
+Let's consider a single point-like source of radiation.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+source
+\begin_inset Quotes erd
+\end_inset
+
+ electromagnetic field
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+By 
+\begin_inset Quotes eld
+\end_inset
+
+source
+\begin_inset Quotes erd
+\end_inset
+
+, we mean 
+\begin_inset Quotes eld
+\end_inset
+
+at a point sufficiently far away from us along the line of propagation.
+\begin_inset Quotes erd
+\end_inset
+
+ This does introduce a phase ambiguity, but this is not important for our
+ purposes, since an interferometer only measures phase differences.
+\end_layout
+
+\end_inset
+
+ can be described by a complex 2-vector: 
+\begin_inset Formula \[
+\vec{e}=\left(\begin{array}{c}
+e_{x}\\
+e_{y}\end{array}\right),\]
+
+\end_inset
+
+provided we fix an arbitrary cartesian basis with 
+\begin_inset Formula $z$
+\end_inset
+
+ parallel to the direction of propagation.
+ The voltage response 
+\begin_inset Formula $\vec{v}_{p}$
+\end_inset
+
+ of the two receptors associated with antenna 
+\begin_inset Formula $p$
+\end_inset
+
+ is also a complex 2-vector.
+ Under the linearity assumption, the following relation holds:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\vec{v}_{p}=\mathbf{J}_{p}\vec{e},\label{eq:me-vvector}\end{equation}
 
 \end_inset
 
@@ -56,17 +342,48 @@ For a sky consisting of a single point source:
 
 \begin_layout Standard
 where 
-\series bold
-B
-\series default
- is the source coherency matrix
+\begin_inset Formula $\mathbf{J}_{p}$
+\end_inset
+
+ is some 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ complex-valued matrix, which we call a 
+\emph on
+Jones matrix
+\emph default
+.
+ Note that for any linear transformation of 2-vectors, there exists a 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ matrix describing it.
+\end_layout
+
+\begin_layout Standard
+The output of interferometer 
+\begin_inset Formula $pq$
+\end_inset
+
+ is a set of 4 pairwise 
+\emph on
+correlations
+\emph default
+ between the voltages registered at antennas 
+\begin_inset Formula $p$
+\end_inset
+
+ and 
+\begin_inset Formula $q$
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \[
-\mathbf{B}=\frac{1}{2}\left(\begin{array}{cc}
-I+Q & U+iV\\
-U-iV & I-Q\end{array}\right),\]
+V_{xx}=\left\langle v_{px}\bar{v}_{qx}\right\rangle ,\: V_{xy}=\left\langle v_{px}\bar{v}_{qy}\right\rangle {,\; V}_{yx}=\left\langle v_{py}\bar{v}_{qx}\right\rangle {,\: V}_{yy}=\left\langle v_{py}\bar{v}_{qy}\right\rangle \]
 
 \end_inset
 
@@ -74,38 +391,271 @@ U-iV & I-Q\end{array}\right),\]
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $\mathbf{J}_{p}$
+(The 
+\begin_inset Formula $\left\langle \cdot\right\rangle $
 \end_inset
 
- is the 
+ operation represents time averaging.) If we arrange these products into
+ a 
 \begin_inset Formula $2\times2$
 \end_inset
 
- Jones matrix for antenna 
-\begin_inset Formula $p$
-\end_inset
-
-, and 
+ matrix 
 \begin_inset Formula $\mathbf{V}_{pq}$
 \end_inset
 
- is the correlation matrix for antennas 
-\begin_inset Formula $p,q.$
+, we can see that it can be represented via a matrix product of 
+\begin_inset Formula $\vec{v}_{p}$
 \end_inset
 
- The 
+ (a column vector) and the conjugate transpose of 
+\begin_inset Formula $\vec{v}_{q}$
+\end_inset
+
+ (a row vector):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{V}_{pq}=\left(\begin{array}{cc}
+\left\langle v_{px}\bar{v}_{qx}\right\rangle  & \left\langle v_{px}\bar{v}_{qy}\right\rangle \\
+\left\langle v_{px}\bar{v}_{qy}\right\rangle  & \left\langle v_{py}\bar{v}_{qy}\right\rangle \end{array}\right)=\left\langle \left(\begin{array}{c}
+e_{px}\\
+e_{py}\end{array}\right)(\bar{e}_{qx}\,\bar{e}_{qy})\right\rangle =\left\langle \vec{e_{p}}\vec{e}_{q}^{*}\right\rangle \label{eq:hamaker-coherency}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We shall henceforth use 
+\begin_inset Formula $A^{*}$
+\end_inset
+
+ to refer to the conjugate transpose of 
+\begin_inset Formula $A$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Now, substituting in eq.
+ 
+\begin_inset LatexCommand \eqref{eq:me-vvector}
+
+\end_inset
+
+ above, we get
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{V}_{pq}=\left\langle \mathbf{J}_{p}\vec{e}(\mathbf{J}_{q}\vec{e})^{*}\right\rangle \simeq\mathbf{J}_{p}\left\langle \vec{e}\vec{e}^{*}\right\rangle \mathbf{J}_{q}^{*}\label{eq:me-ps-approx}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The inner product is the 
+\emph on
+self-coherency
+\emph default
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\left\langle \vec{e}\vec{e}^{*}\right\rangle $
+\end_inset
+
+, which we also call the 
+\family default
+\series default
+\shape default
+\size default
+\emph on
+\bar default
+\noun default
+\color default
+brightness matrix
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+, since it can be expressed in terms of the Stokes brightness parameters:
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+The 
+\begin_inset Formula $\pm$
+\end_inset
+
+ and 
+\begin_inset Formula $\mp$
+\end_inset
+
+ signs in eq.
+ 
+\begin_inset LatexCommand \eqref{eq:b-matrix}
+
+\end_inset
+
+ are due to a long-standing sign ambiguity in the definition of Stokes 
+\begin_inset Formula $V$
+\end_inset
+
+.
+ Even the ME papers, in their printed version, are mutually inconsistent.
+ In practice, an astronomer will go with whatever definition his software
+ package of choice provides, and flip signs as necessary.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{B}=\frac{1}{2}\left(\begin{array}{cc}
+I+Q & U\pm\imath V\\
+U\mp\imath V & I-Q\end{array}\right).\label{eq:b-matrix}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Formula $\mathbf{J}_{p}$
+\end_inset
+
+ term is referred to as the 
+\emph on
+Jones matrix
+\emph default
+ of antenna 
+\begin_inset Formula $p$
+\end_inset
+
+.
+ It represents all effects in the signal path of antenna 
+\begin_inset Formula $p$
+\end_inset
+
+ (including those between the source and the antenna).
+ This gives us the abstract form of the matrix ME, for a single point source:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{V}_{pq}=\mathbf{J}_{p}\mathbf{B}\mathbf{J}_{q}^{*}\label{eq:me0-ps}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+The 
 \begin_inset Quotes eld
 \end_inset
 
-*
+non-smearing
 \begin_inset Quotes erd
 \end_inset
 
- operation denotes a conjugate-transpose: 
-\begin_inset Formula $\mathbf{A}^{*}=(\bar{\mathbf{A}})^{t}$
+ assumption
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
 \end_inset
 
 
+\begin_inset Formula $\simeq$
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+ sign in eq.
+ 
+\begin_inset LatexCommand \eqref{eq:me-ps-approx}
+
+\end_inset
+
+ turns into equality only if 
+\begin_inset Formula $\mathbf{J}_{p}$
+\end_inset
+
+ is constant over the averaging interval.
+ In fact this is very rarely the case; the effect, or rather the error it
+ introduces, is known under the various guises of 
+\begin_inset Quotes eld
+\end_inset
+
+time/bandwidth smearing
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+decoherence
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+depolarization
+\begin_inset Quotes erd
+\end_inset
+
+, etc.
+ This is discussed in detail in (paper I).
+\end_layout
+
+\begin_layout Standard
+In practice, the error can always be analytically or computationally estimated,
+ or made as small as necessary by reducing the sampling interval.
+ We shall therefore omit the 
+\begin_inset Formula $\left\langle \:\right\rangle $
+\end_inset
+
+ brackets from here on, and assume direct equality in eq.
+ 
+\begin_inset LatexCommand \eqref{eq:me-ps-approx}
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsection
+Decomposing J
 \end_layout
 
 \begin_layout Standard
@@ -117,7 +667,21 @@ The
 
 
 \series default
- term can be further decomposed into more 
+ term represents the 
+\begin_inset Quotes eld
+\end_inset
+
+sum total
+\begin_inset Quotes erd
+\end_inset
+
+ of all effects in the signal path.
+ In practical applications, it is impossible to estimate 
+\series bold
+J
+\series default
+ directly, but it is possible to decompose it into a product of individual
+ 
 \begin_inset Quotes eld
 \end_inset
 
@@ -125,17 +689,13 @@ physical
 \begin_inset Quotes erd
 \end_inset
 
- components, representing effects along the signal path to antenna 
-\begin_inset Formula $p$
-\end_inset
-
-.
- For example:
+ effects, on which we may have a better handle.
+ An example decomposition would be as follows:
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \begin{equation}
-\mathbf{V}_{pq}=\mathbf{G}_{p}K_{p}\mathbf{E}_{p}\mathbf{B}\mathbf{E}_{q}^{*}K_{q}^{*}\mathbf{G}_{q}^{*}\label{eq:me}\end{equation}
+\begin_inset Formula \begin{eqnarray}
+\mathbf{J}_{p} & = & \mathbf{D}_{p}\mathbf{G}_{p}\mathbf{E}_{p}\mathbf{F}_{p}\label{eq:me-j-decomposition}\end{eqnarray}
 
 \end_inset
 
@@ -143,154 +703,267 @@ physical
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $\mathbf{E}_{p}$
-\end_inset
-
- is the 
-\begin_inset Quotes eld
-\end_inset
-
-sky Jones
-\begin_inset Quotes erd
-\end_inset
-
- for the antenna 
-\begin_inset Formula $p$
-\end_inset
-
- (and the source direction) describing all image-plane effects, 
-\begin_inset Formula $\mathbf{G}_{p}$
-\end_inset
-
- is the 
-\begin_inset Quotes eld
-\end_inset
-
-
+Here, 
+\series bold
+D
+\series default
+ describes 
 \emph on
-uv
+polarization leakage
 \emph default
--plane Jones
-\begin_inset Quotes erd
-\end_inset
-
+ between the two receptors, 
+\series bold
+G
+\series default
+ (a diagonal matrix) desribes the receiver gains, 
+\series bold
+E
+\series default
+ (usually scalar) describes the beam gain, and 
+\series bold
+F
+\series default
+ (a rotation matrix) describes Faraday rotation.
+ Collectively, this set of matrices is referred to as the 
+\emph on
+Jones chain
+\emph default
  for antenna 
 \begin_inset Formula $p$
 \end_inset
 
-, and 
-\begin_inset Formula $K_{p}$
+.
+ Substituting this into eq.
+ 
+\begin_inset LatexCommand \eqref{eq:me0-ps}
+
 \end_inset
 
- is the phase term.
- Boldface is used to emphasize 
-\begin_inset Formula $2\times2$
+, and taking note of the fact that 
+\begin_inset Formula $(AB)^{*}=B^{*}A^{*}$
 \end_inset
 
- matrices; 
-\begin_inset Formula $K_{p}$
-\end_inset
-
- is not bold because it is actually a scalar term.
-\end_layout
-
-\begin_layout Subsection
-The full-sky case
+, we get:
 \end_layout
 
 \begin_layout Standard
-To get a full-sky ME, we must integrate over a sphere:
+\begin_inset Formula \begin{eqnarray}
+\mathbf{V}_{pq} & = & \mathbf{D}_{p}\mathbf{G}_{p}\mathbf{E}_{p}\mathbf{F}_{p}\mathbf{B}\mathbf{F}_{q}^{*}\mathbf{E}_{q}^{*}\mathbf{G}_{q}^{*}\mathbf{D}_{q}^{*}\label{eq:me}\end{eqnarray}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \[
-\mathbf{V}_{pq}=\mathbf{G}_{p}\left({\displaystyle \intop}K_{p}\mathbf{E}_{p}\mathbf{B}\mathbf{E}_{q}^{*}K_{q}^{*}d\sigma\right)\mathbf{G}_{q}^{*}\]
-
-\end_inset
-
-
+Further examples and physical descriptions are provided in (paper I).
+ Here we'd only like to note the basic principles:
 \end_layout
 
-\begin_layout Subsection
-Cross-talk
+\begin_layout Itemize
+Any (linear) signal propagation path can be represented by a product of
+ Jones matrices, i.e., a Jones chain
 \end_layout
 
-\begin_layout Standard
-\begin_inset Formula $\mathbf{G}_{p}$
-\end_inset
+\begin_layout Itemize
+The correct order of the matrices is vital, and must correspond to the physical
+ order of the effects.
+ Matrices in general do not commute!
+\end_layout
 
- is a product of several Jones terms associated with instrumental gain,
- polarization leakage, cross-talk between receptors, etc.
- The important thing to realize is that the matrix ME of eq.
- (
-\begin_inset LatexCommand \ref{eq:me}
-
-\end_inset
-
-) 
+\begin_layout Itemize
+On the other hand, it should be noted that some types of matrices 
 \emph on
-assumes that cross-talk is restricted to the two receptors associated with
- one antenna.
-
+do
 \emph default
- If our instrument exhibited cross-talk between, say, dipole X of antenna
- 1 and dipole Y of antenna 2, then eq.
- (
-\begin_inset LatexCommand \ref{eq:me}
+ commute, and we can take advantage of this (both in analysis, and operationally
+ --- when optimizing for the order of calculations).
+\end_layout
+
+\begin_layout Standard
+A decomposition like eq.
+ 
+\begin_inset LatexCommand \eqref{eq:me}
 
 \end_inset
 
-) above would no longer be valid, because cross-talk would 
+ is called 
 \begin_inset Quotes eld
 \end_inset
 
-scramble up
+a
 \begin_inset Quotes erd
 \end_inset
 
- signals arriving along the lines of sight of multiple antennas.
+ measurement equation, as opposed to 
+\begin_inset Quotes eld
+\end_inset
+
+the
+\begin_inset Quotes erd
+\end_inset
+
+ ME of eq.
  
-\begin_inset Foot
-status open
+\begin_inset LatexCommand \eqref{eq:me0-ps}
 
-\begin_layout Standard
-Here's an idle thought: can this already happen in existing interferometers?
- The 
-\begin_inset Formula $4\times4$
 \end_inset
 
- Mueller matrix can represent cross-talk between antennas 
-\begin_inset Formula $p,q$
-\end_inset
-
-, but of course does not account for cross-talk from any other antennas.
- This may be worth pursuing in the context of the Generalized ME.
+.
+ In real life, we always use some particular decomposition of the ME, depending
+ on what instrumental effects we want to model and/or calibrate for.
 \end_layout
 
+\begin_layout Subsection
+The 
+\begin_inset Quotes eld
 \end_inset
 
+closed system
+\begin_inset Quotes erd
+\end_inset
 
+ assumption
 \end_layout
 
 \begin_layout Standard
-Unfortunately, we already know of one manifestation of cross-talk between
- more than two elements --- mutual coupling in a dense array.
+The vital assumption underlying any decomposition similar to eq.
  
-\end_layout
-
-\begin_layout Standard
-Note that in any linear system, the abstract form of the ME (eq.
- 
-\begin_inset LatexCommand \ref{eq:me0}
+\begin_inset LatexCommand \eqref{eq:me-j-decomposition}
 
 \end_inset
 
-) still applies.
- Regardless of cross-talk, there always exists a per-antenna 
+ is that 
+\emph on
+each antenna is a closed system
+\emph default
+.
+ That is, we're assuming that the receptor voltages 
+\begin_inset Formula $\vec{v}_{p}$
+\end_inset
+
+ are only dependent on the EM field vector 
+\begin_inset Quotes eld
+\end_inset
+
+seen
+\begin_inset Quotes erd
+\end_inset
+
+ by the antenna, 
+\begin_inset Formula $\vec{e}_{p}$
+\end_inset
+
+.
+ Since propagation from the 
+\begin_inset Quotes eld
+\end_inset
+
+sky
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $\vec{e}$
+\end_inset
+
+ to 
+\begin_inset Formula $\vec{e}_{p}$
+\end_inset
+
+ can be described by a product of Jones matrices associated with antenna
+ 
+\begin_inset Formula $p$
+\end_inset
+
+ (or to be more precise, with the antenna's line of sight), as can conversion
+ from EM field to voltages, it follows that the whole transformation from
+ 
+\begin_inset Formula $\vec{e}$
+\end_inset
+
+ to 
+\begin_inset Formula $\vec{v}_{p}$
+\end_inset
+
+ can be represented by a per-antenna Jones chain.
+\end_layout
+
+\begin_layout Standard
+Consider the effect of electrical cross-talk, or mutual coupling in a densely-pa
+cked array.
+ If cross-talk or coupling is restricted to the two receptors within an
+ antenna, we call the antenna a 
+\emph on
+closed system
+\emph default
+.
+ For a closed system, the Jones chain approach is perfectly valid.
+\end_layout
+
+\begin_layout Standard
+If, however, cross-talk occurs 
+\emph on
+between receptors associated with different antennas
+\emph default
+, the receptor voltages 
+\begin_inset Formula $\vec{v}_{p}$
+\end_inset
+
+ will not only depend on 
+\begin_inset Formula $\vec{e}_{p}$
+\end_inset
+
+, but also on 
+\begin_inset Formula $\vec{e}_{q}$
+\end_inset
+
+, 
+\begin_inset Formula $\vec{e}_{r}$
+\end_inset
+
+, etc.
+ This means that we can no longer decompose 
 \begin_inset Formula $\mathbf{J}_{p}$
 \end_inset
 
- matrix describing how the antenna converts the 
+ into 
+\begin_inset Quotes eld
+\end_inset
+
+physical
+\begin_inset Quotes erd
+\end_inset
+
+ terms associated only with antenna 
+\begin_inset Formula $p$
+\end_inset
+
+, since cross-talk 
+\begin_inset Quotes eld
+\end_inset
+
+mixes in
+\begin_inset Quotes erd
+\end_inset
+
+ propagation effects associated with the other antennas!
+\end_layout
+
+\begin_layout Standard
+To be absolutely clear on this point, in a linear system the abstract ME
+ of eq.
+ 
+\begin_inset LatexCommand \eqref{eq:me0-ps}
+
+\end_inset
+
+ always holds.
+ As long as the system is linear, there always exists some 
+\begin_inset Formula $\mathbf{J}_{p}$
+\end_inset
+
+ that ties voltages to the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -298,32 +971,369 @@ source
 \begin_inset Quotes erd
 \end_inset
 
- EM field into voltages.
- Just because it exists does not mean we can easily derive it, however.
- In the presense of cross-antenna cross-talk, we can no longer factor 
+ EM field.
+ However, we can only decompose 
 \begin_inset Formula $\mathbf{J}_{p}$
 \end_inset
 
- into a matrix product describing propagation effects along the line of
- sight for antenna 
+ into per-antenna terms, as in eq.
+ 
+\begin_inset LatexCommand \eqref{eq:me}
+
+\end_inset
+
+, if we assume that each antenna forms a closed system, with no cross-talk
+ or coupling with the other antennas.
+\end_layout
+
+\begin_layout Standard
+Unfortunately, with the emergence of Aperture Array and Focal Plane Array
+ designs for new instruments, mutual coupling is no longer negligible, and
+ we can no longer assume a closed system.
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+In fact, even existing instruments may have this problem, if cross-talk
+ occurs in, or on the way to, the correlator.
+ It remains to be seen whether this can be reliably detected.
+\end_layout
+
+\end_inset
+
+ We will address this issue later on in this paper; for now, let's assume
+ a closed system.
+\end_layout
+
+\begin_layout Section
+The matrix ME for a full sky
+\end_layout
+
+\begin_layout Standard
+Real skies are never a single point source, but rather a brightness distribution.
+ We can represent this by making 
+\begin_inset Formula $\mathbf{B}$
+\end_inset
+
+ a function of direction, 
+\begin_inset Formula $\mathbf{B}(\vec{\sigma})$
+\end_inset
+
+, where 
+\begin_inset Formula $\vec{\sigma}$
+\end_inset
+
+ is a unit direction vector.
+\end_layout
+
+\begin_layout Standard
+The EM field measured at each antenna, 
+\begin_inset Formula $\vec{e}_{p},$
+\end_inset
+
+ is a sum of all fields arriving from all possible directions, along all
+ possible propagation paths.
+ In the context of the ME, this means that voltages and visibilities must
+ be computed via integration over a sphere.
+ Obviously, propagation effects such as beam gain depend on direction, therefore
+ Jones matrices must be a function of direction as well:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\vec{v}_{p}={\displaystyle \intop_{\textrm{sky}}}\mathbf{J}_{p}(\vec{\sigma})\vec{e}(\vec{\sigma})d\sigma,\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{V}_{pq}=\intop_{\textrm{sky}}\mathbf{J}_{p}(\vec{\sigma})\mathbf{B}(\vec{\sigma})\mathbf{J}_{q}^{*}(\vec{\sigma})d\sigma.\label{eq:me-sky-integral}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fortunately, this intimidating-looking integral becomes familiar if we consider
+ interferometer geometry.
+\end_layout
+
+\begin_layout Subsection
+Geometry and phase
+\end_layout
+
+\begin_layout Standard
+In the absense of all other instrumental effects, the signal arriving at
+ each antenna incurs a phase delay that depends on direction and antenna
+ location.
+ Following Cotton (), the phase difference between two antennas is given
+ by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\phi_{pq}=u_{pq}l+v_{pq}m+w_{pq}n,\]
+
+\end_inset
+
+where 
+\begin_inset Formula $(u_{pq}\, v_{pq}\, w_{pq})$
+\end_inset
+
+ is the 
+\emph on
+baseline
+\emph default
+ vector from antenna 
+\begin_inset Formula $q$
+\end_inset
+
+ to 
 \begin_inset Formula $p$
 \end_inset
 
- (as we do in eq.
- 
-\begin_inset LatexCommand \ref{eq:me}
+ (in units of wavelength), and 
+\begin_inset Formula $l,m,n$
+\end_inset
+
+ are the direction cosines for 
+\begin_inset Formula $\vec{\sigma}$
+\end_inset
+
+ relative to a designated 
+\emph on
+phase center
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+If we pick an arbitrary reference point 
+\begin_inset Formula $O$
+\end_inset
+
+, it is easy to see that each phase difference can be decomposed into two
+ per-antenna phase terms computed relative to 
+\begin_inset Formula $O$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\phi_{pq}=\phi_{p}-\phi_{q},\;\phi_{p}=u_{p}l+v_{p}m+w_{p}n\]
 
 \end_inset
 
-), since we must take into account all the 
+
+\end_layout
+
+\begin_layout Standard
+The choice of 
+\begin_inset Formula $O$
+\end_inset
+
+ affects the per-antenna phase terms, but not the phase difference.
+ Recall that an interferometer only measures phase difference (as is apparent
+ from the ME itself).
+ We can therefore simply say that each antenna incurs a phase delay, 
+\begin_inset Formula $\phi_{p}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In effect, phase delay multiplies each component of the EM field vector
+ by a scalar factor, 
+\begin_inset Formula $\kappa_{p}=e^{-\imath\phi_{p}}$
+\end_inset
+
+.
+ Following Noordam (AIPS++ note), we can represet this by a diagonal Jones
+ matrix:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+K_{p}=\left(\begin{array}{cc}
+\kappa_{p} & 0\\
+0 & \kappa_{p}\end{array}\right)\equiv e^{-\imath(u_{p}l+v_{p}m+w_{p}n)}.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A diagonal matrix with the same element on the diagonal is called a 
+\emph on
+scalar matrix.
+
+\emph default
+ One useful property of scalar matrices is that they commute with any matrix;
+ in effect they are indistinguishable from scalars.
+ We designate 
+\begin_inset Formula $K$
+\end_inset
+
+ by a non-bold character to emphasize this fact.
+\end_layout
+
+\begin_layout Standard
+Incorporating phase delay into the ME, and commuting the 
+\begin_inset Formula $K$
+\end_inset
+
+ terms, we get
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{V}_{pq}=K_{p}\mathbf{B}K_{q}=\mathbf{B}{(K}_{p}K_{q})={\mathbf{B}e}^{-\imath(u_{pq}l+v_{pq}m+w_{pq}n)},\label{eq:visib-ps}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+which is just the familiar expression for the complex visibility of a point
+ source!
+\end_layout
+
+\begin_layout Subsection
+Deriving the Fourier Transform
+\end_layout
+
+\begin_layout Standard
+Let's substitute 
+\begin_inset Formula $K_{p}$
+\end_inset
+
+ into the spherical integral of eq.
+ 
+\begin_inset LatexCommand \eqref{eq:me-sky-integral}
+
+\end_inset
+
+, and rewrite it as a two-dimensional integral over the direction cosines
+ 
+\begin_inset Formula $l,m$
+\end_inset
+
+.
+ Geometrically, this corresponds to a sine projection of the sky onto a
+ plane tangential at the phase center (the 
+\begin_inset Formula $lm$
+\end_inset
+
+ plane); we can disregard the 
 \begin_inset Quotes eld
 \end_inset
 
-cross-talking
+bottom hemisphere
 \begin_inset Quotes erd
 \end_inset
 
- signals arriving at other antennas.
+, since our field of view is limited by the antenna beam and the horizon.
+ The integration volume 
+\begin_inset Formula $d\sigma$
+\end_inset
+
+ transforms as 
+\begin_inset Formula $d\sigma=dldm/n$
+\end_inset
+
+, so we get:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{V}_{pq}=\underset{{\scriptstyle lm}}{\iint}\frac{1}{n}\mathbf{B}(l,m)e^{-\imath(u_{pq}l+v_{pq}m+w_{pq}n)}dldm.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This almost looks like a 2D Fourier Transform (FT).
+ If you consider that 
+\begin_inset Formula $n=\sqrt{1-l^{2}-m^{2}}$
+\end_inset
+
+, then for sufficiently small fields of view 
+\begin_inset Formula $n\rightarrow1,$
+\end_inset
+
+ and the integral does become an FT.
+ In the case of coplanar arrays such as the WSRT, we may choose a coordinate
+ system such that 
+\begin_inset Formula $w_{pq}\equiv0$
+\end_inset
+
+, and then the FT relationshop holds regardless of 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ This rather fortunate fact is what has made radiointerferometry possible
+ over the decades!
+\end_layout
+
+\begin_layout Standard
+This is effectively the van Cittert-Zernike theorem (...), which the ME papers
+ invoke when referring to the 
+\emph on
+coherency matrix
+\emph default
+ (eq.
+ 
+\begin_inset LatexCommand \ref{eq:hamaker-me}
+
+\end_inset
+
+).
+ What we have shown here is that the FT relationship need not be treated
+ as something extrinsic to the ME, but rather as a 
+\emph on
+natural consequence
+\emph default
+ of the ME.
+ This will become important when we consider image-plane effects.
+\end_layout
+
+\begin_layout Subsection
+Image-plane effects
+\end_layout
+
+\begin_layout Standard
+The ME papers explicitly assume that all signal propagation effects are
+ constant over the field of view.
+ Effects that do vary over the field of view (i.e.
+ the 
+\emph on
+image
+\emph default
+) are called 
+\emph on
+image-plane
+\emph default
+ effects.
+ Image-plane effects become important at, e.g., low frequencies (because of
+ the variable ionospheric phase screen), and/or with wide fields of view,
+ and can no longer be disregarded with new and future instruments.
+ Let us examine them in the context of the ME.
+\end_layout
+
+\begin_layout Standard
+
 \end_layout
 
 \begin_layout Section
