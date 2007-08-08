@@ -1,4 +1,4 @@
-#LyX 1.4.3 created this file. For more info see http://www.lyx.org/
+#LyX 1.4.4 created this file. For more info see http://www.lyx.org/
 \lyxformat 245
 \begin_document
 \begin_header
@@ -30,7 +30,8 @@
 \begin_body
 
 \begin_layout Title
-The Generalized Measurement Equation Of a Radio Interferometer Array
+Generalizing The Measurement Equation Of A Radio Interferometer: Image-plane
+ Effects, Mutual Coupling, and Receptor Arrays
 \end_layout
 
 \begin_layout Author
@@ -58,8 +59,8 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-The Measurement Equation (ME), or the interferometer equation, was developed
- in Hamaker () (collectively referred to as the 
+The Measurement Equation, originally known as the interferometer equation,
+ was developed in Hamaker (...) (collectively referred to as the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -67,7 +68,7 @@ ME Papers
 \begin_inset Quotes erd
 \end_inset
 
- from here on.) The latter of these presents it in its most elegant form,
+ from here on.) Paper IV of the series presents it in its most elegant form,
  that of a matrix equation:
 \begin_inset Foot
 status open
@@ -104,7 +105,7 @@ V
 \emph on
 visibility
 \emph default
-) gives the response of the interferometer composed of antennas 
+) gives the response of the interferometer composed of stations 
 \begin_inset Formula $p$
 \end_inset
 
@@ -131,7 +132,7 @@ J
 \emph on
 Jones matrices
 \emph default
-) represent the signal propagation effects associated with each antenna.
+) represent the signal propagation effects associated with each station.
  We will refer to this equation as the 
 \begin_inset Quotes eld
 \end_inset
@@ -179,12 +180,12 @@ V
 
 \begin_layout Standard
 Note that the ME papers do not deal with instrumental effects that vary
- across the field of view (
+ across the field of view (also called 
 \emph on
 image-plane
 \emph default
- effects); this issue is becoming important in current observations, and
- will be discussed in this paper.
+ effects); this issue is assuming vital importantce in current observations,
+ and will be discussed in this paper.
  Even so, the matrix ME formalism has facilitated breakthroughs in all three
  pursuits, since it can describe the entire instrument and observation in
  a closed form.
@@ -245,7 +246,7 @@ leaves
 The binary assumption.
 
 \series default
- An antenna is composed of two receptors, which we'll call 
+ A station is composed of two receptors, which we'll call 
 \begin_inset Formula $X$
 \end_inset
 
@@ -255,7 +256,7 @@ The binary assumption.
 
  (e.g.
  two dipoles, or two circular receptors, or perhaps even a mix of the two.)
- Note that single-receptor antennas can be trivially made to fit this assumption
+ Note that single-receptor stations can be trivially made to fit this assumption
  by attributing a gain of 0 (see below) to the 
 \begin_inset Quotes eld
 \end_inset
@@ -266,7 +267,7 @@ missing
 
  receptor.
  New instrument designs such as Aperture Arrays (AA's) and Focal Plane Arrays
- (FPA's) have many receptors.
+ (FPA's) will have many receptors per station.
 \end_layout
 
 \begin_layout Standard
@@ -308,9 +309,9 @@ at a point sufficiently far away from us along the line of propagation.
 
  can be described by a complex 2-vector: 
 \begin_inset Formula \[
-\vec{e}=\left(\begin{array}{c}
-e_{x}\\
-e_{y}\end{array}\right),\]
+\vec{\varepsilon}=\left(\begin{array}{c}
+\varepsilon_{x}\\
+\varepsilon_{y}\end{array}\right),\]
 
 \end_inset
 
@@ -323,7 +324,7 @@ provided we fix an arbitrary cartesian basis with
 \begin_inset Formula $\vec{v}_{p}$
 \end_inset
 
- of the two receptors associated with antenna 
+ of the two receptors associated with station 
 \begin_inset Formula $p$
 \end_inset
 
@@ -333,7 +334,7 @@ provided we fix an arbitrary cartesian basis with
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\vec{v}_{p}=\mathbf{J}_{p}\vec{e},\label{eq:me-vvector}\end{equation}
+\vec{v}_{p}=\mathbf{J}_{p}\vec{\varepsilon},\label{eq:me-vvector}\end{equation}
 
 \end_inset
 
@@ -349,16 +350,18 @@ where
 \begin_inset Formula $2\times2$
 \end_inset
 
- complex-valued matrix, which we call a 
-\emph on
-Jones matrix
-\emph default
-.
- Note that for any linear transformation of 2-vectors, there exists a 
+ complex-valued matrix, since for any linear transformation of 2-vectors,
+ there exists a 
 \begin_inset Formula $2\times2$
 \end_inset
 
  matrix describing it.
+ We call this a 
+\emph on
+Jones matrix
+\emph default
+.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -370,7 +373,7 @@ The output of interferometer
 \emph on
 correlations
 \emph default
- between the voltages registered at antennas 
+ between the voltages registered at stations 
 \begin_inset Formula $p$
 \end_inset
 
@@ -383,7 +386,7 @@ correlations
 
 \begin_layout Standard
 \begin_inset Formula \[
-V_{xx}=\left\langle v_{px}\bar{v}_{qx}\right\rangle ,\: V_{xy}=\left\langle v_{px}\bar{v}_{qy}\right\rangle {,\; V}_{yx}=\left\langle v_{py}\bar{v}_{qx}\right\rangle {,\: V}_{yy}=\left\langle v_{py}\bar{v}_{qy}\right\rangle \]
+V_{xx}=\left\langle v_{px}\bar{v}_{qx}\right\rangle ,\quad V_{xy}=\left\langle v_{px}\bar{v}_{qy}\right\rangle ,\quad V_{yx}=\left\langle v_{py}\bar{v}_{qx}\right\rangle ,\quad V_{yy}=\left\langle v_{py}\bar{v}_{qy}\right\rangle \]
 
 \end_inset
 
@@ -395,7 +398,7 @@ V_{xx}=\left\langle v_{px}\bar{v}_{qx}\right\rangle ,\: V_{xy}=\left\langle v_{p
 \begin_inset Formula $\left\langle \cdot\right\rangle $
 \end_inset
 
- operation represents time averaging.) If we arrange these products into
+ operation represents time averaging.) We can arrange these products into
  a 
 \begin_inset Formula $2\times2$
 \end_inset
@@ -404,7 +407,7 @@ V_{xx}=\left\langle v_{px}\bar{v}_{qx}\right\rangle ,\: V_{xy}=\left\langle v_{p
 \begin_inset Formula $\mathbf{V}_{pq}$
 \end_inset
 
-, we can see that it can be represented via a matrix product of 
+ that is a matrix product of 
 \begin_inset Formula $\vec{v}_{p}$
 \end_inset
 
@@ -420,8 +423,8 @@ V_{xx}=\left\langle v_{px}\bar{v}_{qx}\right\rangle ,\: V_{xy}=\left\langle v_{p
 \mathbf{V}_{pq}=\left(\begin{array}{cc}
 \left\langle v_{px}\bar{v}_{qx}\right\rangle  & \left\langle v_{px}\bar{v}_{qy}\right\rangle \\
 \left\langle v_{px}\bar{v}_{qy}\right\rangle  & \left\langle v_{py}\bar{v}_{qy}\right\rangle \end{array}\right)=\left\langle \left(\begin{array}{c}
-e_{px}\\
-e_{py}\end{array}\right)(\bar{e}_{qx}\,\bar{e}_{qy})\right\rangle =\left\langle \vec{e_{p}}\vec{e}_{q}^{*}\right\rangle \label{eq:hamaker-coherency}\end{equation}
+v_{px}\\
+v_{py}\end{array}\right)(\bar{v}_{qx}\,\bar{v}_{qy})\right\rangle =\left\langle \vec{v_{p}}\vec{v}_{q}^{*}\right\rangle \label{eq:hamaker-coherency}\end{equation}
 
 \end_inset
 
@@ -438,7 +441,23 @@ We shall henceforth use
 \end_inset
 
 .
- 
+ This is sometimes called the 
+\begin_inset Quotes eld
+\end_inset
+
+Hermitian transpose
+\begin_inset Quotes erd
+\end_inset
+
+, or the 
+\begin_inset Quotes eld
+\end_inset
+
+adjoint matrix
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -453,7 +472,7 @@ Now, substituting in eq.
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\mathbf{V}_{pq}=\left\langle \mathbf{J}_{p}\vec{e}(\mathbf{J}_{q}\vec{e})^{*}\right\rangle \simeq\mathbf{J}_{p}\left\langle \vec{e}\vec{e}^{*}\right\rangle \mathbf{J}_{q}^{*}\label{eq:me-ps-approx}\end{equation}
+\mathbf{V}_{pq}=\left\langle \mathbf{J}_{p}\vec{\varepsilon}(\mathbf{J}_{q}\vec{\varepsilon})^{*}\right\rangle \simeq\mathbf{J}_{p}\left\langle \vec{\varepsilon}\vec{\varepsilon}^{*}\right\rangle \mathbf{J}_{q}^{*}\label{eq:me-ps-approx}\end{equation}
 
 \end_inset
 
@@ -475,10 +494,10 @@ self-coherency
 \noun off
 \color none
 
-\begin_inset Formula $\left\langle \vec{e}\vec{e}^{*}\right\rangle $
+\begin_inset Formula $\left\langle \vec{\varepsilon}\vec{\varepsilon}^{*}\right\rangle $
 \end_inset
 
-, which we also call the 
+, which we shall call the 
 \family default
 \series default
 \shape default
@@ -486,7 +505,6 @@ self-coherency
 \emph on
 \bar default
 \noun default
-\color default
 brightness matrix
 \family roman
 \series medium
@@ -495,7 +513,6 @@ brightness matrix
 \emph off
 \bar no
 \noun off
-\color none
 , since it can be expressed in terms of the Stokes brightness parameters:
 \begin_inset Foot
 status open
@@ -550,17 +567,17 @@ The
 \emph on
 Jones matrix
 \emph default
- of antenna 
+ of station 
 \begin_inset Formula $p$
 \end_inset
 
 .
- It represents all effects in the signal path of antenna 
+ It represents all effects in the signal path of station 
 \begin_inset Formula $p$
 \end_inset
 
- (including those between the source and the antenna).
- This gives us the abstract form of the matrix ME, for a single point source:
+ (including those between the source and the station).
+ This gives us the general form of the matrix ME for a single point source:
 \end_layout
 
 \begin_layout Standard
@@ -728,7 +745,7 @@ F
 \emph on
 Jones chain
 \emph default
- for antenna 
+ for station 
 \begin_inset Formula $p$
 \end_inset
 
@@ -791,11 +808,17 @@ A decomposition like eq.
 \begin_inset Quotes eld
 \end_inset
 
+
+\series bold
+\emph on
 a
+\series default
+\emph default
+ measurement equation
 \begin_inset Quotes erd
 \end_inset
 
- measurement equation, as opposed to 
+, as opposed to 
 \begin_inset Quotes eld
 \end_inset
 
@@ -835,7 +858,7 @@ The vital assumption underlying any decomposition similar to eq.
 
  is that 
 \emph on
-each antenna is a closed system
+each station is a closed system
 \emph default
 .
  That is, we're assuming that the receptor voltages 
@@ -850,8 +873,8 @@ seen
 \begin_inset Quotes erd
 \end_inset
 
- by the antenna, 
-\begin_inset Formula $\vec{e}_{p}$
+ by the station, 
+\begin_inset Formula $\vec{\varepsilon}_{p}$
 \end_inset
 
 .
@@ -859,41 +882,41 @@ seen
 \begin_inset Quotes eld
 \end_inset
 
-sky
+source
 \begin_inset Quotes erd
 \end_inset
 
  
-\begin_inset Formula $\vec{e}$
+\begin_inset Formula $\vec{\varepsilon}$
 \end_inset
 
  to 
-\begin_inset Formula $\vec{e}_{p}$
+\begin_inset Formula $\vec{\varepsilon}_{p}$
 \end_inset
 
- can be described by a product of Jones matrices associated with antenna
+ can be described by a product of Jones matrices associated with station
  
 \begin_inset Formula $p$
 \end_inset
 
- (or to be more precise, with the antenna's line of sight), as can conversion
+ (or to be more precise, with the station's line of sight), as can conversion
  from EM field to voltages, it follows that the whole transformation from
  
-\begin_inset Formula $\vec{e}$
+\begin_inset Formula $\vec{\varepsilon}$
 \end_inset
 
  to 
 \begin_inset Formula $\vec{v}_{p}$
 \end_inset
 
- can be represented by a per-antenna Jones chain.
+ can be represented by a per-station Jones chain.
 \end_layout
 
 \begin_layout Standard
 Consider the effect of electrical cross-talk, or mutual coupling in a densely-pa
 cked array.
- If cross-talk or coupling is restricted to the two receptors within an
- antenna, we call the antenna a 
+ If cross-talk or coupling is restricted to the two receptors within a station,
+ we call the station a 
 \emph on
 closed system
 \emph default
@@ -904,22 +927,22 @@ closed system
 \begin_layout Standard
 If, however, cross-talk occurs 
 \emph on
-between receptors associated with different antennas
+between receptors associated with different stations
 \emph default
 , the receptor voltages 
 \begin_inset Formula $\vec{v}_{p}$
 \end_inset
 
  will not only depend on 
-\begin_inset Formula $\vec{e}_{p}$
+\begin_inset Formula $\vec{\varepsilon}_{p}$
 \end_inset
 
 , but also on 
-\begin_inset Formula $\vec{e}_{q}$
+\begin_inset Formula $\vec{\varepsilon}_{q}$
 \end_inset
 
 , 
-\begin_inset Formula $\vec{e}_{r}$
+\begin_inset Formula $\vec{\varepsilon}_{r}$
 \end_inset
 
 , etc.
@@ -935,7 +958,7 @@ physical
 \begin_inset Quotes erd
 \end_inset
 
- terms associated only with antenna 
+ terms associated only with station 
 \begin_inset Formula $p$
 \end_inset
 
@@ -947,7 +970,7 @@ mixes in
 \begin_inset Quotes erd
 \end_inset
 
- propagation effects associated with the other antennas!
+ propagation effects associated with the other stations!
 \end_layout
 
 \begin_layout Standard
@@ -972,18 +995,18 @@ source
 \end_inset
 
  EM field.
- However, we can only decompose 
+ However, we may only decompose 
 \begin_inset Formula $\mathbf{J}_{p}$
 \end_inset
 
- into per-antenna terms, as in eq.
+ into per-station terms, as in eq.
  
 \begin_inset LatexCommand \eqref{eq:me}
 
 \end_inset
 
-, if we assume that each antenna forms a closed system, with no cross-talk
- or coupling with the other antennas.
+, if we assume that each station forms a closed system, with no cross-talk
+ or coupling with the other stations.
 \end_layout
 
 \begin_layout Standard
@@ -996,7 +1019,8 @@ status open
 \begin_layout Standard
 In fact, even existing instruments may have this problem, if cross-talk
  occurs in, or on the way to, the correlator.
- It remains to be seen whether this can be reliably detected.
+ It remains to be seen whether this effect can be detected in existing observati
+ons.
 \end_layout
 
 \end_inset
@@ -1027,8 +1051,8 @@ Real skies are never a single point source, but rather a brightness distribution
 \end_layout
 
 \begin_layout Standard
-The EM field measured at each antenna, 
-\begin_inset Formula $\vec{e}_{p},$
+The EM field measured at each station, 
+\begin_inset Formula $\vec{\varepsilon}_{p},$
 \end_inset
 
  is a sum of all fields arriving from all possible directions, along all
@@ -1036,12 +1060,12 @@ The EM field measured at each antenna,
  In the context of the ME, this means that voltages and visibilities must
  be computed via integration over a sphere.
  Obviously, propagation effects such as beam gain depend on direction, therefore
- Jones matrices must be a function of direction as well:
+ our Jones matrices must be a function of direction as well:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \[
-\vec{v}_{p}={\displaystyle \intop_{\textrm{sky}}}\mathbf{J}_{p}(\vec{\sigma})\vec{e}(\vec{\sigma})d\sigma,\]
+\vec{v}_{p}={\displaystyle \intop_{\textrm{sky}}}\mathbf{J}_{p}(\vec{\sigma})\vec{\varepsilon}(\vec{\sigma})d\sigma,\]
 
 \end_inset
 
@@ -1068,15 +1092,15 @@ Geometry and phase
 
 \begin_layout Standard
 In the absense of all other instrumental effects, the signal arriving at
- each antenna incurs a phase delay that depends on direction and antenna
+ each station incurs a phase delay that depends on direction and station
  location.
- Following Cotton (), the phase difference between two antennas is given
+ Following Cotton (), the phase difference between two stations is given
  by:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \[
-\phi_{pq}=u_{pq}l+v_{pq}m+w_{pq}n,\]
+\phi_{pq}=u_{pq}l+v_{pq}m+w_{pq}(n-1),\]
 
 \end_inset
 
@@ -1088,7 +1112,7 @@ where
 \emph on
 baseline
 \emph default
- vector from antenna 
+ vector from station 
 \begin_inset Formula $q$
 \end_inset
 
@@ -1106,9 +1130,14 @@ baseline
 
  relative to a designated 
 \emph on
-phase center
+phase center.
+ 
 \emph default
-.
+Note that 
+\begin_inset Formula $n=\sqrt{1-l^{2}-m^{2}}.$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1117,7 +1146,7 @@ If we pick an arbitrary reference point
 \end_inset
 
 , it is easy to see that each phase difference can be decomposed into two
- per-antenna phase terms computed relative to 
+ per-station phase terms computed relative to 
 \begin_inset Formula $O$
 \end_inset
 
@@ -1126,7 +1155,7 @@ If we pick an arbitrary reference point
 
 \begin_layout Standard
 \begin_inset Formula \[
-\phi_{pq}=\phi_{p}-\phi_{q},\;\phi_{p}=u_{p}l+v_{p}m+w_{p}n\]
+\phi_{pq}=\phi_{p}-\phi_{q},\;\phi_{p}=u_{p}l+v_{p}m+w_{p}(n-1)\]
 
 \end_inset
 
@@ -1138,10 +1167,10 @@ The choice of
 \begin_inset Formula $O$
 \end_inset
 
- affects the per-antenna phase terms, but not the phase difference.
+ affects the per-station phase terms, but not the phase difference.
  Recall that an interferometer only measures phase difference (as is apparent
  from the ME itself).
- We can therefore simply say that each antenna incurs a phase delay, 
+ We can therefore simply say that each station incurs a phase delay, 
 \begin_inset Formula $\phi_{p}$
 \end_inset
 
@@ -1163,7 +1192,7 @@ In effect, phase delay multiplies each component of the EM field vector
 \begin_inset Formula \[
 K_{p}=\left(\begin{array}{cc}
 \kappa_{p} & 0\\
-0 & \kappa_{p}\end{array}\right)\equiv e^{-\imath(u_{p}l+v_{p}m+w_{p}n)}.\]
+0 & \kappa_{p}\end{array}\right)\equiv e^{-\imath(u_{p}l+v_{p}m+w_{p}(n-1))}.\]
 
 \end_inset
 
@@ -1176,8 +1205,8 @@ A diagonal matrix with the same element on the diagonal is called a
 scalar matrix.
 
 \emph default
- One useful property of scalar matrices is that they commute with any matrix;
- in effect they are indistinguishable from scalars.
+ One useful property of scalar matrices is that they commute with any other
+ matrix; in effect they are mathematically indistinguishable from scalars.
  We designate 
 \begin_inset Formula $K$
 \end_inset
@@ -1195,7 +1224,7 @@ Incorporating phase delay into the ME, and commuting the
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\mathbf{V}_{pq}=K_{p}\mathbf{B}K_{q}=\mathbf{B}{(K}_{p}K_{q})={\mathbf{B}e}^{-\imath(u_{pq}l+v_{pq}m+w_{pq}n)},\label{eq:visib-ps}\end{equation}
+\mathbf{V}_{pq}=K_{p}\mathbf{B}K_{q}=\mathbf{B}{(K}_{p}K_{q})={\mathbf{B}e}^{-\imath(u_{pq}l+v_{pq}m+w_{pq}(n-1))},\label{eq:visib-ps}\end{equation}
 
 \end_inset
 
@@ -1209,6 +1238,11 @@ which is just the familiar expression for the complex visibility of a point
 
 \begin_layout Subsection
 Deriving the Fourier Transform
+\begin_inset LatexCommand \label{sec:FT}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1241,7 +1275,7 @@ bottom hemisphere
 \begin_inset Quotes erd
 \end_inset
 
-, since our field of view is limited by the antenna beam and the horizon.
+, since our field of view is limited by the station beam and the horizon.
  The integration volume 
 \begin_inset Formula $d\sigma$
 \end_inset
@@ -1250,12 +1284,32 @@ bottom hemisphere
 \begin_inset Formula $d\sigma=dldm/n$
 \end_inset
 
-, so we get:
+, so we have to put in an extra projection term of 
+\begin_inset Formula $1/n$
+\end_inset
+
+ (another way to look at this is that 
+\series bold
+B
+\series default
+ is a brightness 
+\emph on
+density distribution
+\emph default
+ which the sine projection 
+\emph on
+compresses
+\emph default
+ towards the edges of the map by a factor of 
+\begin_inset Formula $1/n$
+\end_inset
+
+):
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \[
-\mathbf{V}_{pq}=\underset{{\scriptstyle lm}}{\iint}\frac{1}{n}\mathbf{B}(l,m)e^{-\imath(u_{pq}l+v_{pq}m+w_{pq}n)}dldm.\]
+\mathbf{V}_{pq}=\underset{{\scriptstyle lm}}{\iint}\frac{1}{n}\mathbf{B}(l,m)e^{-\imath(u_{pq}l+v_{pq}m+w_{pq}(n-1))}dldm.\]
 
 \end_inset
 
@@ -1264,31 +1318,32 @@ bottom hemisphere
 
 \begin_layout Standard
 This almost looks like a 2D Fourier Transform (FT).
- If you consider that 
-\begin_inset Formula $n=\sqrt{1-l^{2}-m^{2}}$
-\end_inset
-
-, then for sufficiently small fields of view 
-\begin_inset Formula $n\rightarrow1,$
-\end_inset
-
- and the integral does become an FT.
  In the case of coplanar arrays such as the WSRT, we may choose a coordinate
  system such that 
 \begin_inset Formula $w_{pq}\equiv0$
 \end_inset
 
-, and then the FT relationshop holds regardless of 
-\begin_inset Formula $n$
+, and then the integral becomes a true FT.
+ Even with non-coplanar arrays, if we assume a sufficiently small field
+ of view (that is, 
+\begin_inset Formula $B\neq0$
 \end_inset
 
-.
+ only within a sufficently small region around 
+\begin_inset Formula $l=m=0)$
+\end_inset
+
+, then 
+\begin_inset Formula $n=\sqrt{1-l^{2}-m^{2}}\rightarrow1$
+\end_inset
+
+, and the integral again becomes a true FT.
  This rather fortunate fact is what has made radiointerferometry possible
- over the decades!
+ over the past decades!
 \end_layout
 
 \begin_layout Standard
-This is effectively the van Cittert-Zernike theorem (...), which the ME papers
+This is effectively the van Cittert-Zernike theorem (...), which the ME Papers
  invoke when referring to the 
 \emph on
 coherency matrix
@@ -1301,15 +1356,22 @@ coherency matrix
 
 ).
  What we have shown here is that the FT relationship need not be treated
- as something extrinsic to the ME, but rather as a 
+ as something extrinsic to the ME, but as a 
 \emph on
 natural consequence
 \emph default
  of the ME.
- This will become important when we consider image-plane effects.
+ Introducing the 
+\begin_inset Formula $K$
+\end_inset
+
+ term --- which corresponds to a very real physical effect, the geometric
+ phase delay, and therefore has every right to be considered a Jones matrix
+ in its own right --- makes the connection between the ME and the Fourier
+ Transform obvious.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Section
 Image-plane effects
 \end_layout
 
@@ -1317,23 +1379,608 @@ Image-plane effects
 The ME papers explicitly assume that all signal propagation effects are
  constant over the field of view.
  Effects that do vary over the field of view (i.e.
- the 
-\emph on
-image
-\emph default
-) are called 
+ the image) are called 
 \emph on
 image-plane
 \emph default
  effects.
  Image-plane effects become important at, e.g., low frequencies (because of
  the variable ionospheric phase screen), and/or with wide fields of view,
- and can no longer be disregarded with new and future instruments.
+ and can no longer be disregarded for new instruments.
  Let us examine them in the context of the ME.
 \end_layout
 
 \begin_layout Standard
+To begin with, observe that (under the closed system assumption discussed
+ earlier), the 
+\series bold
+J
+\series default
+ term of eq.
+ 
+\begin_inset LatexCommand \eqref{eq:me-sky-integral}
 
+\end_inset
+
+ can be decomposed into the following product:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{J}_{p}(\vec{\sigma})=\mathbf{Q}_{p}K_{p}(\vec{\sigma})\mathbf{R}_{p}(\vec{\sigma}),\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where the 
+\series bold
+Q
+\series default
+-Jones term represents effects that are constant over the field of view,
+ typically called 
+\emph on
+uv-plane effects
+\emph default
+ for reasons that will become apparent shortly.
+ The K-Jones is the geometric phase delay (which we can commute to any position
+ in the product), and the 
+\series bold
+R
+\series default
+-Jones represents image-plane effects.
+ Such a decomposition is always possible, if we also allow 
+\series bold
+Q
+\series default
+ and 
+\series bold
+R
+\series default
+ to become identity in trivial cases.
+ Note that in a typical signal path, uv-plane effects arise inside the station
+ (e.g.
+ receiver gain, polarization leakage), while image-plane effects arise 
+\begin_inset Quotes eld
+\end_inset
+
+in the sky
+\begin_inset Quotes erd
+\end_inset
+
+ (ionospheric phase delay) or at the antenna itself (beam gain), so this
+ ordering of terms often conforms to physical reality.
+\end_layout
+
+\begin_layout Standard
+If we then intergrate over 
+\begin_inset Formula $lm$
+\end_inset
+
+, and substitute in the 
+\emph on
+K
+\emph default
+ terms, the ME becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{V}_{pq}=\mathbf{Q}_{p}\left(\underset{{\scriptstyle lm}}{\iint}\frac{1}{n}\mathbf{R}_{p}(l,m)\mathbf{B}(l,m)\mathbf{R}_{q}^{*}(l,m)e^{-\imath(u_{pq}l+v_{pq}m+w_{pq}(n-1))}dldm\right)\mathbf{Q}_{q}^{*}.\label{eq:me-fullsky}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+The simple case of the uv-plane
+\begin_inset LatexCommand \label{sub:uv-plane}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As seen earlier, under the following two assumptions:
+\end_layout
+
+\begin_layout Enumerate
+image-plane effects are absent (
+\begin_inset Formula $\mathbf{R}{}_{p}\equiv1)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+the field of view is small (
+\begin_inset Formula $n\rightarrow1$
+\end_inset
+
+ where 
+\begin_inset Formula $\mathbf{B}\neq0)$
+\end_inset
+
+ and/or all stations lie in a plane (
+\begin_inset Formula $w\equiv0)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+...the integral in eq.
+ (
+\begin_inset LatexCommand \ref{eq:me-fullsky}
+
+\end_inset
+
+) becomes a two-dimensional Fourier Transform of 
+\series bold
+B
+\series default
+.
+ By itself, the integral can be considered a function of 
+\begin_inset Formula $u,v,$
+\end_inset
+
+ which we designate as 
+\begin_inset Formula $\mathbf{X}(u,v)$
+\end_inset
+
+.
+ 
+\begin_inset Formula $\mathbf{X}(u,v)$
+\end_inset
+
+ is the FT of 
+\begin_inset Formula $\mathbf{B}(l,m)$
+\end_inset
+
+.
+ The essense of radiointerferometry is that at a given point in time, each
+ interferometer 
+\begin_inset Formula $pq$
+\end_inset
+
+ samples 
+\series bold
+X
+\series default
+ at some specific 
+\begin_inset Formula $(u_{pq},v_{pq})$
+\end_inset
+
+ point corresponding to its baseline vector; an array of 
+\begin_inset Formula $N$
+\end_inset
+
+ stations simultaneously samples 
+\begin_inset Formula $N(N-1)/2$
+\end_inset
+
+ points.
+ As the Earth rotates, each baseline vector describes an elliptical arc
+ in the 
+\begin_inset Formula $uv$
+\end_inset
+
+ plane.
+ In this way an interferometer array can eventually sample 
+\series bold
+X
+\series default
+ at enough 
+\begin_inset Formula $uv$
+\end_inset
+
+ points to recover 
+\series bold
+B
+\series default
+ to a high degree of fidelity.
+ (Note that because 
+\series bold
+X
+\series default
+ is Hermitian, only half of the 
+\emph on
+uv
+\emph default
+-plane needs to be known.
+ Thus 12 hours of observation is always sufficient --- less if the baselines
+ are redundant.)
+\end_layout
+
+\begin_layout Standard
+The Q-Jones terms are multiplicative with respect to 
+\series bold
+X
+\series default
+, which is defined in the 
+\begin_inset Formula $uv$
+\end_inset
+
+-plane.
+ This is why they are called 
+\begin_inset Formula $uv$
+\end_inset
+
+-plane effects.
+ 
+\end_layout
+
+\begin_layout Standard
+We can relax the first assumption a bit, and allow image-plane effects that
+ are the same for all stations (
+\begin_inset Formula $\mathbf{R}_{p}\equiv\mathbf{R})$
+\end_inset
+
+, and are 
+\emph on
+constant in time
+\emph default
+.
+ We can then consider the interferometer to be observing an 
+\emph on
+apparent
+\emph default
+ 
+\emph on
+sky
+\emph default
+, 
+\begin_inset Formula $\mathbf{B}_{\textrm{app}}=\mathbf{RB}\mathbf{R}^{*}.$
+\end_inset
+
+ In fact, a real-life interferometer always includes at least one image-plane
+ effect --- the beam pattern of the station, commonly designated as E-Jones.
+ As long as the beam pattern is stable in time and (nearly) identical across
+ stations --- which is the case for a carefully-designed instrument ---
+ the interferometer array will sample an 
+\begin_inset Formula $\mathbf{X}(u,v)$
+\end_inset
+
+ that is an FT of the apparent sky 
+\begin_inset Formula $\mathbf{B_{\textrm{app}}=E}\mathbf{B}\mathbf{E}^{*}$
+\end_inset
+
+.
+ Note also that for a dish-type antenna, 
+\series bold
+E
+\series default
+ is significantly non-zero only within a limited field of view, which helps
+ to satisfy the 
+\begin_inset Formula $n\rightarrow1$
+\end_inset
+
+ assumption.
+ This is what we'll refer to as the 
+\begin_inset Quotes eld
+\end_inset
+
+classical regime
+\begin_inset Quotes erd
+\end_inset
+
+ of radiointerferometry.
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Formula $\mathbf{X}(u,v)$
+\end_inset
+
+ we introduced here is quite simply the 
+\begin_inset Quotes eld
+\end_inset
+
+coherency matrix
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\series bold
+X
+\series default
+, of eq.
+ (
+\begin_inset LatexCommand \eqref{eq:hamaker-me}
+
+\end_inset
+
+).
+ The ME Papers only focus on how the coherency is operated on by uv-plane
+ effects (the Q-Jones); one purpose of the present paper is to explore the
+ consequences of non-trivial image-plane effects (the R-Jones).
+ Since uv-plane effects have been thoroughly explored by the ME Papers,
+ we're going to disregard them from now on, and assume 
+\begin_inset Formula $\mathbf{Q}_{p}\equiv1$
+\end_inset
+
+ for all subsequent equations.
+\end_layout
+
+\begin_layout Subsection
+Time-constant image-plane effects
+\end_layout
+
+\begin_layout Standard
+Let us first keep the 
+\begin_inset Formula $n\rightarrow1$
+\end_inset
+
+ assumption, and consider image-plane effects that are constant in time,
+ but vary from station to station.
+ The ME then becomes (omitting uv-plane effects):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{V}_{pq}=\underset{{\scriptstyle lm}}{\iint}\mathbf{R}_{p}(l,m)\mathbf{B}(l,m)\mathbf{R}_{q}^{*}(l,m)e^{-\imath(u_{pq}l+v_{pq}m)}dldm.\label{eq:me-imageonly}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The integral is still an FT, but there's no longer a single apparent sky.
+ Instead, each interferometer sees 
+\emph on
+its own
+\emph default
+ 
+\emph on
+apparent coherency
+\emph default
+, 
+\begin_inset Formula $\mathbf{X}_{pq}$
+\end_inset
+
+, that is an FT of 
+\emph on
+its own
+\emph default
+ apparent sky, 
+\begin_inset Formula $\mathbf{B}_{pq}=\mathbf{R}_{p}^{}\mathbf{B}\mathbf{R}_{q}^{*}$
+\end_inset
+
+.
+ Over time, each baseline vector 
+\begin_inset Formula $(u_{pq},v_{pq})$
+\end_inset
+
+ rotates through the 
+\begin_inset Formula $uv$
+\end_inset
+
+-plane, providing us with samples of different 
+\begin_inset Formula $\mathbf{X}_{pq}$
+\end_inset
+
+'s, each along its own single track through 
+\begin_inset Formula $uv$
+\end_inset
+
+ space.
+\end_layout
+
+\begin_layout Standard
+This is a major problem, for two reasons:
+\end_layout
+
+\begin_layout Itemize
+Operationally, both simulation and calibration require a numeric model that
+ can compute 
+\series bold
+X
+\series default
+ from 
+\series bold
+B
+\series default
+.
+ In the classical regime, this involves a single Fourier Transform of the
+ apparent sky.
+ In order to represent image-plane effects, the same approach would incur
+ a separate FT for each interferometer 
+\begin_inset Formula $pq$
+\end_inset
+
+, which (given the large number of stations in modern and future instruments)
+ quickly becomes computationally prohibitive.
+ Clearly, some computational shortcuts are needed --- and some have already
+ been proposed (see below).
+\end_layout
+
+\begin_layout Itemize
+In the classical regime, we sample a single coherency distribution 
+\begin_inset Formula $\mathbf{X}(u,v)$
+\end_inset
+
+ at a large and well-spread number of points.
+ The imaging process (recovering 
+\begin_inset Formula $\mathbf{B}_{\textrm{app}}$
+\end_inset
+
+ from 
+\series bold
+X
+\series default
+) is then the relatively simple matter of an inverse FT.
+ In the presense of non-trivial image-plane effects, an interferometer array
+ samples multiple 
+\begin_inset Formula $\mathbf{X}_{pq}$
+\end_inset
+
+ distributions, each only along a single arc.
+ This makes the imaging step rather more difficult!
+\end_layout
+
+\begin_layout Subsection
+Time-variable image-plane effects
+\end_layout
+
+\begin_layout Standard
+If image-plane effects are variable in time, the situation gets even more
+ difficult.
+ Eq.
+ 
+\begin_inset LatexCommand \eqref{eq:me-imageonly}
+
+\end_inset
+
+ still applies, but each interferometer's apparent sky becomes a function
+ of time, 
+\begin_inset Formula $\mathbf{B}_{pq}(t)$
+\end_inset
+
+.
+ This means that the apparent coherency 
+\begin_inset Formula $\mathbf{X}_{pq}(t)$
+\end_inset
+
+ is also a function of time! Recall that the sampling proceeds along a single
+ 
+\begin_inset Formula $uv$
+\end_inset
+
+-track given by 
+\begin_inset Formula $(u_{pq}(t),v_{pq}(t))$
+\end_inset
+
+; an interferometer relies on the Earth to rotate it through an arc in the
+ 
+\begin_inset Formula $uv$
+\end_inset
+
+-plane, which happens on the timescale of hours.
+ If image-plane effects vary on shorter time scales, then the apparent coherency
+ 
+\begin_inset Formula $\mathbf{X}_{pq}$
+\end_inset
+
+ keeps changing as the interferometer tries to sample it.
+ The problems described in the previous section then become even more severe.
+\end_layout
+
+\begin_layout Subsection
+The 
+\begin_inset Formula $n$
+\end_inset
+
+ term as an image-plane effect
+\end_layout
+
+\begin_layout Standard
+Up to now we've been assuming small fields of view, that is 
+\begin_inset Formula $n\rightarrow1.$
+\end_inset
+
+ We can now drop the assumption.
+ Let us define an 
+\begin_inset Quotes eld
+\end_inset
+
+N-Jones
+\begin_inset Quotes erd
+\end_inset
+
+ term as 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+N_{p}(l,m)=\frac{1}{\sqrt{n}}e^{-\imath w_{p}(n-1)}\quad(n=\sqrt{1-l^{2}-m^{2}})\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is a legitimate Jones matrix (a scalar one), and it does correspond
+ to the quite real physical effect of the 
+\begin_inset Quotes eld
+\end_inset
+
+extra
+\begin_inset Quotes erd
+\end_inset
+
+ phase delay introduced by the 
+\begin_inset Formula $w$
+\end_inset
+
+ component of the baseline vector.
+\end_layout
+
+\begin_layout Standard
+Eq.
+ (
+\begin_inset LatexCommand \ref{eq:me-fullsky}
+
+\end_inset
+
+) then becomes (assuming no image-plane effects, i.e.
+ 
+\begin_inset Formula $\mathbf{R}_{p}\equiv1$
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{V}_{pq}=\underset{{\scriptstyle lm}}{\iint}N_{p}(l,m)\mathbf{B}(l,m)N_{q}^{*}(l,m)e^{-\imath(u_{pq}l+v_{pq}m)}dldm.\label{eq:me-n-term}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Comparing this to eq.
+ 
+\begin_inset LatexCommand \eqref{eq:me-imageonly}
+
+\end_inset
+
+, we see that 
+\emph on
+N
+\emph default
+ can be considered as just another per-station image-plane effect, one that
+ is variable in time.
+ This clearly shows that the wide-field problem (
+\begin_inset Formula $n\ne1)$
+\end_inset
+
+ is just an instance of the general mage-plane effect problem; a solution
+ that works for the latter will also work for the former.
+\end_layout
+
+\begin_layout Subsection
+Possible solutions
+\end_layout
+
+\begin_layout Standard
+As seen above, a direct extension of the 
+\begin_inset Quotes eld
+\end_inset
+
+classical approach
+\begin_inset Quotes erd
+\end_inset
+
+ to image-plane effects is computationally prohibitive.
+ 
 \end_layout
 
 \begin_layout Section
@@ -1370,7 +2017,7 @@ Let's assume an arbitrary set of
 
  receptors (e.g.
  dipoles) in arbitrary orientations.
- The voltage response 
+ Assuming a single point source at first, the voltage response 
 \begin_inset Formula $v_{p}$
 \end_inset
 
@@ -1396,8 +2043,7 @@ source
 \series bold
 column
 \series default
- vector).
- Assuming a single point source: 
+ vector): 
 \end_layout
 
 \begin_layout Standard
@@ -1436,15 +2082,15 @@ and the
 \end_inset
 
  correlation matrix 
-\begin_inset Formula $\mathbf{X}$
+\begin_inset Formula $\mathbf{V}$
 \end_inset
 
- is (ignoring smearing):
+ becomes (ignoring smearing):
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \[
-\mathbf{X}=\left\langle \bar{v}\bar{v}^{*}\right\rangle =\left(\begin{array}{cc}
+\mathbf{V}=\left\langle \bar{v}\bar{v}^{*}\right\rangle =\left(\begin{array}{cc}
 j_{x,1} & j_{y,1}\\
 \vdots & \vdots\\
 j_{x,n} & j_{y,n}\end{array}\right)\mathbf{B}\left(\begin{array}{ccc}
@@ -1465,15 +2111,7 @@ The
 \begin_inset Formula $\mathcal{J}$
 \end_inset
 
- matrix is sort of like a 
-\begin_inset Quotes eld
-\end_inset
-
-Jones
-\begin_inset Quotes erd
-\end_inset
-
- matrix for the entire array.
+ matrix is a Jones-like matrix for the entire array.
  In fact, for any given receptor pair, this equation is equivalent to the
  matrix ME of eq.
  (
@@ -1485,7 +2123,7 @@ Jones
 \end_layout
 
 \begin_layout Standard
-The problem is, we cannot derive the 
+The problem is that we cannot derive the 
 \begin_inset Formula $\mathcal{J}$
 \end_inset
 
@@ -1498,16 +2136,16 @@ physical
 \end_inset
 
  terms that we can understand.
- If we ignore image-plane effects (apart from the beam response) for the
- time being, then one possible decomposition is as follows:
+ If we consider no other image-plane effects apart from beam response for
+ the time being, then one possible decomposition is as follows:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\vec{v}=\left(\begin{array}{ccc}
-d_{11} & \ldots & d_{1n}\\
+\vec{v}=\mathbf{QKE}\vec{\varepsilon}=\left(\begin{array}{ccc}
+q_{11} & \ldots & q_{1n}\\
  & \ddots\\
-d_{n1} & \ldots & d_{nn}\end{array}\right)\left(\begin{array}{ccc}
+q_{n1} & \ldots & q_{nn}\end{array}\right)\left(\begin{array}{ccc}
 \kappa_{1} & 0 & 0\\
 0 & \ddots & 0\\
 0 & 0 & \kappa_{n}\end{array}\right)\left(\begin{array}{cc}
@@ -1526,7 +2164,7 @@ and the full ME then becomes:
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\mathbf{X}=\mathbf{DKEBE^{*}K^{*}D^{*}}\label{eq:array-me}\end{equation}
+\mathbf{V}=\mathbf{QKEBE^{*}K^{*}Q^{*}}\label{eq:array-me}\end{equation}
 
 \end_inset
 
@@ -1539,9 +2177,13 @@ The
 \end_inset
 
  
+\series bold
+
 \begin_inset Formula $\mathbf{E}$
 \end_inset
 
+
+\series default
  matrix gives us the beam responce, the 
 \begin_inset Formula $n\times n$
 \end_inset
@@ -1550,21 +2192,30 @@ The
 \begin_inset Formula $\mathbf{K}$
 \end_inset
 
- matrix gives us the phase terms, and the 
+ matrix gives us the individual phase terms (different for every receptor),
+ and the 
 \begin_inset Formula $n\times n$
 \end_inset
 
  
-\begin_inset Formula $\mathbf{D}$
+\series bold
+
+\begin_inset Formula $\mathbf{Q}$
 \end_inset
 
+
+\series default
  matrix gives us the cross-talk a.k.a.
- mutual coupling between the receptors (the actual receiver gains can be
- rolled into the 
-\begin_inset Formula $\mathbf{D}$
+ mutual coupling between the receptors (receiver gains can be rolled into
+ the 
+\begin_inset Formula $\mathbf{Q}$
 \end_inset
 
- matrix, or split out into a diagonal matrix of their own).
+ matrix, or split out into an 
+\begin_inset Formula $n\times n$
+\end_inset
+
+ diagonal matrix of their own).
 \end_layout
 
 \begin_layout Standard
@@ -1584,7 +2235,7 @@ closed
  system.
  In this case 
 \series bold
-D
+Q
 \series default
  becomes block-diagonal, 
 \series bold
@@ -1612,8 +2263,9 @@ Image-plane effects
 
 \begin_layout Standard
 This is where things get sticky.
- If image plane effects do not vary over the array, then we can replace
- the 
+ If we assume that image plane effects do not vary over the array (i.e.
+ are the same along the different lines of sight towards the different receptors
+), then we can replace the 
 \begin_inset Formula $\vec{\varepsilon}$
 \end_inset
 
@@ -1631,52 +2283,111 @@ This is where things get sticky.
 Z
 \series default
  is a Jones matrix describing the image-plane effect.
- In equation (
+ We can 
+\begin_inset Quotes eld
+\end_inset
+
+roll up
+\begin_inset Quotes erd
+\end_inset
+
+ the 
+\begin_inset Formula $n\times2$
+\end_inset
+
+ 
+\series bold
+E
+\series default
+ matrix and the 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ 
+\series bold
+Z
+\series default
+ matrix into a single term: 
+\begin_inset Formula $\mathbf{R}=\mathbf{EZ}$
+\end_inset
+
+, which is an 
+\begin_inset Formula $n\times2$
+\end_inset
+
+ matrix describing both the beam response and image-plane effects.
+ In the spirit of section 
+\begin_inset LatexCommand \ref{sub:uv-plane}
+
+\end_inset
+
+, if we define an 
+\begin_inset Formula $N\times N$
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+apparent sky
+\begin_inset Quotes erd
+\end_inset
+
+ matrix as  
+\begin_inset Formula $\mathbf{B_{\textrm{app}}=R}\mathbf{B}\mathbf{R}^{*}$
+\end_inset
+
+, eq.
+ (
 \begin_inset LatexCommand \ref{eq:array-me}
 
 \end_inset
 
-), 
-\series bold
-B
-\series default
- is then replaced by 
-\begin_inset Formula $\mathbf{Z}\mathbf{B}\mathbf{Z}^{*}.$
+) becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{V}=\mathbf{QKB_{\textrm{app}}K^{*}Q^{*}}\label{eq:array-me-bapp}\end{equation}
+
 \end_inset
 
- Quite fortunately, for a focal plane array within a smallish dish, we can
- probably safely assume this is the case.
+
 \end_layout
 
 \begin_layout Standard
 If image-plane effects do vary across receptors, then a matrix formalism
- is no longer sufficient for equation (
-\begin_inset LatexCommand \ref{eq:array-me}
-
-\end_inset
-
-).
- This is because each receptor 
+ is no longer sufficient! This is because each receptor 
 \begin_inset Formula $p$
 \end_inset
 
- then has its own 
-\begin_inset Formula $\mathbf{Z}_{p}$
+ must somehow have its own 
+\begin_inset Formula $\mathbf{R}_{p}$
 \end_inset
 
- Jones matrix, so the image-plane term becomes a 
+ Jones matrix.
+ We need to describe signal propagation along 
+\begin_inset Formula $n$
+\end_inset
+
+ lines of sight, and each propagation effect needs a 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ matrix.
+ The image-plane term becomes a 
 \begin_inset Formula $p\times2\times2$
 \end_inset
 
- tensor!
+ tensor! 
 \end_layout
 
 \begin_layout Standard
 Another way to look at this conundrum is as follows.
- As long as every two dipoles are co-located and form a closed system (as
+ As long as each receptor pair is co-located and forms a closed system (as
  is the case for traditional interferometers), the voltage response of the
- two dipoles depends only on the EM field at the dipoles' location.
- The correlation between antennas 
+ receptor depends only on the EM field at its location.
+ The correlations between stations 
 \begin_inset Formula $p$
 \end_inset
 
@@ -1693,17 +2404,18 @@ Another way to look at this conundrum is as follows.
 \end_inset
 
 .
- This allows us to write an ME as in eq.
+ This allows us to write the ME in a matrix form, as in eq.
  
 \begin_inset LatexCommand \eqref{eq:me}
 
 \end_inset
 
 .
- In the presense of significant cross-talk between more than two dipoles,
- the voltage responce of each will now depend on the EM field at other locations.
+ In the presense of significant cross-talk between more than two receptors,
+ the voltage responce of each will now depend on the EM field at multiple
+ locations.
  In effect, the 
-\begin_inset Formula $\mathbf{D}$
+\begin_inset Formula $\mathbf{Q}$
 \end_inset
 
  term 
@@ -1715,26 +2427,40 @@ scrambles up
 \end_inset
 
  image plane effects between all receptor locations, so we can no longer
- use a matrix formalism! 
+ use a matrix formalism.
 \end_layout
 
-\begin_layout Subsubsection
-The short-term solution
+\begin_layout Subsection
+Implementation considerations
 \end_layout
 
 \begin_layout Standard
-In the short term, we can get around this as follows.
- Consider the 
-\begin_inset Formula $\mathbf{KEBE^{*}K^{*}}$
+Current work on aperture plane and focal plane arrays requires software
+ both for simulation and calibration of observed data.
+ At present, only two software packages explicitly implement measurement
+ equations: AIPS++ () and MeqTrees ().
+ The former employs a fixed form of the 
+\begin_inset Formula $2\times2$
 \end_inset
 
- part of eq.
- (
-\begin_inset LatexCommand \ref{eq:array-response}
+ matrix formalism, the latter takes a more general approach, allowing one
+ to build arbitrary matrix equations from scratch.
+\end_layout
 
+\begin_layout Standard
+In the short term, the general array case can be 
+\begin_inset Quotes eld
 \end_inset
 
-), and proceed as follows:
+shoehorned
+\begin_inset Quotes erd
+\end_inset
+
+ into a 
+\begin_inset Formula $2\times2$
+\end_inset
+
+ matrix formalism as follows:
 \end_layout
 
 \begin_layout Itemize
@@ -1743,7 +2469,7 @@ Pair up the receptors in some reasonable manner, and designate each pair
 \begin_inset Quotes eld
 \end_inset
 
-pseudoantenna
+pseudostation
 \begin_inset Quotes erd
 \end_inset
 
@@ -1758,12 +2484,12 @@ pseudoantenna
 
 \emph on
 Assume that the image-plane effect 
-\begin_inset Formula $\mathbf{Z}_{p}$
+\begin_inset Formula $\mathbf{R}_{p}$
 \end_inset
 
  is the same for both receptors in the pair
 \emph default
- (this is probably safe, provided the paired receptors are physically close.)
+ (this is valid as long as the paired receptors are physically close.)
 \end_layout
 
 \begin_layout Itemize
@@ -1775,16 +2501,16 @@ Now compute a series of
 \begin_inset Quotes eld
 \end_inset
 
-pseudoantennas
+pseudostations
 \begin_inset Quotes erd
 \end_inset
 
-, using the traditional form of the ME:
+, using the traditional matrix form of the ME:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\mathbf{V}_{pq}=\mathbf{G}_{p}\mathbf{E}_{p}\mathbf{Z}_{p}\mathbf{B}\mathbf{Z}_{q}^{*}\mathbf{K}_{q}^{*}\mathbf{E}_{q}^{*}\mathbf{G}_{q}^{*}\label{eq:pseudo-me}\end{equation}
+\mathbf{V}_{pq}=\mathbf{K}_{p}\mathbf{R}_{p}\mathbf{B}\mathbf{R}_{q}^{*}\mathbf{K}_{q}^{*}\label{eq:pseudo-me}\end{equation}
 
 \end_inset
 
@@ -1803,35 +2529,28 @@ The only difference w.r.t.
 \begin_inset Formula $\mathbf{K}_{p}$
 \end_inset
 
- is now a diagonal matrix, not a scalar (since the dipoles are not co-located).
- Since it doesn't commute, we have to put it in its proper physical place.
- Also, we've split out 
-\begin_inset Formula $\mathbf{Z}_{p}$
+ is now a diagonal matrix, not a scalar (since the receptors are close,
+ but not necessarily co-located).
+ This 
+\begin_inset Formula $\mathbf{K}_{p}$
 \end_inset
 
- into a separate Jones term.
+ term no longer commutes, so we have to put it in its proper physical place.
  
 \end_layout
 
 \begin_layout Standard
-Eq.
- (
-\begin_inset LatexCommand \ref{eq:pseudo-me}
-
+The remaining problem is to implement the cross-talk term 
+\series bold
+D
+\series default
+, which is an 
+\begin_inset Formula $n\times n$
 \end_inset
 
-) can be implemented in MeqTrees in the usual way, just like the traditional
- ME, with 
-\begin_inset Formula $n(n+1)/2$
-\end_inset
-
- per-baseline subtrees (
-\begin_inset Formula $n+1,$
-\end_inset
-
- since we need the autocorrelations as well).
- Then we need to implement a fairly straightforward node that collects the
- per-baseline correlation matrices 
+ matrix.
+ In MeqTrees, this can be done by implementing a fairly straightforward
+ node that collects the per-baseline correlation matrices 
 \begin_inset Formula $\mathbf{V}_{pq}$
 \end_inset
 
@@ -1840,15 +2559,15 @@ Eq.
 \end_inset
 
  (hermitian) matrix 
-\begin_inset Formula $\mathbf{X}'$
+\begin_inset Formula $V'$
 \end_inset
 
 .
  This can then be multiplied by 
-\begin_inset Formula $\mathbf{D}$
+\begin_inset Formula $\mathbf{Q}$
 \end_inset
 
- using the existing MatrixMultiply node.
+ using the existing MatrixMultiply operation.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1861,9 +2580,9 @@ To properly incorporate image-plane effects into equation (
 
 \end_inset
 
-), we need to go to tensor notation.
- This can perhaps lead to some new insights into the problem, so I'll explore
- it in the next section.
+), we need to use tensor notation.
+ This can perhaps lead to some new insights into the problem, so we'll explore
+ it in detail in the next section.
  
 \end_layout
 
@@ -2093,6 +2812,17 @@ A common convention is to use Greek letters for the summation indices, e.g.
 \end_layout
 
 \begin_layout Standard
+The power of Einstein notation is that it allows us to establish a few formal
+ rules for manipulating tensor expressions.
+ These rules let us reduce complex expressions to manageable forms.
+ Here are a few particularly useful rules:
+\end_layout
+
+\begin_layout Subsubsection
+Transposition
+\end_layout
+
+\begin_layout Standard
 Transposition, in tensor notation, simply swaps the upper and lower indices.
  
 \begin_inset Formula $[A^{t}]_{j}^{i}=A_{i}^{j}.$
@@ -2106,7 +2836,7 @@ real estate
 \begin_inset Quotes erd
 \end_inset
 
-, we'll write the conjugate transpose of 
+, we can write the conjugate transpose of 
 \begin_inset Formula $A_{j}^{i}$
 \end_inset
 
@@ -2117,13 +2847,17 @@ real estate
 
 \end_layout
 
+\begin_layout Subsubsection
+Commutation
+\end_layout
+
 \begin_layout Standard
-Finally, note that the terms in an Einstein summation 
+The terms in an Einstein summation 
 \series bold
-commute
+commute!
 \series default
-, since (to look at it another way) they simply represent scalars that make
- up one term in some complicated nested sum.
+ This is easy to see: each term represents a scalar, together they make
+ up one product in some complicated nested sum.
  For example, the matrix product 
 \begin_inset Formula $A_{k}^{i}B_{j}^{k}=C_{j}^{i}$
 \end_inset
@@ -2137,7 +2871,8 @@ commute
 \begin_inset Formula $B_{k}^{i}A_{j}^{k}\neq B_{j}^{k}A_{k}^{i}.$
 \end_inset
 
- Note how the relative position of the summation index changes.
+ Note how the relative position (upper vs.
+ lower) of the summation index changes.
  In one case we're summing over columns of 
 \begin_inset Formula $B$
 \end_inset
@@ -2156,6 +2891,52 @@ commute
 
 .
  
+\end_layout
+
+\begin_layout Subsubsection
+Index collapse
+\end_layout
+
+\begin_layout Standard
+Summation indices can be 
+\begin_inset Quotes eld
+\end_inset
+
+collapsed
+\begin_inset Quotes erd
+\end_inset
+
+ by isolating sub-products.
+ For example, the sum 
+\begin_inset Formula $A_{j}^{i}B_{k}^{j}C_{i}^{k}D^{k}$
+\end_inset
+
+ can be simplified by isolating the sub-product 
+\begin_inset Formula $E_{i}^{j}=B_{k}^{j}C_{i}^{k}D^{k}$
+\end_inset
+
+, thus becoming simply 
+\begin_inset Formula $A_{j}^{i}E_{i}^{j}.$
+\end_inset
+
+ The rule is that the subproduct must contain 
+\emph on
+all
+\emph default
+ occurences of a summation index.
+ It would be illegal to isolate the sub-product 
+\begin_inset Formula $F_{i}^{j}=B_{k}^{j}C_{i}^{k}$
+\end_inset
+
+, since the sum would formally become 
+\begin_inset Formula $A_{j}^{i}F_{i}^{j}D^{k}$
+\end_inset
+
+--- with an extra free index 
+\begin_inset Formula $k$
+\end_inset
+
+! 
 \end_layout
 
 \begin_layout Subsection
@@ -2186,7 +2967,7 @@ An EM field vector is a (1,0) tensor,
 \begin_inset Formula $p$
 \end_inset
 
- is not a tensor index here, but simply an antenna 
+ is not a tensor index here, but simply an station 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2195,7 +2976,7 @@ label
 \end_inset
 
 , so we hide it inside square brackets).
- The voltage response of antenna 
+ The voltage response of station 
 \begin_inset Formula $p$
 \end_inset
 
@@ -2204,7 +2985,7 @@ label
 
 \begin_layout Standard
 \begin_inset Formula \[
-[v_{p}]{}^{i}=[J_{p}]_{j}^{i}\varepsilon^{j}\]
+[v_{p}]{}^{i}=[J_{p}]_{\alpha}^{i}\varepsilon^{\alpha}\]
 
 \end_inset
 
@@ -2212,7 +2993,12 @@ label
 \end_layout
 
 \begin_layout Standard
-The source coherency matrix is a (1,1) tensor:
+Here 
+\begin_inset Formula $\alpha$
+\end_inset
+
+is a summation index.
+ The source coherency matrix is a (1,1) tensor:
 \end_layout
 
 \begin_layout Standard
@@ -2225,7 +3011,7 @@ B_{j}^{i}=\varepsilon^{i}\bar{\varepsilon_{j}}\]
 \end_layout
 
 \begin_layout Standard
-The correlation matrix for antenna pair 
+The correlation matrix for station pair 
 \begin_inset Formula $pq$
 \end_inset
 
@@ -2257,7 +3043,7 @@ which is exactly equation (
 \end_layout
 
 \begin_layout Standard
-Now, rememering that we can commute the terms:
+Now, rememering that we can commute the terms in an Einstein sum:
 \end_layout
 
 \begin_layout Standard
@@ -2311,8 +3097,8 @@ hiding
 \begin_inset Formula $q$
 \end_inset
 
- indices inside square brackets, since they don't take part in any tensor
- operations above.
+ station indices inside square brackets, since they don't take part in any
+ tensor operations above.
  Upon further consideration, this distinction proves to be completely artificial.
  We can treat them as 
 \emph on
@@ -2332,10 +3118,10 @@ free
 \begin_inset Formula $N$
 \end_inset
 
- is the number of antennas.
+ is the number of stations.
  All the correlation matrices, as a whole, will be represented by a (2,2)
  type tensor 
-\begin_inset Formula $X_{jp}^{iq},$
+\begin_inset Formula $V_{jp}^{iq},$
 \end_inset
 
  of size 
@@ -2353,7 +3139,7 @@ free
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-X_{jp}^{iq}=J_{\alpha p}^{i}B_{\beta}^{\alpha}\bar{J}_{j}^{\beta q}\label{eq:me0-tensor1}\end{equation}
+V_{jp}^{iq}=J_{\alpha p}^{i}B_{\beta}^{\alpha}\bar{J}_{j}^{\beta q}\label{eq:me0-tensor1}\end{equation}
 
 \end_inset
 
@@ -2366,10 +3152,7 @@ X_{jp}^{iq}=J_{\alpha p}^{i}B_{\beta}^{\alpha}\bar{J}_{j}^{\beta q}\label{eq:me0
 en masse
 \emph default
 .
-\end_layout
-
-\begin_layout Standard
-This may seem like just a 
+ This may seem like just a 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2383,11 +3166,11 @@ party trick
 
 \begin_layout Standard
 Note that the correlation tensor 
-\begin_inset Formula $X$
+\begin_inset Formula $V$
 \end_inset
 
  is hermitian, in the sense that 
-\begin_inset Formula $X_{jp}^{iq}=\bar{X}_{iq}^{jp}.$
+\begin_inset Formula $V_{jp}^{iq}=\bar{V}_{iq}^{jp}.$
 \end_inset
 
  This can be derived from eq.
@@ -2396,15 +3179,16 @@ Note that the correlation tensor
 
 \end_inset
 
-), by swapping the indices around (and knowing that 
+), by swapping the indices around, and making use of the fact that that
+ 
 \begin_inset Formula $B$
 \end_inset
 
- is hermitian.)
+ is hermitian.
 \end_layout
 
 \begin_layout Subsection
-The generalized ME, in tensor notation
+A generalized ME, in tensor notation
 \end_layout
 
 \begin_layout Standard
@@ -2421,7 +3205,8 @@ Let's put tensor notation to work to incorporate image-plane effects into
  We'd like to preempt any arguments about the validity or applicability
  of this particular model, by stating out front that we claim no such thing.
  The point of the exercise to show how tensor notation can be used to derive
- generalized measurement equations from certain assumptions about the physics.
+ generalized measurement equations starting from certain assumptions about
+ the physics.
 \end_layout
 
 \begin_layout Standard
@@ -2453,7 +3238,7 @@ y
 
  for summation indices in the same range.
  For free indices that refer to receptors (and run from 1 to 
-\begin_inset Formula $N$
+\begin_inset Formula $n$
 \end_inset
 
 ), we'll use 
@@ -2469,7 +3254,7 @@ y
 
 \begin_layout Standard
 Again, we have 
-\begin_inset Formula $N$
+\begin_inset Formula $n$
 \end_inset
 
  arbitrary receptors observing a single source.
@@ -2486,7 +3271,7 @@ source
 \end_inset
 
  Image-plane effects are described by a (2,1) tensor, 
-\begin_inset Formula $Z_{j}^{pi}.$
+\begin_inset Formula $R_{j}^{pi}.$
 \end_inset
 
  This implies that they are different for each receptor 
@@ -2498,18 +3283,15 @@ source
 \begin_inset Quotes eld
 \end_inset
 
-beam response
+voltage response
 \begin_inset Quotes erd
 \end_inset
 
- of each receptor is described by a (1,1) tensor, 
+ of each receptor can be described by its own (1,1) tensor, 
 \begin_inset Formula $E_{i}^{p}$
 \end_inset
 
 .
- Physically, this incorporates the beam pattern, receptor orientation, and
- receptor type (i.e.
- dipole or circular).
  Finally, the phase term of each receptor (due to pathlength diferences)
  is a (1,0) tensor, 
 \begin_inset Formula $K^{p}.$
@@ -2525,7 +3307,7 @@ Let's take this in small steps.
 
 \begin_layout Standard
 \begin_inset Formula \[
-\varepsilon'^{pi}=K^{p}Z_{\alpha}^{pi}\varepsilon^{\alpha}\]
+\varepsilon'^{pi}=K^{p}R_{\alpha}^{pi}\varepsilon^{\alpha}\]
 
 \end_inset
 
@@ -2547,7 +3329,7 @@ Let's take this in small steps.
 
 \begin_layout Standard
 \begin_inset Formula \[
-\varepsilon'^{i}=\kappa Z_{\alpha}^{i}\varepsilon^{\alpha},\]
+\varepsilon'^{i}=\kappa R_{\alpha}^{i}\varepsilon^{\alpha},\]
 
 \end_inset
 
@@ -2556,7 +3338,7 @@ Let's take this in small steps.
 
 \begin_layout Standard
 where 
-\begin_inset Formula $Z$
+\begin_inset Formula $R$
 \end_inset
 
  is the Jones matrix describing the image-plane effect for this particular
@@ -2569,7 +3351,7 @@ where
 \begin_inset Formula $\varepsilon'^{i}$
 \end_inset
 
- into (scalar) voltage 
+ into a (scalar) voltage 
 \begin_inset Formula $v$
 \end_inset
 
@@ -2583,7 +3365,7 @@ where
 
 \begin_layout Standard
 \begin_inset Formula \[
-v=E_{i}\varepsilon'^{i}.\]
+v=E_{\beta}\varepsilon'^{\beta}.\]
 
 \end_inset
 
@@ -2600,7 +3382,7 @@ Now, if we put the receptor index
 
 \begin_layout Standard
 \begin_inset Formula \[
-v^{p}=E_{\beta}^{p}K^{p}Z_{\alpha}^{p\beta}\varepsilon^{\alpha}\]
+v^{p}=E_{\beta}^{p}K^{p}R_{\alpha}^{p\beta}\varepsilon^{\alpha}\]
 
 \end_inset
 
@@ -2608,7 +3390,7 @@ v^{p}=E_{\beta}^{p}K^{p}Z_{\alpha}^{p\beta}\varepsilon^{\alpha}\]
 \end_layout
 
 \begin_layout Standard
-Note that we're now summing over 
+We're now summing over 
 \begin_inset Formula $\alpha$
 \end_inset
 
@@ -2641,16 +3423,17 @@ ideal
 \begin_inset Quotes erd
 \end_inset
 
- voltage vector, then we need to multiply it by an 
-\begin_inset Formula $N\times N$
+ voltage vector without cross-talk, then we need to multiply it by an 
+\begin_inset Formula $n\times n$
 \end_inset
 
- matrix:
+ matrix (i.e.
+ a (1,1) type tensor) to apply cross-talk:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \[
-v^{p}=D_{\sigma}^{p}v'^{\sigma}.\]
+v^{p}=Q_{\sigma}^{p}v'^{\sigma}.\]
 
 \end_inset
 
@@ -2663,7 +3446,7 @@ The final equation for the voltage response of the array is then:
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-v^{p}=D_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}\varepsilon^{\alpha}.\label{eq:v-tensor}\end{equation}
+v^{p}=Q_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}R_{\alpha}^{\sigma\beta}\varepsilon^{\alpha}.\label{eq:v-tensor}\end{equation}
 
 \end_inset
 
@@ -2671,7 +3454,7 @@ v^{p}=D_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}\varepsi
 \end_layout
 
 \begin_layout Standard
-Were now summing over 
+We're now summing over 
 \begin_inset Formula $\sigma$
 \end_inset
 
@@ -2689,7 +3472,7 @@ Were now summing over
 
 \begin_layout Standard
 The correlation matrix 
-\begin_inset Formula $X_{q}^{p}$
+\begin_inset Formula $V_{q}^{p}$
 \end_inset
 
  is computed as 
@@ -2708,7 +3491,7 @@ The correlation matrix
 
 \begin_layout Standard
 \begin_inset Formula \[
-X_{q}^{p}=\left(D_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}\varepsilon^{\alpha}\right)\left(D_{\tau}^{q}E_{\gamma}^{\tau}K^{\tau}Z_{\delta}^{\tau\gamma}\varepsilon^{\delta}\right)^{*}\]
+V_{q}^{p}=\left(Q_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}R_{\alpha}^{\sigma\beta}\varepsilon^{\alpha}\right)\left(Q_{\tau}^{q}E_{\gamma}^{\tau}K^{\tau}R_{\delta}^{\tau\gamma}\varepsilon^{\delta}\right)^{*}\]
 
 \end_inset
 
@@ -2716,14 +3499,14 @@ X_{q}^{p}=\left(D_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\bet
 \end_layout
 
 \begin_layout Standard
-Note that we need to use a different set of summation indices within each
- pair of brackets, since each sum is computed independently.
+Note that we now need to use a different set of summation indices within
+ each pair of brackets, since each sum is computed independently.
  Doing the conjugate-transpose, we get:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-X_{q}^{p}=D_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{Z}_{\tau\gamma}^{\delta}\bar{K}_{\tau}^{}\bar{E}_{\tau}^{\gamma}\bar{D}_{q}^{\tau}.\label{eq:gme0}\end{equation}
+X_{q}^{p}=Q_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}R_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{R}_{\tau\gamma}^{\delta}\bar{K}_{\tau}\bar{E}_{\tau}^{\gamma}\bar{Q}_{q}^{\tau}.\label{eq:gme0}\end{equation}
 
 \end_inset
 
@@ -2731,7 +3514,8 @@ X_{q}^{p}=D_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}B_{\
 \end_layout
 
 \begin_layout Standard
-This is the full tensor form of the generalized ME for an array.
+This is the full tensor form of a generalized ME for our hypothetical array.
+ Note how similar it looks to a matrix measurement equation.
 \end_layout
 
 \begin_layout Subsection
@@ -2754,7 +3538,7 @@ The GME of eq.
 
 \begin_layout Standard
 \begin_inset Formula \[
-\mathbf{X}=\left(\begin{array}{cc}
+\mathbf{V}=\left(\begin{array}{cc}
 j_{x,1} & j_{y,1}\\
 \vdots & \vdots\\
 j_{x,n} & j_{y,n}\end{array}\right)\mathbf{B}\left(\begin{array}{ccc}
@@ -2767,13 +3551,13 @@ So, have we forgotten about the
 \begin_inset Formula $\mathcal{J}$
 \end_inset
 
- matrix? Of course, it's still present in the GME, in the more verbose tensor
+ matrix? Of course, it's still present in our GME, in the more verbose tensor
  form of
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \[
-D_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}.\]
+Q_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}R_{\alpha}^{\sigma\beta}.\]
 
 \end_inset
 
@@ -2803,7 +3587,7 @@ If you track down the free indices in this tensor expression ---
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-X_{q}^{p}=J_{\alpha}^{p}B_{\beta}^{\alpha}\bar{J}_{q}^{\beta}\label{eq:gme-J}\end{equation}
+V_{q}^{p}=J_{\alpha}^{p}B_{\beta}^{\alpha}\bar{J}_{q}^{\beta}\label{eq:gme-J}\end{equation}
 
 \end_inset
 
@@ -2817,8 +3601,8 @@ This is an old friend, the matrix ME of eq.
 
 \end_inset
 
-, written in tensor notation.
- We can't compute 
+, rewritten in tensor notation.
+ Since we can't compute 
 \begin_inset Formula $J_{i}^{p}$
 \end_inset
 
@@ -2829,7 +3613,7 @@ This is an old friend, the matrix ME of eq.
 \begin_inset Formula $2\times2$
 \end_inset
 
- coherency in theory depends on only two Jones matrices (
+ correlation matrix in theory depends on only two Jones matrices (
 \begin_inset Formula $\mathbf{V}_{pq}=\mathbf{J}_{p}\mathbf{B}\mathbf{J}_{q}^{*}$
 \end_inset
 
@@ -2841,11 +3625,11 @@ This is an old friend, the matrix ME of eq.
 \end_layout
 
 \begin_layout Standard
-As already implied above, the decomposition of 
+As already implied above, the decomposition of the 
 \begin_inset Formula $J$
 \end_inset
 
- given by eq.
+ tensor given by eq.
  (
 \begin_inset LatexCommand \ref{eq:gme0}
 
@@ -2925,9 +3709,8 @@ A T-tensor that translates the EM field vector into another vector (e.g.,
 \end_layout
 
 \begin_layout Itemize
-A T-tensor that translates both components of the EM field equally (scalar
- operation, e.g.
- phase delay) does not need any 
+A T-tensor that translates both components of the EM field equally (i.e.
+ a scalar operation such as phase delay) does not need any 
 \begin_inset Formula $\{1,2\}$
 \end_inset
 
@@ -2935,8 +3718,8 @@ A T-tensor that translates both components of the EM field equally (scalar
 \end_layout
 
 \begin_layout Itemize
-A T-tensor transforming the EM field vector into a scalar (e.g., beam response
- of a dipole), must have an lower index of 
+A T-tensor transforming the EM field vector into a scalar (e.g., the beam
+ response of a receptor), must have an lower index of 
 \begin_inset Formula $\{1,2\}$
 \end_inset
 
@@ -2953,7 +3736,7 @@ A T-tensor for an effect that is different across receptors must have an
 \end_layout
 
 \begin_layout Itemize
-A T-tensor for an effect that ties groups of dipoles together must have
+A T-tensor for an effect that ties groups of receptors together must have
  two indices (upper and lower) with a range of 
 \begin_inset Formula $\{1...N\}$
 \end_inset
@@ -2973,10 +3756,10 @@ Faraday rotation translates vectors, so it must have an upper and a lower
 
  index.
  If different across receptors, it must also have a 
-\begin_inset Formula $\{1...N$
+\begin_inset Formula $\{1...N\}$
 \end_inset
 
-} index.
+ index.
  This suggests that the tensor looks like 
 \begin_inset Formula $F_{j}^{pi}$
 \end_inset
@@ -2999,7 +3782,7 @@ Phase delay operates on the EM vector as a scalar.
 
 \begin_layout Itemize
 Beam responce translates the EM vector into a scalar voltage, and must therefore
- have a lower 
+ have one lower 
 \begin_inset Formula $\{1,2\}$
 \end_inset
 
@@ -3020,7 +3803,7 @@ Cross-talk translates a set of receptor voltages into another set of voltages,
 
  indices.
  Its T-tensor looks like 
-\begin_inset Formula $D_{q}^{p}$
+\begin_inset Formula $Q_{q}^{p}$
 \end_inset
 
 .
@@ -3037,7 +3820,7 @@ If mutual coupling affects the arriving EM field at each receptor (rather
 \end_inset
 
  indices, giving us a rank-4 tensor, 
-\begin_inset Formula $D_{qj}^{pi}$
+\begin_inset Formula $Q_{qj}^{pi}$
 \end_inset
 
 .
@@ -3055,7 +3838,315 @@ If mutual coupling affects the arriving EM field at each receptor (rather
 \end_layout
 
 \begin_layout Subsection
-Full-sky GME
+The full-sky GME
+\end_layout
+
+\begin_layout Standard
+By analogy with the matrix ME, we can expect the GME to give us something
+ close to a Fourier Transform, when rewritten in a full-sky form.
+ Let's see whether this is indeed the case.
+\end_layout
+
+\begin_layout Standard
+When observing a real sky, each receptor is exposed to the integral of the
+ EM field arriving from all possible directions.
+ In eq.
+ (
+\begin_inset LatexCommand \ref{eq:gme0}
+
+\end_inset
+
+), we assume that all terms except 
+\begin_inset Formula $Q$
+\end_inset
+
+ depend on direction 
+\begin_inset Formula $\vec{\varsigma}.$
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+We'll come back to this assumption later.
+\end_layout
+
+\end_inset
+
+ For a full-sky GME, we need to rewrite the equation as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+V_{q}^{p}=Q_{\sigma}^{p}\left(\intop_{sky}E_{\beta}^{\sigma}K^{\sigma}R_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{R}_{\tau\gamma}^{\delta}\bar{K}_{\tau}\bar{E}_{\tau}^{\gamma}d\varsigma\right)\bar{Q}_{q}^{\tau},\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+which, projected into 
+\begin_inset Formula $lm$
+\end_inset
+
+ coordinates, gives us:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+V_{q}^{p}=Q_{\sigma}^{p}\left(\underset{{\scriptstyle lm}}{\iint}E_{\beta}^{\sigma}K^{\sigma}R_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{R}_{\tau\gamma}^{\delta}\bar{K}_{\tau}\bar{E}_{\tau}^{\gamma}\frac{dldm}{n}\right)\bar{Q}_{q}^{\tau}\label{eq:gme-fullsky-int}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+{\scriptstyle \left(n=\sqrt{1-l^{2}-m^{2}}\right)}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let's use the formal rules established above to 
+\begin_inset Quotes eld
+\end_inset
+
+collapse
+\begin_inset Quotes erd
+\end_inset
+
+ a few free indices into tensor sub-products.
+ Firstly, there is the 
+\begin_inset Quotes eld
+\end_inset
+
+apparent sky
+\begin_inset Quotes erd
+\end_inset
+
+ tensor: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+B_{\tau}^{\sigma}=E_{\beta}^{\sigma}R_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{R}_{\tau\gamma}^{\delta}\bar{E}_{\gamma}^{\tau}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that while we use the same letter (
+\begin_inset Formula $B$
+\end_inset
+
+), this is a different tensor from the 
+\begin_inset Quotes eld
+\end_inset
+
+true sky
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $B_{\delta}^{\alpha},$
+\end_inset
+
+ since the index ranges are different.
+ Physically, 
+\begin_inset Formula $B_{\tau}^{\sigma}(l,m)$
+\end_inset
+
+ corresponds to the correlation 
+\begin_inset Quotes eld
+\end_inset
+
+seen
+\begin_inset Quotes erd
+\end_inset
+
+ by receptors 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ and 
+\begin_inset Formula $\tau$
+\end_inset
+
+ as a function of direction.
+ Next, we introduce a phase tensor:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+K_{\tau}^{\sigma}=K^{\sigma}\bar{K}_{\tau},\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+which is an 
+\begin_inset Formula $n\times n$
+\end_inset
+
+ matrix.
+ Again, there should not be any confusion with the 
+\begin_inset Quotes eld
+\end_inset
+
+other
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $K^{\sigma}$
+\end_inset
+
+, since the tensor type is different.
+ Each element of the phase matrix is given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\kappa_{\tau}^{\sigma}=e^{-\imath(u_{\sigma\tau}l+v_{\sigma\tau}m+w_{\sigma\tau}(n-1))}.\]
+
+\end_inset
+
+ Equation 
+\begin_inset LatexCommand \eqref{eq:gme-fullsky-int}
+
+\end_inset
+
+ then becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+V_{q}^{p}=Q_{\sigma}^{p}\left(\underset{{\scriptstyle lm}}{\iint}B_{\tau}^{\sigma}K_{\tau}^{\sigma}\frac{dldm}{n}\right)\bar{Q}_{q}^{\tau}\label{eq:gme-fullsky-int1}\end{equation}
+
+\end_inset
+
+and all discussion in section 
+\begin_inset LatexCommand \eqref{sec:FT}
+
+\end_inset
+
+ applies.
+ Indeed, this can be approximated by 
+\begin_inset Formula $n\times n$
+\end_inset
+
+ individual Fourier Transforms under the same conditions.
+\end_layout
+
+\begin_layout Subsubsection
+Integration as an Einstein sum
+\end_layout
+
+\begin_layout Standard
+Now, a particularly elegant extension of Einstein summation involves integration.
+ Consider that an integral is basically a generalization of a sum.
+ If we have some function 
+\begin_inset Formula $f(x)$
+\end_inset
+
+, we can write it as a 
+\begin_inset Quotes eld
+\end_inset
+
+tensor
+\begin_inset Quotes erd
+\end_inset
+
+: 
+\begin_inset Formula $f_{x}$
+\end_inset
+
+, where 
+\begin_inset Formula $x$
+\end_inset
+
+ is a 
+\begin_inset Quotes eld
+\end_inset
+
+continuous
+\begin_inset Quotes erd
+\end_inset
+
+ rather than a discrete index.
+ The infinitesemal 
+\begin_inset Formula $dx$
+\end_inset
+
+ can be written as the 
+\begin_inset Quotes eld
+\end_inset
+
+tensor
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $d^{x}$
+\end_inset
+
+.
+ The whole integration operation can then be expressed in Einsteinian notation
+ as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+{\displaystyle \intop_{x}}f(x)dx=f_{x}d^{x}.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So far this is purely a notational convention, but do observe that it follows
+ all the rules of traditional Einstein summation.
+ As long as we keep track of which indices are discrete tensor indices,
+ and which are 
+\begin_inset Quotes eld
+\end_inset
+
+continuous
+\begin_inset Quotes erd
+\end_inset
+
+, we can freely mix the two notations.
+ We can then rewrite eq.
+ 
+\begin_inset LatexCommand \eqref{eq:gme-fullsky-int}
+
+\end_inset
+
+ as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+V_{q}^{p}=Q_{\sigma}^{p}E_{\beta lm}^{\sigma}K_{lm}^{\sigma}R_{\alpha lm}^{\sigma\beta}B_{\delta lm}^{\alpha}\bar{R}_{\tau\gamma lm}^{\delta}\bar{K}_{\tau lm}\bar{E}_{\tau lm}^{\gamma}d^{l}d^{m}\bar{Q}_{q}^{\tau}\label{eq:gme-fullsky-int}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+A particular full-sky GME
 \end_layout
 
 \begin_layout Standard
@@ -3095,7 +4186,7 @@ Does
 
 \begin_layout Standard
 \begin_inset Formula \[
-X_{q}^{p}=D_{\sigma}^{p}\left(\intop_{sky}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{Z}_{\tau\gamma}^{\delta}\bar{K}_{\tau}\bar{E}_{\tau}^{\gamma}d\varsigma\right)\bar{D}_{q}^{\tau},\]
+V_{q}^{p}=D_{\sigma}^{p}\left(\intop_{sky}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{Z}_{\tau\gamma}^{\delta}\bar{K}_{\tau}\bar{E}_{\tau}^{\gamma}d\varsigma\right)\bar{D}_{q}^{\tau},\]
 
 \end_inset
 
@@ -3112,7 +4203,7 @@ which, projected into
 
 \begin_layout Standard
 \begin_inset Formula \[
-X_{q}^{p}=D_{\sigma}^{p}\left(\underset{{\scriptstyle lm}}{\iint}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{Z}_{\tau\gamma}^{\delta}\bar{K}_{\tau}\bar{E}_{\tau}^{\gamma}\frac{dldm}{n}\right)\bar{D}_{q}^{\tau}\]
+V_{q}^{p}=D_{\sigma}^{p}\left(\underset{{\scriptstyle lm}}{\iint}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{Z}_{\tau\gamma}^{\delta}\bar{K}_{\tau}\bar{E}_{\tau}^{\gamma}\frac{dldm}{n}\right)\bar{D}_{q}^{\tau}\]
 
 \end_inset
 
@@ -3129,8 +4220,17 @@ X_{q}^{p}=D_{\sigma}^{p}\left(\underset{{\scriptstyle lm}}{\iint}E_{\beta}^{\sig
 \end_layout
 
 \begin_layout Standard
-If we designate the value of the integral by 
-\begin_inset Formula $\mathcal{X}_{\tau}^{\sigma}$
+The integral expression has two free indices, 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ and 
+\begin_inset Formula $\tau$
+\end_inset
+
+.
+ If we designate the value of the integral by the coherency matrix 
+\begin_inset Formula $X_{\tau}^{\sigma}$
 \end_inset
 
 , we have
@@ -3138,7 +4238,7 @@ If we designate the value of the integral by
 
 \begin_layout Standard
 \begin_inset Formula \[
-X_{q}^{p}=D_{\sigma}^{p}\mathcal{X}_{\tau}^{\sigma}\bar{D}_{q}^{\tau}.\]
+V_{q}^{p}=D_{\sigma}^{p}X_{\tau}^{\sigma}\bar{D}_{q}^{\tau}.\]
 
 \end_inset
 
@@ -3146,11 +4246,41 @@ X_{q}^{p}=D_{\sigma}^{p}\mathcal{X}_{\tau}^{\sigma}\bar{D}_{q}^{\tau}.\]
 \end_layout
 
 \begin_layout Standard
-The physical meaning of 
-\begin_inset Formula $\mathcal{X}$
+which ties together the observed correlation matrix, 
+\begin_inset Formula $V_{q}^{p}$
 \end_inset
 
- is simply the ideal correlation matrix, without cross-talk.
+, and the apparent coherency matrix 
+\begin_inset Formula $X_{\tau}^{\sigma}$
+\end_inset
+
+.
+ The physical meaning of each element of 
+\begin_inset Formula $X_{\tau}^{\sigma}$
+\end_inset
+
+ is the apparent coherency observed by receptor pair 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ and 
+\begin_inset Formula $\tau$
+\end_inset
+
+.
+ The cross-talk term 
+\begin_inset Formula $D$
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+scrambles up
+\begin_inset Quotes erd
+\end_inset
+
+ the apparent coherencies among all receptors.
 \end_layout
 
 \begin_layout Subsection
@@ -3162,7 +4292,7 @@ As another useful exercise, let's see how under the
 \begin_inset Quotes eld
 \end_inset
 
-no cross-antenna cross-talk
+no cross-station cross-talk
 \begin_inset Quotes erd
 \end_inset
 
@@ -3182,7 +4312,7 @@ no cross-antenna cross-talk
 \end_layout
 
 \begin_layout Standard
-Let's consider a system of two antennas, 
+Let's consider a system of two stations, 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3216,7 +4346,7 @@ b
 \end_inset
 
 , 
-\begin_inset Formula $D_{q}^{p}\neq0$
+\begin_inset Formula $Q_{q}^{p}\neq0$
 \end_inset
 
  only for 
@@ -3228,7 +4358,7 @@ b
 \end_inset
 
  (in other words, 
-\begin_inset Formula $D$
+\begin_inset Formula $Q$
 \end_inset
 
  is block-diagonal).
@@ -3248,7 +4378,7 @@ Furthermore, in such a system each pair of dipoles is co-located.
 \end_inset
 
 ] and 
-\begin_inset Formula $Z_{j}^{x_{a}i}=Z_{j}^{y_{a}i}\equiv{[Z}_{a}]_{j}^{i}$
+\begin_inset Formula $R_{j}^{x_{a}i}=R_{j}^{y_{a}i}\equiv[R_{a}]_{j}^{i}$
 \end_inset
 
 , and the same for 
@@ -3272,7 +4402,7 @@ label
 \end_layout
 
 \begin_layout Standard
-The voltage response of antenna 
+The voltage response of station 
 \begin_inset Formula $a$
 \end_inset
 
@@ -3289,7 +4419,7 @@ The voltage response of antenna
 
 ):
 \begin_inset Formula \[
-{[v}_{a}]^{p}=D_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}\varepsilon^{\alpha},\]
+[v_{a}]^{p}=Q_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}R_{\alpha}^{\sigma\beta}\varepsilon^{\alpha},\]
 
 \end_inset
 
@@ -3302,8 +4432,8 @@ where the
 \end_inset
 
  summation index must formally still go over all 4 possible values.
- However, since there's no cross-talk between antennas, 
-\begin_inset Formula $D_{\sigma}^{p}=0$
+ However, since there's no cross-talk between stations, 
+\begin_inset Formula $Q_{\sigma}^{p}=0$
 \end_inset
 
  (and the whole term becomes 0) for 
@@ -3320,7 +4450,7 @@ where the
 \end_inset
 
  dipoles are co-located, 
-\begin_inset Formula $Z_{j}^{\sigma i}\equiv[Z_{a}]_{j}^{i}$
+\begin_inset Formula $R_{j}^{\sigma i}\equiv[R_{a}]_{j}^{i}$
 \end_inset
 
  and 
@@ -3333,7 +4463,7 @@ where the
 \end_inset
 
  summation range, we can consider the 
-\begin_inset Formula $Z$
+\begin_inset Formula $R$
 \end_inset
 
  term to be a 
@@ -3350,7 +4480,7 @@ where the
 
 \begin_layout Standard
 \begin_inset Formula \[
-[v_{a}]^{p}=D_{\sigma}^{p}E_{\beta}^{\sigma}{[K}_{a}]{[Z}_{a}]_{\alpha}^{\beta}\varepsilon^{\alpha}.\]
+[v_{a}]^{p}=Q_{\sigma}^{p}E_{\beta}^{\sigma}[K_{a}][R_{a}]_{\alpha}^{\beta}\varepsilon^{\alpha}.\]
 
 \end_inset
 
@@ -3364,7 +4494,7 @@ This of course is equivalent to a matrix product, which we can write in
 
 \begin_layout Standard
 \begin_inset Formula \[
-\vec{v}_{a}=D_{a}E_{a}K_{a}Z_{a}\vec{\varepsilon}\]
+\vec{v}_{a}=Q_{a}E_{a}K_{a}R_{a}\vec{\varepsilon}\]
 
 \end_inset
 
@@ -3372,16 +4502,16 @@ This of course is equivalent to a matrix product, which we can write in
 \end_layout
 
 \begin_layout Standard
-Doing the same for antenna 
+Doing the same for station 
 \begin_inset Formula $b$
 \end_inset
 
-, we arrive at the traditional matrix ME:
+, we arrive at a traditional matrix ME:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \[
-X_{ab}=\left\langle v_{a}\bar{v}_{b}^{*}\right\rangle {=D}_{a}E_{a}K_{a}Z_{a}BZ_{b}^{*}K_{b}^{*}E_{b}^{*}D_{b}^{*}.\]
+X_{ab}=\left\langle v_{a}\bar{v}_{b}^{*}\right\rangle =Q_{a}E_{a}K_{a}R_{a}BR_{b}^{*}K_{b}^{*}E_{b}^{*}Q_{b}^{*}.\]
 
 \end_inset
 
