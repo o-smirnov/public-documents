@@ -1,4 +1,4 @@
-#LyX 1.4.4 created this file. For more info see http://www.lyx.org/
+#LyX 1.4.3 created this file. For more info see http://www.lyx.org/
 \lyxformat 245
 \begin_document
 \begin_header
@@ -2322,7 +2322,7 @@ Z
 \end_inset
 
 , if we define an 
-\begin_inset Formula $N\times N$
+\begin_inset Formula $n\times n$
 \end_inset
 
  
@@ -2357,11 +2357,12 @@ apparent sky
 
 \begin_layout Standard
 If image-plane effects do vary across receptors, then a matrix formalism
- is no longer sufficient! This is because each receptor 
+ is no longer sufficient! This is because the expression for each receptor
+ 
 \begin_inset Formula $p$
 \end_inset
 
- must somehow have its own 
+ must somehow incorporate its own 
 \begin_inset Formula $\mathbf{R}_{p}$
 \end_inset
 
@@ -2375,8 +2376,8 @@ If image-plane effects do vary across receptors, then a matrix formalism
 \end_inset
 
  matrix.
- The image-plane term becomes a 
-\begin_inset Formula $p\times2\times2$
+ The image-plane term becomes an 
+\begin_inset Formula $n\times2\times2$
 \end_inset
 
  tensor! 
@@ -2542,7 +2543,7 @@ The only difference w.r.t.
 \begin_layout Standard
 The remaining problem is to implement the cross-talk term 
 \series bold
-D
+Q
 \series default
 , which is an 
 \begin_inset Formula $n\times n$
@@ -2559,7 +2560,7 @@ D
 \end_inset
 
  (hermitian) matrix 
-\begin_inset Formula $V'$
+\begin_inset Formula $\mathbf{V}'$
 \end_inset
 
 .
@@ -2911,7 +2912,7 @@ collapsed
 \begin_inset Formula $A_{j}^{i}B_{k}^{j}C_{i}^{k}D^{k}$
 \end_inset
 
- can be simplified by isolating the sub-product 
+ can be rewritten by isolating the sub-product 
 \begin_inset Formula $E_{i}^{j}=B_{k}^{j}C_{i}^{k}D^{k}$
 \end_inset
 
@@ -2919,11 +2920,12 @@ collapsed
 \begin_inset Formula $A_{j}^{i}E_{i}^{j}.$
 \end_inset
 
- The rule is that the subproduct must contain 
+ The rule is that for an index to be collapsed, the subproduct must contain
+ 
 \emph on
 all
 \emph default
- occurences of a summation index.
+ occurences of the index.
  It would be illegal to isolate the sub-product 
 \begin_inset Formula $F_{i}^{j}=B_{k}^{j}C_{i}^{k}$
 \end_inset
@@ -2936,7 +2938,20 @@ all
 \begin_inset Formula $k$
 \end_inset
 
-! 
+.
+ On the other hand, we can isolate the sub-product 
+\begin_inset Formula $G_{k}^{i}=A_{j}^{i}B_{k}^{j}$
+\end_inset
+
+ and collapse the 
+\begin_inset Formula $j$
+\end_inset
+
+; the 
+\begin_inset Formula $k$
+\end_inset
+
+ occurs elsewhere in the expression but it is not collapsed in this sub-product.
 \end_layout
 
 \begin_layout Subsection
@@ -3077,7 +3092,8 @@ outer product
 \begin_inset Quotes erd
 \end_inset
 
- form of the classical ME!
+ form of the classical ME, as derived in (Hamaker ...
+ -- Paper I).
 \end_layout
 
 \begin_layout Standard
@@ -3471,16 +3487,17 @@ We're now summing over
 \end_layout
 
 \begin_layout Standard
-The correlation matrix 
+Assuming all receptors are now being correlated together, the correlation
+ matrix 
 \begin_inset Formula $V_{q}^{p}$
 \end_inset
 
- is computed as 
+ is then computed as 
 \begin_inset Formula $\left\langle v^{p}\bar{v}_{q}\right\rangle $
 \end_inset
 
 .
- Ignoring smearing, we can then use eq.
+ Ignoring smearing, we can use eq.
  (
 \begin_inset LatexCommand \ref{eq:v-tensor}
 
@@ -3506,7 +3523,7 @@ Note that we now need to use a different set of summation indices within
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-X_{q}^{p}=Q_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}R_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{R}_{\tau\gamma}^{\delta}\bar{K}_{\tau}\bar{E}_{\tau}^{\gamma}\bar{Q}_{q}^{\tau}.\label{eq:gme0}\end{equation}
+V_{q}^{p}=Q_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}R_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{R}_{\tau\gamma}^{\delta}\bar{K}_{\tau}\bar{E}_{\tau}^{\gamma}\bar{Q}_{q}^{\tau}.\label{eq:gme0}\end{equation}
 
 \end_inset
 
@@ -3838,12 +3855,237 @@ If mutual coupling affects the arriving EM field at each receptor (rather
 \end_layout
 
 \begin_layout Subsection
+Beamforming
+\end_layout
+
+\begin_layout Standard
+A receptor array will often be operated in beamforming mode.
+ In this mode, receptor voltages are added up with complex weights to form
+ a synthesized beam.
+ The output of the array is then a single voltage (or a single complex number,
+ if beamforming is done after A/D conversion) per beam, rather than 
+\begin_inset Formula $n$
+\end_inset
+
+ receptor voltages.
+\end_layout
+
+\begin_layout Standard
+Beamforming may also be described in terms of the GME.
+ Let's assume we have 
+\begin_inset Formula $N$
+\end_inset
+
+ stations, each being an array of 
+\begin_inset Formula $n_{1},n_{2},...,n_{N}$
+\end_inset
+
+ receptors.
+ The voltage vector registered at station 
+\begin_inset Formula $a$
+\end_inset
+
+ can be described by eq.
+ (
+\begin_inset LatexCommand \ref{eq:v-tensor}
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+v^{p}=Q_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}R_{\alpha}^{\sigma\beta}\varepsilon^{\alpha}.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The output of one beamformer, 
+\begin_inset Formula $f$
+\end_inset
+
+, is computed by multiplying this by a vector of weights, 
+\begin_inset Formula $W_{p}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+f=W_{p}v^{p}=W_{p}Q_{\sigma}^{p}E_{\beta}^{\sigma}K^{\sigma}R_{\alpha}^{\sigma\beta}\varepsilon^{\alpha}.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Obviously, the beamformer weights are just another T-tensor.
+ 
+\end_layout
+
+\begin_layout Standard
+In a typical application, we need to correlate the synthesized beams across
+ stations.
+ In this context, it is useful to derive a 
+\begin_inset Quotes eld
+\end_inset
+
+synthesized beam
+\begin_inset Quotes erd
+\end_inset
+
+ tensor which would allow us to treat a whole station as a single receptor.
+ To do this, we must assume that image plane effects are the same for all
+ receptors in a station (
+\begin_inset Formula $R_{\alpha}^{\sigma\beta}\equiv R_{\alpha}^{\beta}$
+\end_inset
+
+).
+ Futhermore, we need to decompose the phase term 
+\begin_inset Formula $K^{\sigma}$
+\end_inset
+
+ into a common 
+\begin_inset Quotes eld
+\end_inset
+
+station phase
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $K$
+\end_inset
+
+, and a per-receptor relative phase 
+\begin_inset Formula $(\delta{K)}^{\sigma}$
+\end_inset
+
+, so that 
+\begin_inset Formula $K^{\sigma}=K{(\delta K)}^{\sigma}$
+\end_inset
+
+.
+ This can be derived in a straightforward way from the station geometry.
+ We can then collapse some summation indices:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+f=W_{p}Q_{\sigma}^{p}E_{\beta}^{\sigma}K{(\delta K)}^{\sigma}R_{\alpha}^{\beta}\varepsilon^{\alpha}=(W_{p}Q_{\sigma}^{p}E_{\beta}^{\sigma}{(\delta K)}^{\sigma})KR_{\alpha}^{\beta}\varepsilon^{\alpha}=S_{\beta}KR_{\alpha}^{\beta}\varepsilon^{\alpha}.\label{eq:beamformer-voltage}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This expression is quite similar to eq.
+ (
+\begin_inset LatexCommand \ref{eq:v-tensor}
+
+\end_inset
+
+).
+ If 
+\begin_inset Formula $a$
+\end_inset
+
+ is the station index, and the synthesized beam tensor for station 
+\begin_inset Formula $a$
+\end_inset
+
+ is 
+\begin_inset Formula $S_{\beta}^{a}$
+\end_inset
+
+, then a complete GME for an interferometer composed of beamformed stations
+ is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+V_{b}^{a}=S_{\beta}^{a}K^{a}R_{\alpha}^{a\beta}B_{\delta}^{\alpha}\bar{R}_{b\gamma}^{\delta}\bar{K}_{b}\bar{S}_{b}^{\gamma},\label{eq:gme-beamformer}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+which is very similar to the GME of eq.
+ (
+\begin_inset LatexCommand \ref{eq:gme0}
+
+\end_inset
+
+), except that the beam tensor 
+\begin_inset Formula $E$
+\end_inset
+
+ has been replaced by the 
+\begin_inset Quotes eld
+\end_inset
+
+synthesized beam
+\begin_inset Quotes erd
+\end_inset
+
+ tensor 
+\begin_inset Formula $S$
+\end_inset
+
+, and there's no cross-talk between stations.
+ 
+\end_layout
+
+\begin_layout Standard
+Note that if each station produces a pair of synthesized beams (e.g., for
+ the same pointing but sensitive to different polarizations), then this
+ equation reduces to the classical matrix ME.
+\end_layout
+
+\begin_layout Standard
+This shows that a synthetic beam tensor, 
+\begin_inset Formula $S_{\beta}$
+\end_inset
+
+, can always be derived from the beamformer weights, the cross-talk terms,
+ and station geometry, under the assumption that image-plane effects are
+ the same across a station.
+ This is a safe assumption for small receptor arrays.
+ If this assumption does not hold, we're left with an extra 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ index in eq.
+ (
+\begin_inset LatexCommand \ref{eq:beamformer-voltage}
+
+\end_inset
+
+), and can no longer factor out an 
+\begin_inset Formula $S_{\beta}$
+\end_inset
+
+ tensor describing the synthesized beam.
+ Physically, this corresponds to image-plane effects distorting the synthesized
+ beam.
+\end_layout
+
+\begin_layout Subsection
 The full-sky GME
 \end_layout
 
 \begin_layout Standard
 By analogy with the matrix ME, we can expect the GME to give us something
- close to a Fourier Transform, when rewritten in a full-sky form.
+ close to a Fourier Transform when rewritten in a full-sky form.
  Let's see whether this is indeed the case.
 \end_layout
 
@@ -4053,7 +4295,7 @@ Integration as an Einstein sum
 \end_layout
 
 \begin_layout Standard
-Now, a particularly elegant extension of Einstein summation involves integration.
+A particularly elegant extension of Einstein summation involves integration.
  Consider that an integral is basically a generalization of a sum.
  If we have some function 
 \begin_inset Formula $f(x)$
@@ -4138,55 +4380,7 @@ continuous
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-V_{q}^{p}=Q_{\sigma}^{p}E_{\beta lm}^{\sigma}K_{lm}^{\sigma}R_{\alpha lm}^{\sigma\beta}B_{\delta lm}^{\alpha}\bar{R}_{\tau\gamma lm}^{\delta}\bar{K}_{\tau lm}\bar{E}_{\tau lm}^{\gamma}d^{l}d^{m}\bar{Q}_{q}^{\tau}\label{eq:gme-fullsky-int}\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-A particular full-sky GME
-\end_layout
-
-\begin_layout Standard
-When observing a real sky, each receptor is exposed to the integral of the
- EM field arriving from all possible directions.
- In eq.
- (
-\begin_inset LatexCommand \ref{eq:gme0}
-
-\end_inset
-
-), all terms except 
-\begin_inset Formula $D$
-\end_inset
-
- depend on direction 
-\begin_inset Formula $\vec{\varsigma}.$
-\end_inset
-
-
-\begin_inset Foot
-status open
-
-\begin_layout Standard
-Does 
-\begin_inset Formula $D$
-\end_inset
-
- depend on direction as well? If so, it may have to go inside the integral
- too.
-\end_layout
-
-\end_inset
-
- For a full-sky GME, we need to rewrite the above as
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-V_{q}^{p}=D_{\sigma}^{p}\left(\intop_{sky}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{Z}_{\tau\gamma}^{\delta}\bar{K}_{\tau}\bar{E}_{\tau}^{\gamma}d\varsigma\right)\bar{D}_{q}^{\tau},\]
+V_{q}^{p}=Q_{\sigma}^{p}E_{\beta lm}^{\sigma}K_{lm}^{\sigma}R_{\alpha lm}^{\sigma\beta}B_{\delta lm}^{\alpha}\bar{R}_{\tau\gamma lm}^{\delta}\bar{K}_{\tau lm}\bar{E}_{\tau lm}^{\gamma}N_{lm}d_{}^{l}d^{m}\bar{Q}_{q}^{\tau}\label{eq:gme-fullsky-int2}\end{equation}
 
 \end_inset
 
@@ -4194,42 +4388,33 @@ V_{q}^{p}=D_{\sigma}^{p}\left(\intop_{sky}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}
 \end_layout
 
 \begin_layout Standard
-which, projected into 
-\begin_inset Formula $lm$
-\end_inset
-
- coordinates, gives us:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-V_{q}^{p}=D_{\sigma}^{p}\left(\underset{{\scriptstyle lm}}{\iint}E_{\beta}^{\sigma}K^{\sigma}Z_{\alpha}^{\sigma\beta}B_{\delta}^{\alpha}\bar{Z}_{\tau\gamma}^{\delta}\bar{K}_{\tau}\bar{E}_{\tau}^{\gamma}\frac{dldm}{n}\right)\bar{D}_{q}^{\tau}\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-{\scriptstyle \left(n=\sqrt{1-l^{2}-m^{2}}\right)}\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The integral expression has two free indices, 
-\begin_inset Formula $\sigma$
-\end_inset
-
- and 
-\begin_inset Formula $\tau$
+where 
+\begin_inset Formula $N_{lm}=1/\sqrt{1-l^{2}-m^{2}}$
 \end_inset
 
 .
- If we designate the value of the integral by the coherency matrix 
+\end_layout
+
+\begin_layout Subsubsection
+The effect of non-colocated receptors
+\end_layout
+
+\begin_layout Subsubsection
+The coherency tensor
+\end_layout
+
+\begin_layout Standard
+If we designate the value of the integral in eq.
+ 
+\begin_inset LatexCommand \eqref{eq:gme-fullsky-int}
+
+\end_inset
+
+ by the 
+\emph on
+apparent coherency tensor
+\emph default
+ 
 \begin_inset Formula $X_{\tau}^{\sigma}$
 \end_inset
 
@@ -4238,7 +4423,7 @@ The integral expression has two free indices,
 
 \begin_layout Standard
 \begin_inset Formula \[
-V_{q}^{p}=D_{\sigma}^{p}X_{\tau}^{\sigma}\bar{D}_{q}^{\tau}.\]
+V_{q}^{p}=Q_{\sigma}^{p}X_{\tau}^{\sigma}\bar{Q}_{q}^{\tau}.\]
 
 \end_inset
 
@@ -4250,7 +4435,7 @@ which ties together the observed correlation matrix,
 \begin_inset Formula $V_{q}^{p}$
 \end_inset
 
-, and the apparent coherency matrix 
+, and the apparent coherency tensor 
 \begin_inset Formula $X_{\tau}^{\sigma}$
 \end_inset
 
@@ -4259,7 +4444,7 @@ which ties together the observed correlation matrix,
 \begin_inset Formula $X_{\tau}^{\sigma}$
 \end_inset
 
- is the apparent coherency observed by receptor pair 
+ is, obviously, the apparent coherency observed by receptor pair 
 \begin_inset Formula $\sigma$
 \end_inset
 
@@ -4269,7 +4454,7 @@ which ties together the observed correlation matrix,
 
 .
  The cross-talk term 
-\begin_inset Formula $D$
+\begin_inset Formula $Q$
 \end_inset
 
  
@@ -4281,6 +4466,31 @@ scrambles up
 \end_inset
 
  the apparent coherencies among all receptors.
+ Note that this similar to, but subtly different from the 
+\begin_inset Quotes eld
+\end_inset
+
+coherency matrix
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $X$
+\end_inset
+
+ (or 
+\begin_inset Formula $X_{q}^{p}$
+\end_inset
+
+) used in the classical matrix ME of eq.
+ 
+\begin_inset LatexCommand \eqref{eq:hamaker-me}
+
+\end_inset
+
+.
+ The latter presumes that each receptor pair (or at least both receptors
+ in a pair) observe the same sky, which is not true in the general case.
 \end_layout
 
 \begin_layout Subsection
