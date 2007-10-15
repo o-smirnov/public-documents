@@ -1,4 +1,4 @@
-#LyX 1.4.3 created this file. For more info see http://www.lyx.org/
+#LyX 1.4.4 created this file. For more info see http://www.lyx.org/
 \lyxformat 245
 \begin_document
 \begin_header
@@ -2184,7 +2184,7 @@ The
 
 
 \series default
- matrix gives us the beam responce, the 
+ matrix gives us the beam response, the 
 \begin_inset Formula $n\times n$
 \end_inset
 
@@ -2219,7 +2219,7 @@ The
 \end_layout
 
 \begin_layout Standard
-Note that in the case of an array of dishes, we have 
+In the case of an array of dishes, we have 
 \begin_inset Formula $n=2m$
 \end_inset
 
@@ -2234,13 +2234,13 @@ closed
 
  system.
  In this case 
-\series bold
-Q
-\series default
+\begin_inset Formula $\mathbf{Q}$
+\end_inset
+
  becomes block-diagonal, 
-\series bold
-K
-\series default
+\begin_inset Formula $\mathbf{K}$
+\end_inset
+
  becomes block-scalar (
 \begin_inset Formula $\kappa_{1}=\kappa_{2},\kappa_{3}=\kappa_{4},...)$
 \end_inset
@@ -2255,6 +2255,20 @@ K
 \end_inset
 
 ).
+\end_layout
+
+\begin_layout Standard
+Note that the ordering of terms in this equation is not entirely physical
+ --- in the actual signal path, the phase delay represented by 
+\begin_inset Formula $\mathbf{K}$
+\end_inset
+
+ occurs before the beam response 
+\begin_inset Formula $\mathbf{E}$
+\end_inset
+
+.
+ This is 
 \end_layout
 
 \begin_layout Subsection
@@ -2321,7 +2335,7 @@ Z
 
 \end_inset
 
-, if we define an 
+, if we then define an 
 \begin_inset Formula $n\times n$
 \end_inset
 
@@ -3418,15 +3432,7 @@ We're now summing over
 \end_layout
 
 \begin_layout Standard
-Finally, cross-talk 
-\begin_inset Quotes eld
-\end_inset
-
-scrambles
-\begin_inset Quotes erd
-\end_inset
-
- the voltage responses.
+Finally, cross-talk scrambles the voltage responses.
  If 
 \begin_inset Formula $v'^{p}$
 \end_inset
@@ -3625,8 +3631,8 @@ This is an old friend, the matrix ME of eq.
 
  directly, so we need to break it down into a product of physically meaningful
  terms, for which we can at least plug in some realistic numbers.
- Note that this is exactly the same situation as for the matrix ME: even
- though each 
+ Note that this parallels the situation of the matrix ME: even though each
+ 
 \begin_inset Formula $2\times2$
 \end_inset
 
@@ -3635,10 +3641,10 @@ This is an old friend, the matrix ME of eq.
 \end_inset
 
 ), in real life we almost always compute each 
-\begin_inset Formula $\mathbf{J}$
+\begin_inset Formula $\mathbf{J}_{p}$
 \end_inset
 
- as a product of several physically comprehensible terms.
+ as a product of several terms that emerge from physical models.
 \end_layout
 
 \begin_layout Standard
@@ -3736,7 +3742,7 @@ A T-tensor that translates both components of the EM field equally (i.e.
 
 \begin_layout Itemize
 A T-tensor transforming the EM field vector into a scalar (e.g., the beam
- response of a receptor), must have an lower index of 
+ response of a receptor), must have a lower index of 
 \begin_inset Formula $\{1,2\}$
 \end_inset
 
@@ -3855,15 +3861,196 @@ If mutual coupling affects the arriving EM field at each receptor (rather
 \end_layout
 
 \begin_layout Subsection
+Describing mutual coupling
+\end_layout
+
+\begin_layout Standard
+Equations 
+\begin_inset LatexCommand \eqref{eq:v-tensor}
+
+\end_inset
+
+ and 
+\begin_inset LatexCommand \eqref{eq:gme0}
+
+\end_inset
+
+ were derived under the perhaps simplistic assumption that mutual coupling
+ can be fully described via cross-talk between the receptor voltages.
+ That is, the EM field vector at each dipole's location was given by a type
+ (2,0) tensor, 
+\begin_inset Formula $\varepsilon'^{pi}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\varepsilon'^{pi}=K^{p}R_{\alpha}^{pi}\varepsilon^{\alpha},\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The EM field was then converted into nominal receptor voltages by the beam
+ tensor, 
+\begin_inset Formula $E$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+v'^{p}=E_{\beta}^{p}\varepsilon'^{p\beta}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and then converted into actual voltages via a (1,1) type cross-talk tensor
+ 
+\begin_inset Formula $Q$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+v^{p}=Q_{\sigma}^{p}v'^{\sigma}.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The underlying assumption here is that each receptor's voltage response
+ can be derived from the nominal voltages alone.
+ To see why this may be simplistic, consider the hypothetical array of Fig.
+ ??, composed of 
+\begin_inset Formula $n$
+\end_inset
+
+ identical dipoles in the same orientation, parallel to the 
+\begin_inset Formula $x$
+\end_inset
+
+ axis.
+ The dipoles are only sensitive to the 
+\begin_inset Formula $x$
+\end_inset
+
+ component of the EM field, which, in terms of the beam tensor 
+\begin_inset Formula $E$
+\end_inset
+
+, means that 
+\begin_inset Formula $E_{2}^{p}\equiv0$
+\end_inset
+
+ for all 
+\begin_inset Formula $p$
+\end_inset
+
+.
+ Consequently, the actual voltages 
+\begin_inset Formula $v^{p}$
+\end_inset
+
+ in this model will only depend on the 
+\begin_inset Formula $x$
+\end_inset
+
+ EM field component.
+ If mutual coupling causes any dipole to be sensitive to the 
+\begin_inset Formula $y$
+\end_inset
+
+ component, we can't represent this in a cross-talk-only model.
+\end_layout
+
+\begin_layout Standard
+A more general approach is to describe the voltage response of each receptor
+ as a function of the EM field at all the locations, i.e.
+ by a type (1,2)-tensor:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+v^{p}=E_{\sigma\beta}^{p}\varepsilon'^{\sigma\beta}.\label{eq:v-tensor-gen}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This 
+\begin_inset Formula $E$
+\end_inset
+
+ tensor (
+\begin_inset Formula $2n^{2}$
+\end_inset
+
+ complex numbers) then describes both the beam response, and the mutual
+ coupling.
+ Our cross-talk-only model corresponds to 
+\begin_inset Formula $E$
+\end_inset
+
+ being decomposable into an Einstein sum of two (1,1)-type tensors (
+\begin_inset Formula $n^{2}+2n$
+\end_inset
+
+ complex numbers), as 
+\begin_inset Formula $E_{\sigma\beta}^{p}=Q_{\sigma}^{p}E_{\beta}^{p}.$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
 Beamforming
 \end_layout
 
 \begin_layout Standard
-A receptor array will often be operated in beamforming mode.
- In this mode, receptor voltages are added up with complex weights to form
- a synthesized beam.
- The output of the array is then a single voltage (or a single complex number,
- if beamforming is done after A/D conversion) per beam, rather than 
+A receptor array (
+\begin_inset Quotes eld
+\end_inset
+
+station
+\begin_inset Quotes erd
+\end_inset
+
+) will often be operated in beamforming mode.
+ In this mode, groups of receptor voltages are added up with complex weights
+ to form a 
+\begin_inset Quotes eld
+\end_inset
+
+station beam
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The output of the 
+\begin_inset Quotes eld
+\end_inset
+
+station
+\begin_inset Quotes erd
+\end_inset
+
+ is then a single voltage (or a single complex number, if beamforming is
+ done after A/D conversion) per beam, rather than 
 \begin_inset Formula $n$
 \end_inset
 
@@ -3930,13 +4117,12 @@ Obviously, the beamformer weights are just another T-tensor.
 \end_layout
 
 \begin_layout Standard
-In a typical application, we need to correlate the synthesized beams across
- stations.
+In a typical application, we need to correlate the station outputs.
  In this context, it is useful to derive a 
 \begin_inset Quotes eld
 \end_inset
 
-synthesized beam
+station beam
 \begin_inset Quotes erd
 \end_inset
 
@@ -3997,7 +4183,7 @@ This expression is quite similar to eq.
 \begin_inset Formula $a$
 \end_inset
 
- is the station index, and the synthesized beam tensor for station 
+ is the station index, and the station beam tensor for station 
 \begin_inset Formula $a$
 \end_inset
 
@@ -4029,15 +4215,7 @@ which is very similar to the GME of eq.
 \begin_inset Formula $E$
 \end_inset
 
- has been replaced by the 
-\begin_inset Quotes eld
-\end_inset
-
-synthesized beam
-\begin_inset Quotes erd
-\end_inset
-
- tensor 
+ has been replaced by the station beam tensor 
 \begin_inset Formula $S$
 \end_inset
 
@@ -4046,14 +4224,14 @@ synthesized beam
 \end_layout
 
 \begin_layout Standard
-Note that if each station produces a pair of synthesized beams (e.g., for
- the same pointing but sensitive to different polarizations), then this
- equation reduces to the classical matrix ME.
+Note that if each station produces a pair of station beams (e.g., for the
+ same pointing but sensitive to different polarizations), then this equation
+ reduces to the classical matrix ME.
 \end_layout
 
 \begin_layout Standard
-This shows that a synthetic beam tensor, 
-\begin_inset Formula $S_{\beta}$
+This shows that a station beam tensor, 
+\begin_inset Formula $S_{\beta}^{a}$
 \end_inset
 
 , can always be derived from the beamformer weights, the cross-talk terms,
@@ -4071,11 +4249,11 @@ This shows that a synthetic beam tensor,
 \end_inset
 
 ), and can no longer factor out an 
-\begin_inset Formula $S_{\beta}$
+\begin_inset Formula $S_{\beta}^{a}$
 \end_inset
 
- tensor describing the synthesized beam.
- Physically, this corresponds to image-plane effects distorting the synthesized
+ tensor describing the station beam.
+ Physically, this corresponds to image-plane effects distorting the station
  beam.
 \end_layout
 
@@ -4092,28 +4270,16 @@ By analogy with the matrix ME, we can expect the GME to give us something
 \begin_layout Standard
 When observing a real sky, each receptor is exposed to the integral of the
  EM field arriving from all possible directions.
- In eq.
+ To simplify matters, let's start with the assumption that mutual coupling
+ --- the Q term of eq.
  (
 \begin_inset LatexCommand \ref{eq:gme0}
 
 \end_inset
 
-), we assume that all terms except 
-\begin_inset Formula $Q$
-\end_inset
-
- depend on direction 
+) --- is not direction-dependent.
+ All other terms in the equation are a function of direction 
 \begin_inset Formula $\vec{\varsigma}.$
-\end_inset
-
-
-\begin_inset Foot
-status open
-
-\begin_layout Standard
-We'll come back to this assumption later.
-\end_layout
-
 \end_inset
 
  For a full-sky GME, we need to rewrite the equation as
@@ -4288,6 +4454,10 @@ and all discussion in section
 \end_inset
 
  individual Fourier Transforms under the same conditions.
+\end_layout
+
+\begin_layout Subsubsection
+Describing mutual coupling
 \end_layout
 
 \begin_layout Subsubsection
