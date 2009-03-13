@@ -1,15 +1,35 @@
 #!/bin/bash
-if [ "$1" == "" ]; then
-  echo "Usage: $0 <template_name>"
+print_templates ()
+{
   echo -n "Available templates are: "
   for t in `ls *_makems.cfg`; do
-    echo -n ${t%_makems.cfg}
+    echo -n "${t%_makems.cfg} "
   done
   echo " "
+}
+
+if [ "$1" == "" ]; then
+  echo "Usage $0 <template>"
+  print_templates
   exit 1
 fi
+configfile="$1_makems.cfg"
+
+if [ ! -f $configfile ]; then
+  echo "No such template: $1"
+  print_templates
+  exit 1
+fi 
 
 rm -f makems.cfg
-ln -s $1_makems.cfg makems.cfg
+ln -s $configfile makems.cfg
 makems
-mv $1.MS_p1 $1.MS
+# find out MS name from config file
+msname="`grep MSName= $configfile | cut -d = -f 2`"
+if [ "$msname" != "" ]; then
+  echo "Created $msname"
+  mv ${msname}_p1 $msname
+  chmod -R a+rX $msname
+else
+  echo "Couldn't find MS name in config file $configfile"
+fi
