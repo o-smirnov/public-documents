@@ -171,7 +171,7 @@ for line in f:
 		dec = deg2rad(eval(columns[dec_col])+25)	# Manually insert dec of MS
 		I = (10.0**(eval(columns[i_1400_col])));
 		Q = U = V = 0;
-		spi = 1;
+		spi = 0;
 		smaj = eval(columns[maj_col])/206264.806;
 		smin = eval(columns[min_col])/206264.806;
 		pa   = eval(columns[pa_col])
