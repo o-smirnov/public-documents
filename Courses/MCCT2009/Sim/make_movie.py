@@ -34,7 +34,7 @@ for a in sys.argv:
       npix = int(value);
     elif kw == "cell":
       cellsize = value;
-    elif kw == "nframes":+
+    elif kw == "nframes":
       nframes = int(value);
     elif kw == "dt":
       dt = int(value);
