@@ -27,6 +27,7 @@ makems
 # find out MS name from config file
 msname="`grep MSName= $configfile | cut -d = -f 2`"
 if [ "$msname" != "" ]; then
+  rm -fr $msname
   mv ${msname}_p1 $msname
   chmod -R a+rX $msname
   echo "Inserting MODEL_DATA and CORRECTED_DATA columns";
