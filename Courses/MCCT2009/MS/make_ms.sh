@@ -27,9 +27,11 @@ makems
 # find out MS name from config file
 msname="`grep MSName= $configfile | cut -d = -f 2`"
 if [ "$msname" != "" ]; then
-  echo "Created $msname"
   mv ${msname}_p1 $msname
   chmod -R a+rX $msname
+  echo "Inserting MODEL_DATA and CORRECTED_DATA columns";
+  lwimager ms=$msname data=CORRECTED_DATA mode=channel weight=natural npix=1 &>/dev/null
+  echo "Created $msname"
 else
   echo "Couldn't find MS name in config file $configfile"
 fi
