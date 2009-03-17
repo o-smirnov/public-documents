@@ -29,10 +29,16 @@
 
 import sys
 import os
+import math
 from math import log10, pi
 
 # max sources to write -- sorted by brightness
 MAX_SOURCES = 100;
+
+# RA, Dec of MS
+RA0 = 0;
+DEC0 = 65;
+cos_dec0 = math.cos(DEC0);
 
 def deg2dms(deg=0):
 	"""
@@ -167,8 +173,8 @@ for line in f:
 #		print required_cols[i]
 #		print columns[i]
 		name = columns[source_col];
-		ra = deg2rad(eval(columns[ra_col])+0)		# Manually insert RA of MS
-		dec = deg2rad(eval(columns[dec_col])+25)	# Manually insert dec of MS
+		ra = deg2rad(eval(columns[ra_col])/cos_dec0+RA0)		# Manually insert RA of MS
+		dec = deg2rad(eval(columns[dec_col])+DEC0)	# Manually insert dec of MS
 		I = (10.0**(eval(columns[i_1400_col])));
 		Q = U = V = 0;
 		spi = 0;
