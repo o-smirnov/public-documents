@@ -1,0 +1,567 @@
+\documentclass[]{aa}
+
+\usepackage{graphicx}
+\usepackage{txfonts}
+\usepackage{natbib}
+
+\bibpunct{(}{)}{;}{a}{}{,} % to follow the A&A style
+
+
+% shortcut to typeset a 2x2 matrix... we do a lot of these
+\newcommand{\matrixtt}[4]{\left( \begin{array}{cc}#1&#2\\#3&#4\\\end{array} \right)}
+
+
+\begin{document}
+
+
+\title{Revisiting the Measurement Equation: Understanding And Calibrating Direction-Dependent Effects  In Radio Interferometers}
+
+\author{O.M.\ Smirnov}
+
+\institute{Netherlands Institute for Radio Astronomy (ASTRON)\\
+  P.O. Box 2, 7990AA Dwingeloo, The Netherlands \\
+  \email{noordam@astron.nl smirnov@astron.nl}}
+
+\date{}
+
+\titlerunning{Measurement Equation \& Direction-Dependent Effects}
+\authorrunning{O.M.\ Smirnov}
+
+\abstract%
+%context
+{This is a placeholder abstract.}%
+%aims
+{World domination.}
+%methods
+{Promote the Measurement Equation.}%
+%results
+{I've had a few // but then again...}%
+%conclusions
+{World domination via the M.E. is imminent.}
+
+\keywords{Methods: numerical - Methods: data analysis - Techniques:
+interferometric - Techniques: polarimetric}
+
+\maketitle
+
+\section*{Introduction}
+
+The Measurement Equation of a generic radio interferometer (henceforth referred to as RIME. ``The Measurement Equation'' is also a term in current use, but seems overly broad.) was formulated by \citet{ME1} after almost 50 years of radio astronomy. Prior to the RIME, mathematical models of radio interferometers (as implemented by a number of software packages such as AIPS, Miriad, NEWSTAR, DIFMAP) were somewhat ad hoc and approximate. Despite this (and in part thanks to the careful design of existing instruments), the technique of {\em selfcalibration} \citep{Cornwell:selfcal} has allowed radioastronomers to achieve spectacular results. However, by the time the RIME was formulated, even older and well-understood instruments such as the WSRT were beginning to expose the limitations of these approximate models. New instruments (and upgrades of older observatories), such as the current crop of Square Kilometer Array \citep{Schilizzi:SKA} ``pathfinders'', and indeed the SKA itself, were already beginning to loom on the horizon. These new instruments exhibit far more subtle and elaborate observational effects, due not only to their greately increased sensitivity, but also to new features of their design. In particular, while traditional selfcal only deals with direction-independent effects (DIEs), calibration of these new instruments requires us to deal with Direction-Dependent Effects (DDEs), that is, effects that vary across the field of view (FoV) of the instrument. 
+
+It is then quite fortunate that the emergence of the RIME formalism has provided us with a complete and elegant mathematical framework for dealing with observational effects, and ultimately DDEs. Oddly enough, outside of a small community of algorithm developers that have enthusiastically accepted the formalism and put it to good use, uptake of RIME by radio astronomers at large has been slow. Anecdotal evidence suggests that some of the ``old guard'' either perceives the RIME as arcane and unnecessary, or simply fails to see its benefits. Even more worryingly, almost 15 years after the first publication, the formalism is not taught to the new generation of students. Worryingly, because in the author's estimation, the RIME should be the cornerstone of every entry-level interferometry course!\footnote{Section~\ref{sec:what-is-the-point} discusses this assertion in depth.} In part this slow acceptance has been shaped by the availability of software. Today's radio astronomers rely almost exclusively on the software packages mentioned above, whose internal paradigms are rooted in the selfcal developments of the 1980s and lack an explicit RIME.\footnote{All legacy packages do use some specific and limited form of the RIME implicitly. This will be discussed further in Sect.~\ref{sec:implicit-mes}.} The continued success of legacy packages means that the {\em thinking} about interferometry and calibration is still largely shaped by pre-RIME paradigms. It doesn't help that new software exploiting the power of the RIME has been slow to emerge, and practical results even more so (but see Sect.~\ref{sec:3C147} of this paper.)  
+
+On the other hand, from the author's personal experience of teaching the RIME at several workshops, once the penny drops, people tend to describe the RIME in terms such as ``obvious'', ``simple'', ``intuitive'', ``elegant'' and ``powerful''. This suggests that there's an explanatory gap in the literature. The first part of this paper therefore tries to address this gap, recasting existing ideas into one consistent mathematical framework, and showing where other approaches to the RIME fit in. Section~\ref{sec:derivation} revisits the ideas of the original RIME papers I and IV \citep{ME1, ME4}, deriving the RIME from first principles. It then shows how fundamentals of interferometry itself (and the van Cittert-Zernike theorem in particular) follow from the RIME (rather than the other way around!), in the process extending the formalism to incorporate DDEs. Section~\ref{sec:formulations} looks at alternative formulations of the RIME and their practical implications, and shows where they fit into the formalism. It also tries to clear up some controversies and misunderstandings that have accumulated over the years. Section~\ref{sec:what-is-the-point} then discusses why the RIME is crucial in the context of modern and future instruments (with the benefit of 15 years of hindsight.) Section~\ref{sec:calibration} discusses calibration in RIME terms, and explicates the links between the RIME and various legacy implementations of selfcal. 
+
+The second half of this paper deals with the subject of DDEs, which were not covered by the original RIME formulation at all. Typical DDEs are caused by beamshapes that are variable in time and/or different between antennas, pointing errors (which could be considered a simple case of differing beamshapes), ionospheric and tropospheric refraction, etc. The problem of DDEs is two-pronged: firstly, some effects are not known apriori and must therefore be calibrated for directly from the data, and secondly, even when the effect is known, correcting for it is decidedly untrivial. A lot of progress has been made on the latter problem, and \citet{SB:imageplane} have proposed an algorithm that corrects for known DDEs during imaging and deconvolution. \citet{Rau:DDEs} and \citet{SB:calibration-low-freq} provide an in-depth review of other developments. This paper will concentrate on the calibration aspect of the problem.
+
+The above authors have developed a description of DDEs using the $4\times4$ Mueller matrix and coherency vector formalism of \citet{ME1}. The $4\times4$ formalism has also been included in the 2nd edition of \citet*[Sect.~4.8]{tms}. In the meantime, \citet{ME4} has recast the RIME using only $2\times2$ matrices. The $2\times2$ form of the RIME has far more intuitive appeal,\footnote{This admittedly subjective judgement is firmly based on the author's teaching experience.} and is far better suited for describing calibration problems, yet has been somewhat unjustly ignored in the literature. Addressing this perceived injustice is yet another aim of this paper. (Section~\ref{sec:formulations} describes the $4\times4$ vs. $2\times2$ formalisms in more detail.)
+
+Section~\ref{sec:ddes} of this paper presents an analysis of the DDE problem using the $2\times2$ formalism. Sect.~\ref{sec:dde-examples} talks about some specific DDEs relevant to current and future instruments, and shows some instructive simulations of these DDEs using the MeqTrees software \citep{meqtrees}. Last but certainly not least, Sect.~\ref{sec:3C147} shows an application of these concepts to real data. It presents a record dynamic range (over 1.5 million) calibration of a WSRT observation, including calibration of DDEs, and discusses the implications of this result for the calibratability of future telescopes such as the SKA.
+
+\section{\label{sec:derivation}Revisiting the Measurement Equation}
+
+\subsection{The RIME of a single source}
+
+\subsubsection{Signal propagation}
+
+Consider a single source of quasi-monochromatic signal (i.e. a sky consisting of a single point source.) The signal at a fixed point in space and time can be then be described by the complex vector $\vec e$. Let us pick an $xyz$ coordinate system with $z$ along the direction of propagation (i.e. from antenna to source.) In such a system, $\vec e$ can be represented by a column vector of 2 complex numbers:
+
+\[
+\vec e = \left( \begin{array}{c}e_x\\e_y\end{array} \right) 
+\]
+
+Our fundamental assumption is {\em linearity}: all transformations along the signal path are linear w.r.t. $\vec e$. Basic linear algebra tells us that all linear transformations of a 2-vector can be represented (in any given coordinate system) by a matrix multiplication:
+
+\begin{equation}
+\vec e' = \vec J \vec e,
+\end{equation}
+
+where $\vec J$ is a $2\times2$ complex matrix known as the {\em Jones} matrix \citep{jones}. Obviously, multiple effects along the signal propagation path correspond to repeated matrix multiplications, forming what we call a {\em Jones chain}. We can regard multiple effects separately and write out Jones chains, or we can collapse them all into a single cumulative Jones matrix as convenient:
+
+\begin{equation}\label{eq:jones-chain}
+\vec e' = \vec J_n \vec J_{n-1} ... \vec J_1 \vec e = \vec J \vec e
+\end{equation}
+
+The order of terms in a Jones chain corresponds to the physical order in which effects occur along the signal path. Since matrix multiplication does not (in general) commute, we must be careful to preserve this order. 
+
+Now, the signal hits our antenna and is ultimately converted into complex voltages by the antenna feeds. Let us further assume that we have two feeds $a$ and $b$ (for example, two linear dipoles, or left/right circular feeds), and that the voltages $v_a$ and $v_b$ are linear w.r.t. $\vec e$. We can formally treat the two voltages as a voltage vector $\vec v$, analogous to $\vec e$. Their linear relationship is yet another matrix multiplication:
+
+\begin{equation}\label{eq:e-voltage}
+\vec v = \left( \begin{array}{c}v_a\\v_b\end{array} \right) = \vec J \vec e
+\end{equation}
+ 
+Equation~(\ref{eq:e-voltage}) can be thought of as representing the fundamental linear relationship between the voltage vector $\vec v$ as measured by the antenna feeds, and the ``original'' signal vector $\vec e$ at some arbitrarily distant point, with $\vec J$ being the cumulative product of all propagation effects along the signal path (including electronic effects in the antenna/feed itself.) We shall call refer to this $\vec J$ as the {\em total Jones} matrix (as opposed to individual Jones terms in a Jones chain.) 
+
+\subsubsection{The visibility matrix}
+
+Two spatially separated antennas $p$ and $q$ measure two independent voltage vectors $\vec v_p,\vec v_q$. In an {\em interferometer}, these are fed into a correlator, which produces 4 pairwise correlations between the components of $\vec v_p$ and $\vec v_q$:
+
+    \begin{equation}\label{eq:correlation}
+    \langle v_{pa}v^*_{qa}\rangle, \langle v_{pa}v^*_{qb}\rangle, 
+    \langle v_{pb}v^*_{qa}\rangle, \langle v_{pb}v^*_{qb}\rangle
+    \end{equation}
+
+Here, angle brackets denote averaging over some (small) time and frequency bin, and $x^*$ is the complex conjugate of $x$.  It is convenient for our purposes to arrange these four correlations into the {\em visibility matrix\/}\footnote{\citet{ME4} calls $\vec V_{pq}$ the {\em coherency matrix}, in order to distinguish it from traditional scalar visibilities. Since the elements of the matrix are precisely the complex visibilities, we submit {\em visibility} matrix as a more logical term.} $\vec V_{pq}$:
+
+    \[
+    \vec V_{pq} = 2 \matrixtt{\langle v_{pa}v^*_{qa}\rangle}{\langle v_{pa}v^*_{qb}\rangle}{\langle v_{pb}v^*_{qa}\rangle}{\langle v_{pb}v^*_{qb}\rangle}
+    \]
+
+We introduce a factor of 2 here, for reasons explained in Sect.~\ref{sec:factor2}. It is easily seen that $\vec V_{pq}$ can be written as a matrix product of $\vec v_p$ (as a column vector), and the conjugate of $\vec v_q$ (as a row vector):
+
+\begin{equation}\label{eq:coherency}
+\vec V_{pq} = 2 \left<\left( \begin{array}{c}v_{pa}\\v_{pb}\end{array} \right) (v^*_{qa},v^*_{qb}) \right > = 2 \langle \vec v_p \vec v^\dagger_q \rangle
+\end{equation}
+
+Here, $\dagger$ represents the conjugate transpose operation (also called a Hermitian transpose.)
+
+\subsubsection{\label{sec:RIME-emerges}The RIME emerges}
+
+Starting with some arbitrarily distant vector $\vec e$, our signal travels along two different paths to antennas $p$ and $q$. Following eq.~(\ref{eq:e-voltage}), each propagation path has its own total Jones matrix, $\vec J_p$ and $\vec J_q$. Combining eqs.~(\ref{eq:e-voltage}) and (\ref{eq:coherency}), we get:
+
+    \[
+    \vec V_{pq} = 2 \langle  \vec J_p \vec e ( \vec J_q \vec e )^\dagger \rangle  = 2 \langle  \vec J_p (\vec e \vec e^\dagger) \vec J^\dagger_q \rangle 
+    \]
+
+Assuming that $\vec J_p$ and $\vec J_q$ are constant over the averaging interval,\footnote{This is a crucial assumption, which we will revisit in Sect.~\ref{sec:smearing}} we can move them outside the averaging operator:
+
+    \[
+    \vec V_{pq} = 2 \vec J_p \langle  \vec e \vec {\rm e}^\dagger \rangle  \vec J^\dagger_q = 
+    2 \vec J_p 
+    \matrixtt{\langle e_x e^*_x\rangle }{\langle e_x e^*_y\rangle }{\langle e_y e^*_x\rangle }{\langle e_y e^*_y\rangle }
+    \vec J^\dagger_q
+    \]
+
+The bracketed quantities here are intimately related to the definition of the Stokes parameters \citep{born-wolf,tms}. \citet{ME3} explicitly show that
+
+    \begin{equation}\label{eq:IQUV}
+    2 
+    \matrixtt{\langle e_x e^*_x\rangle }{\langle e_x e^*_y\rangle }{\langle e_y e^*_x\rangle }{\langle e_y e^*_y\rangle }
+    = 
+    \matrixtt{I+Q}{U+iV}{U-iV}{I-Q} = \vec B
+    \end{equation}
+
+We now define the {\em brightness matrix} $\vec B$ as the right-hand side\footnote{Following a long-standing controversy, we have decided to break with \citet{ME4} by omitting $\frac{1}{2}$ from the definition of $\vec B$, and adding a factor 2 to the definition of $\vec V_{pq}$ in eq.~(\ref{eq:coherency}). The reasons for this will be spelled out in Sect.~\ref{sec:factor2}.} of eq.~(\ref{eq:IQUV}). This gives us the first form of the RIME, that of a single point source:
+
+    \begin{equation}\label{eq:me0}
+    \vec V_{pq} = \vec J_p \vec B  \vec J^\dagger_q
+    \end{equation}
+
+Or in expanded form:
+
+\[
+    \left( 
+    \begin{array}{cc}
+    v_{aa} & v_{ab} \\
+    v_{ba} & v_{bb} \\
+    \end{array}
+    \right) = 
+    \left( 
+    \begin{array}{cc}
+    j_{11p} & j_{12p} \\
+    j_{21p} & j_{22p} \\
+    \end{array}
+    \right) 
+    \left( 
+    \begin{array}{cc}
+    I+Q & U+iV \\
+    U-iV & I-Q \\
+    \end{array}
+    \right) 
+    \left( 
+    \begin{array}{cc}
+    j_{11q} & j_{12q} \\
+    j_{21q} & j_{22q} \\
+    \end{array}
+    \right)^\dagger
+\]
+
+which quite elegantly ties together the observed visibilities $\vec V_{pq}$ with the intrinsic source brightness $\vec B$, and the per-antenna terms $\vec J_p$ and $\vec J_q$.
+
+Note that eq.~(\ref{eq:me0}) holds in any coordinate system. The vector $\vec e$, the brightness matrix $\vec B$ that is derived from it, and the linear transformations $\vec J_p$ and $\vec J_q$ are distinct mathematical entities that are independent of coordinate systems; choosing a coordinate basis associates a specific {\em representation} with $\vec e$,  $\vec B$ and $\vec J$, manifesting itself in a 2-vector or a $2\times2$ matrix populated with specific complex numbers. For example, it is quite possible (and sometimes desirable) to rewrite the RIME in a circular polarisation basis. This is discussed further in Sect.~\ref{sec:circular}. In this paper, we shall use an orthonormal $xyz$ basis unless otherwise stated.
+
+\subsubsection{The onion form}
+
+We can also choose to expand $\vec J_p$ and $\vec J_q$ into their associated Jones chains, as per 
+eq.~(\ref{eq:jones-chain}). This results in the rather pleasing ``onion form'' of the RIME:
+
+    \begin{equation}\label{eq:me0-onion}
+    \vec V_{pq} = \vec J_{pn}(...(\vec J_{p2} (\vec J_{p1} \vec B  \vec J_{q1}^\dagger)\vec J^\dagger_{q2}) ... )\vec J^\dagger_{qm}
+    \end{equation}
+
+Intuitively, this corresponds to various effects in the signal path applying sequential layers of ``corruptions'' to the original source brightness $\vec B$. Note that the two signal paths can in principle be entirely dissimilar, making the ``onion'' assymetric (hence the use of $n\ne m$ for the outer indices.) One of the strengths of the RIME is its ability to describe heterogenous interferometer arrays with dissimilar signal propagation paths.
+
+\subsubsection{An elementary Jones taxonomy}
+
+Different propagation effects are described by different kinds of Jones matrices. The simplest kind of matrix is a {\em scalar} matrix, corresponding to a transformation that affects both components of the $\vec e$ vector equally. In this paper, we use bold capitals $(\vec J)$ to represent matices in general, and normal-weight capitals $(K)$ for scalar matrices. An example is the phase delay matrix:
+
+    \[
+    K = {\rm e}^{i\phi} \equiv 
+    \left( 
+    \begin{array}{cc}
+    {\rm e}^{i\phi} & 0 \\
+    0 & {\rm e}^{i\phi} \\
+    \end{array}
+    \right) =   
+    {\rm e}^{i\phi} \left( 
+    \begin{array}{cc}
+    1 & 0 \\
+    0 & 1 \\
+    \end{array}
+    \right)    
+    \]
+
+An important property of scalar matrices is that they have the same representation in all coordinate systems (Sect.~\ref{sec:RIME-emerges} above discusses the distinction between linear operators and their representations), so {\em scalarity} is defined independently of coordinate frame.
+
+Diagonal matrices correspond to effects that affect the two $\vec e$ components independently, without intermixing. Note that unlike sclarness, diagonality {\em does} depend on choice of coordinate systems. For example, if we consider linear dipoles, their electronic gains are (nominally) independent, and the corresponding Jones matrix is diagonal in an $xy$ coordinate basis:
+
+    \[
+    \vec G = 
+    \left( 
+    \begin{array}{cc}
+    g_x & 0 \\
+    0 & g_y \\
+    \end{array}
+    \right) 
+    \]
+
+The gains of a pair of circular receptors, on the other hand, are not diagonal in an $xy$ frame (but are diagonal in a circular polarization frame -- see Sect.~\ref{sec:circular}.)
+
+Matrices with non-zero off-diagonal terms intermix the two components of $\vec e$. A special case of this is the {\em rotation} matrix:
+
+    \[
+    \mbox{Rot~}\phi = 
+    \left( 
+    \begin{array}{cc}
+    \cos\phi & -\sin\phi \\
+    \sin\phi & \cos\phi \\
+    \end{array}
+    \right) 
+    \]
+
+Like diagonality, the property of being a rotation matrix also depends on choice of coordinate frame. Examples of rotation matrices (in an $xy$ frame) are rotation through parallactic angle $\vec P$, and Faraday rotation in the ionosphere $\vec F$.
+
+It is important for our purposes that, while in general matrix multiplication is non-commutative, specific kinds of matrices do commute:
+
+\begin{enumerate}
+\item Scalar matrices commute with everything.
+\item Diagonal matrices commute among themselves.
+\item Rotation matrices commute among themselves. 
+\end{enumerate}
+
+Rules 2 and 3 are not very satisfactory as stated. This is because diagonality and rotation are properties defined in a specific coordinate frame, while (non-)commutation is defined independently of coordinates. Two linear operators $\vec A$ and $\vec B$ either commute or they don't, so their matrices will commute (or not) irrespective of what they look like for a particular basis. Without delving too much into linear algebra, let's adopt a practical formulation: {\em if there exists a coordinate basis where the matrices $\vec A$ and $\vec B$ are both diagonal (or both a rotation), then $\vec A \vec B=\vec B\vec A$ in all coordinate frames.} We shall be making use of commutation properties later on.
+
+\subsubsection{\label{sec:coherency}Phase and coherency}
+
+Equation~(\ref{eq:me0}) is universal in the sense that the $\vec J_p$ and $\vec J_q$ terms represent all effects along the signal path rolled up into one $2\times2$ matrix. It is time to examine these in more detail. In the ideal case of a completely uncorrupted observation, there is one fundamental effect remaining -- that of phase delay associated with signal propagation. We are not interested in absolute phase, since the averaging operator implicit in a correlation measurement such as eq.~(\ref{eq:correlation}) is only sensitive to phase {\em difference} between voltages $\vec v_p$ and $\vec v_q$. 
+
+Phase difference is due to the geometric pathlength difference from source to antennas $p$ and $q$. For reasons discussed in Sect.~\ref{sec:smearing}, we want to minimize this difference for a specific direction, so a correlator will usually introduce additional delay terms to compensate for the pathlength difference in the chosen direction, effectively ``steering'' the interferometer. This direction is called the {\em phase centre}. The conventional approach is to consider phase differences on {\em baseline} $p-q$, but for our purposes let's pick an arbitrary zero point, and consider the phase difference at each antenna $p$ relative to the zero point.
+
+Adopting the conventional coordinate system of \citet{tms}, with the $z$ axis pointing towards the phase centre, the phase difference at antenna $p$, for a signal arriving from direction $\bar \sigma$, is given by
+
+  \[
+  \kappa_p = 2\pi (u_p l+v_p m+w_p (n-1))
+  \]
+
+where $(u_p,v_p,w_p)=\vec u_p$ are the coordinates of antenna $p$, and $l,m,n=\sqrt{1-l^2-m^2}$ are the direction cosines of $\bar\sigma$. Following \citet{JEN:note185}, we can now introduce a scalar {\em K-Jones} matrix representing the phase delay effect. After all, phase delay is just another linear transformation of the signal, and is perfectly amenable to the Jones formalism:
+
+  \begin{equation}\label{eq:K}
+  K_p = {\rm e}^{-i\kappa_p} = {\rm e}^{-2\pi i(u_p l+v_p m+w_p (n-1))}
+  \end{equation}
+
+The RIME for a single uncorrupted point source is then simply:
+
+  \begin{equation}\label{eq:me-point-source}
+  \vec V_{pq} = K_p \vec B  K^\dagger_q
+  \end{equation}
+
+Substituting the exponents for $K_p$ from eq.~(\ref{eq:K}), and remembering that scalar matrices commute with everything, we can recast eq.~(\ref{eq:me-point-source}) in a more traditional form:
+
+  \begin{equation}\label{eq:me-point-source-uvw}
+  \vec V_{pq} = \vec B  {\rm e}^{-2\pi i(u_{pq} l+v_{pq} m+w_{pq} (n-1)},\;\vec u_{pq} = \vec u_p - \vec u_q,
+  \end{equation}
+ 
+which expresses the visibility as a function of {\em baseline $uvw$ coordinates} $\vec u_{pq}$. We shall call the visibility matrix given by eqs.~(\ref{eq:me-point-source}) or (\ref{eq:me-point-source-uvw}) the {\em source coherency}, and write it as $\vec X_{pq}$. In the traditional view of radiointerferometry, $\vec X_{pq}$ is a measurement of the coherency function $\vec X(u,v,w)$ at point $u_{pq},v_{pq},w_{pq}$ (with $\vec X$ being a $2\times2$ complex matrix rather than the traditional scalar complex function.) For the purposes of this paper, let us adopt an operational definition of {\em source coherency} as being the visibility that would be measured by an ideal interferometer. For a point source, the coherency is given by eq.~(\ref{eq:me-point-source}).
+
+\subsubsection{A single corrupted point source}
+
+A real-world interferometer will have some ``corrupting'' effects in the signal path, in addition to the nominal phase delay $K_p$. Since the latter is scalar and thus commutes with everything, we can move it to the beginning of the Jones chain, and write the total Jones $\vec J_p$ of eq.~(\ref{eq:me0}) as
+
+\[
+\vec J_p = \vec G_p K_p,
+\]
+
+where $\vec G_p$ represents all the other (corrupting) effects. We can then formulate the RIME for a single corrupted point source as:
+
+  \begin{equation}\label{eq:me-point-source-corrupted}
+  \vec V_{pq} = \vec G_p \vec X_{pq} \vec G^\dagger_q,
+  \end{equation}
+
+where $\vec X_{pq}$ is the source coherency, as defined above.
+ 
+
+\subsection{Multiple discrete sources}
+
+Let us now consider a sky composed of $N$ point sources. The contributions of each source to the measured visibility matrix $\vec V_{pq}$ add up linearly. The signal propagation path is different for each source $s$ and antenna $p$, but each path can be described by its own Jones matrix $\vec J_{sp}$. Equation~(\ref{eq:me0}) then becomes:
+
+  \begin{equation}\label{eq:me-nps-j}
+  \vec V_{pq} = \sum_{s}{\vec J_{sp} \vec B_s J^\dagger_{sq}}
+  \end{equation}
+
+Remember that each $\vec J_{sp}$ is a product of a (generally non-commuting) {\em Jones chain}, corresponding to the physical order of effects along the signal path:
+
+  \[
+  \vec J_{sp} = \vec J_{spn} ... \vec J_{sp1},
+  \]
+
+where effects represented by the right side of the chain ($...\vec J_{sp1}$) occur ``at the source'', and effects on the left side of the chain ($\vec J_{spn}...$) ``at the antenna''. Somewhere along the chain is the phase term $K_{sp}$, but since (being a scalar matrix) it commutes with everything, we are free to move it to any position in the product.
+
+Some elements in the chain may be the same for all sources. This tends to be true for effects at the antenna end of the signal path, such as electronic gain. Let us then collapse the chain into a product of three Jones matrices:
+
+  \[
+  \vec J_{sp} = \vec G_{p} \vec E_{sp} K_{sp}
+  \]
+
+$\vec G_{p}$ is the source-independent ``antenna'' (left) side of the Jones chain, i.e. the product of all the terms from the leftmost $\vec J_{spn}$, up to and not including the leftmost source-dependent term. If the entire chain is source-dependent, $\vec G_{p}$ is simply unity. $\vec E_{sp}$ is the source-dependent remainder of the chain, and $K_{sp}$ is the phase term. We can then recast eq.~(\ref{eq:me-nps-j}) as follows:
+
+  \begin{equation}\label{eq:me-nps-gek}
+  \vec V_{pq} = \vec G_p \left ( \sum_{s}{\vec E_{sp} K_{sp} \vec B_s K^\dagger_{sq} \vec E^\dagger_{sq}} \right ) \vec G^\dagger_q
+  \end{equation}
+
+Or, using the source coherency of eq.~(\ref{eq:me-point-source}):
+
+  \begin{equation}\label{eq:me-nps-ge}
+  \vec V_{pq} = \vec G_p \left ( \sum_{s}{\vec E_{sp} \vec X_{spq} E^\dagger_{sq}} \right ) \vec G^\dagger_q
+  \end{equation}
+
+$\vec G_p$ describes the {\em direction-independent effects} (DIEs), and $\vec E_{sp}$ the {\em  direction-dependent} effects (DDEs). 
+
+In principle the sum in eq.~(\ref{eq:me-nps-ge}) should be taken over all sufficiently bright\footnote{Brighter than the noise, that is -- see Sect.~\ref{sec:noise}.} sources in the sky, but in practice our FoV is limited by the voltage beam pattern of each antenna (or in the case of an all-sky instrument such as LOFAR, by the horizon). In RIME terms, beam gain is just another Jones term in the chain, ensuring $\vec E_{sp}=0$ for sources outside the beam.
+
+If the observed field has little or no spatially extended emission, this form of the RIME is already powerful enough to allow for calibration of DDEs, as we shall show in Sect.~\ref{sec:3C147}.
+
+\subsection{The full-sky RIME}
+
+In the more general case, the sky is not a sum of discrete sources, but rather a continuous brightness distribution $\vec B(\bar\sigma)$, where $\bar\sigma$ is a (unit) direction vector. For each antenna $p$, we then have a Jones term $\vec J_p(\bar\sigma)$, describing the signal path for direction $\bar\sigma$. To get the total visibility as measured by an interferometer, we must integrate eq.~(\ref{eq:me0}) over all possible directions, i.e. over a unit sphere:
+
+\[
+\vec V_{pq} = \int\limits_{4\pi} \vec J_p(\bar\sigma) \vec B(\bar\sigma) \vec J^\dagger_q(\bar\sigma) \, d\Omega
+\]
+
+This spherical integral is not very tractable, so we perform a sine projection of the sphere onto the plane $(l,m)$ tangent at the field centre.\footnote{Or the N/S celestial pole, for East-West arrays, which does not materially change any of the arguments.} This analysis is fully analogous to that of \citet[Sect.~3.1]{tms}, with only the integrand being somewhat different. The integral then becomes:
+
+\[
+\vec V_{pq} = \iint\limits_{lm} \vec J_p(l,m) \vec B(l,m) \vec J^\dagger_q(l,m) \frac{dl\,dm}{\sqrt{1-l^2-m^2}}
+\]
+
+By analogy with eq.~(\ref{eq:me-nps-gek}), we now decompose $\vec J_p(l,m)$ into a direction-independent part, a direction-dependent part, and a phase term:
+
+\[
+\vec J_p(l,m) = \vec G_p\vec E_p(l,m) K_p(l,m) = \vec G_p\vec E_p(l,m) {\rm e}^{-2\pi i(u_p l+v_p m+w_p (n-1))}
+\]
+
+Let us also define the {\em apparent sky} for baseline $pq$ as
+
+\begin{equation}\label{eq:bapp}
+\vec B_{pq}(l,m) = \frac{1}{n} \vec E_p(l,m)  \vec B(l,m) \vec E^\dagger_q(l,m).
+\end{equation}
+
+Substituting this into the integral and commuting the $K$ terms around (see also eq.~\ref{eq:me-point-source-uvw}), we get:
+
+\begin{equation}\label{eq:me-allsky}
+\vec V_{pq} = \vec G_p \left( \iint\limits_{lm} \vec B_{pq}(l,m) {\rm e}^{-2\pi i(u_{pq} l+v_{pq} m+w_{pq} (n-1))} \,dl\,dm \right) \vec G^\dagger_q
+\end{equation}
+
+Eqs.~(\ref{eq:bapp}) and (\ref{eq:me-allsky}) together constitute a general full-sky RIME. We shall return to this general formulation in Sect.~\ref{sec:ddes}. For now, let us make two simplifying assumptions:
+
+\begin{enumerate}
+\item DDEs ($\vec E_p$) are the same for all antennas: $\vec E_p(l,m) \equiv \vec E(l,m)$. 
+\item $\vec E(l,m)$ is only non-zero in a small area around $l=m=0$ (so that $n\to 1$ where $E(l,m) \ne 0.$) This is the case in traditional narrow-FoV interferometery.
+\item[2a.] Alternatively, $w\equiv0$ (as is the case in a  coplanar interferometer array, such as an East-West array.)
+\end{enumerate}
+
+Under these assumptions, the exponent under the integral becomes simply ${\rm e}^{-2\pi i(u_{pq} l+v_{pq}m)}$ -- recognizably, the kernel of a two-dimensional Fourier transform. Crucially, the apparent sky $\vec B_{pq}$ becomes the same on all baselines (in the traditional view, this corresponds to the ``true'' sky multiplied by the power beam): 
+
+  \[
+  \vec B_{pq}(l,m) \equiv B_{\rm app}(l,m) =  \frac{1}{n} \vec E(l,m) \vec B(l,m) \vec E^\dagger(l,m)
+  \]
+
+We can then rewrite the full-sky RIME as:
+
+\begin{equation}\label{eq:me-allsky-simple}
+\vec V_{pq} = \vec G_p \vec X_{pq} \vec G^\dagger_q,
+\end{equation}
+
+where $\vec X_{pq} = \vec X(u_{pq},v_{pq})$, and the matrix function $\vec X(u,v)$ is simply the (element-by-element) two-dimensional Fourier transform of the matrix function $\vec B_{\rm app}(l,m)$. The similarity to eq.~(\ref{eq:me-point-source-corrupted}) of a single point source is readily apparent. For obvious reasons, we shall call this $\vec X(u,v)$ the {\em sky coherency}. Effectively, we have derived the van Cittert-Zernike theorem (VCZ), the cornerstone of radio interferometery \citep[Sect.~14.1]{tms}, from the basic RIME! 
+
+This approach turns the RIME formalism on its head. Note that eq.~(\ref{eq:me-allsky-simple}) is pretty much the original coherency matrix formulation of \citet[eq.~2]{ME4}. In the RIME papers, Hamaker et al. defer to VCZ, treating the coherency as a ``given'' (while recasting it to matrix form) to which Jones matrices then apply. By treating phase ($K$) as a Jones matrix in its own right, we have shown that the Jones formalism naturally extends to the $(l,m)$ plane, and that VCZ is actually a consequence of the RIME rather than being something extrinsic to it. This also opens the door to studying DDEs as part of the same formalism, to which we shall return in Sect.~\ref{sec:ddes}.
+
+\subsubsection{Time variability}
+
+We have not yet cosidered the time variable at all. Signal propagation effects (and indeed the sky itself) do vary in time, but this did not matter up to now, since the RIME describes an (effectively) instantaneous measurement, if we ignore the issue of time averaging (which will be considered separately in Sect.~\ref{sec:smearing}). 
+
+Time begins to play an important role when we consider DDEs. At any point in time, an interferometer given by eq.~(\ref{eq:me-allsky-simple}) measures the coherency function $\vec X(u,v)$ at a number of points $(u_{pq},v_{pq})$ (i.e. for all {\em baselines} $p-q$). This ``snapshot'' measurement gives a limited sampling of the $(u,v)$ plane, which adversely affects our ability to reconstruct the sky $\vec B_{\rm app}$ from the sampled values. To sample the $(u,v)$ plane more fully, we usually rely on the Earth's rotation, which over several hours effectively ``swings'' every baseline vector $(u_{pq},v_{pq})$ through an arc in the $(u,v)$ plane. For eq.~(\ref{eq:me-allsky-simple}) to hold throughout an observation, we must additionally assume that the apparent sky $\vec B_{\rm app}$ stays the same, while we wait for the interferometer array to sample the $(u,v)$ plane fully! This means that the traditional view of an interferometer measuring the Fourier transform of the [apparent] sky only holds if we assume that DDEs remain constant in time, besides being the same for all antennas:
+
+\[
+\vec E_p(t,l,m) \equiv \vec E_p(l,m) \equiv \vec E(l,m)\;\;\mbox{for all~} t,p. 
+\]
+
+That this is patently not the case in real life will be the subject of Sect.~\ref{sec:ddes}.
+
+
+\subsection{Limitations of the RIME formalism}
+
+\subsubsection{\label{sec:noise}Noise}
+
+The RIME as presented here and in the original papers is formulated for a noise-free measurement. In practice, each element of the $\vec V_{pq}$ matrix (i.e. each complex visibility) is accompanied by uncorrelated Gaussian noise in the real and imaginary parts; a detailed treatment of this can be found in \citet[Sect.~6.2]{tms}. The noise level imposes a hard sensitivity limit on any given observation, which has a few implications relevant to our purposes:
+
+\begin{itemize}
+\item ``Reaching the noise'' has become the gold standard of calibration (Sect.~\ref{sec:calibration}). Many reductions are limited by calibration artifacts 
+rather than the noise.
+\item {\em Corrections} to the data (however one defines the term) can potentially distort the noise level across an observation, so due care must be taken.
+\item Faint sources below the noise threshold can be effectively ignored.
+\item Numerical approximations can be considered ``good enough'' once they get to within the noise (assuming no systematic errors.)
+\end{itemize}
+
+The latter two considerations are what we refer to by ``sufficiently faint'' sources and ``sufficently close'' approximations throughout this paper.
+
+\subsubsection{\label{sec:smearing}Smearing and decoh{\ae}rence}
+
+Time/bandwidth smearing, etc.
+
+\subsubsection{\label{sec:closure-errors}Closure errors}
+
+\section{\label{sec:formulations}Alternative formulations}
+
+* Discuss alternative formulations of the ME (in literature, and for practical purposes)
+
+\subsection{Specific vs. general RIMEs} 
+
+* Discuss specific formulations with specific Jones terms (Note 185, CASA approach, etc.) Point out how this sometimes obscurs the forest by the trees.
+
+\subsection{Mueller vs. Jones formalism}
+
+4x4 bad, 2x2 good. Why the imaging people find 4x4 convenient.
+
+\subsection{\label{sec:circular}Circular vs. linear polarizations}
+
+Converting between coordinate bases and all that.
+
+\subsection{Implementation issues}
+
+4x4 vs. 2x2 etc, optimizing computations, circular vs. linear bases, commutation and non-commutation, diagonality, all that.
+
+\subsection{Errors and controversies}
+
+For all its elegance, even the simplest version of the RIME (e.g. as formulated in Sect.~\ref{sec:RIME-emerges}) contains two points of confusion and controversy. The first has to do with the sign of the $iV$ term, and the second with the factors of 2 in the definition of $\vec V_{pq}$ and $\vec B$.
+
+\subsubsection{Sign of Stokes $V$}
+
+The sign of Stokes $V$ has been a perennial source of confusion. The \citet{IAU74} definition specifies that $V$ is positive for right-hand circular polarization, but the literature is littered with papers adopting the opposite convention. Fortunately, major software packages such as AIPS and MIRIAD follow the IAU definition (though this 
+has not always been the case for earlier versions). As for the $iV$ term in the RIME, Papers I and II of the series \citep{ME1,ME2} used the sign convention of eq.~(\ref{eq:IQUV}). In Paper III of the RIME series, \citet{ME3} then discussed the issue in detail, and showed that this convention is ``correct'' in the sense of following from the IAU definitions for Stokes $V$ and standard coordinate systems. However, in Paper IV, \citet{ME4} then used the opposite sign convention! In Paper V, \citet{ME5} noted the inconsistency, yet persisted in the opposite convention. 
+
+In this paper we follow the ``correct'' sign conventions of Papers I through III, as per eq.~(\ref{eq:IQUV}).
+
+In practice, few radio astronomers concern themselves with the sign of Stokes $V$, which is perhaps why the confusion has been allowed to fester. Unfortunately, this also means that the minority that does care about $V$ must triple-check its sign on every occassion!
+
+\subsubsection{\label{sec:factor2}Factors of 2, or what is the unit response of an ideal interferometer?}
+
+A far more insidious issue is the factor of $2$ in eqs.~(\ref{eq:coherency}) and (\ref{eq:IQUV}). This has been the subject of a long-standing controversy both in the literature and in software. The definition of Stokes $I$ in terms of the complex amplitudes of the electric field is quite unambiguous \citep{tms,born-wolf}:
+
+\begin{eqnarray*}
+I&=&\langle |e_x|^2\rangle  + \langle |e_y|^2\rangle , \\
+Q&=&\langle |e_x|^2\rangle  - \langle |e_y|^2\rangle , \\
+&...&
+\end{eqnarray*}
+
+This implies that a {\em unit} source of $I=1, Q=U=V=0$ corresponds to complex amplitudes of $\langle |e_x|^2\rangle =\langle |e_y|^2\rangle = 1/2$. What is less clear is how to relate this to the outputs of a correlator. That is, given an ideal interferometer and a unit source at the phase centre, what visibility matrix $\vec V_{pq}$ should we expect to see? (In other words, what is the gain factor of an ideal interferometer?) This is something for which no unambiguous definition exists. Historically, two conventions have emerged:
+
+\paragraph{Convention-1/2.} Unit correlations correspond to unit complex amplitudes, so a 1 Jy source produces correlations of 1/2 each: 
+
+\[
+\vec V_{pq} = \matrixtt{\langle |e_x|^2\rangle }{0}{0}{\langle |e_y|^2\rangle } = \frac{1}{2}\matrixtt{1}{0}{0}{1}
+\]
+
+\paragraph{Convention-1.} Unit correlations correspond to unit Stokes $I$:
+
+\[
+\vec V_{pq} = 2\matrixtt{\langle |e_x|^2\rangle }{0}{0}{\langle |e_x|^2\rangle } = \matrixtt{1}{0}{0}{1}
+\]
+
+Convention-1/2 is somewhat more pleasing to the purists, as it retains standard physical units for visibilities. This is the convention used throughout the RIME papers, beginning with \citet{ME1}, and also originally adopted in the MeqTrees system \citep{meqtrees}. However, Convention-1 is by far the more widespread, having been adopted by AIPS and other software systems, which has effectively entrenched it in the minds of most radio astronomers.
+
+The first edition of what is effectively the Holy Scripture of radio interferometry, \citet*{tms1}, had a factor of 1/2 in the equations for interferometer response (eq.~4.46), but omitted it in Table~4.47. (We conjecture that this table may in fact be the origin of Convention-1!) By the time of the second edition, Convention-1 was already widespread, and the authors responded by dropping the factor of 1/2 after eq.~(4.29), noting that it was ``omitted and considered to be subsumed within the overall gain factor.'' \citep[see p. 102]{tms}. For better or for worse, this has irrevocably consecrated Convention-1 as the Chosen One.
+
+Ultimately, flux scales are tied to known calibrator sources, whose brightnesses are quite unambigously defined in Janskys. This means that in practice, the factor of 2 is indeed quietly subsumed into the gain calibration. Problems arise when data is moved between software packages that follow different conventions. For example, data calibrated with MeqTrees (formerly using 
+Convention-1/2) is kept in a Measurement Set (MS), yet the only tool available for making images from an MS is the AIPS++/CASA imager (Convention-1.) This has often resulted in images with fluxes that were off by a factor of 2, so the MeqTrees project has recently switched to Convention-1.
+
+In this paper, we have taken the difficult decision of breaking with the original formulations, and recasting the RIME using Convention-1. There remains the question of where to inject the requisite factor of 2. We have decided to do it ``on the inside'', by dropping the factor of 1/2 from the \citet{ME4} definition of the brightness matrix $\vec B$ (eq.~\ref{eq:IQUV}). The alternative was to add a factor of 2 to the ``outside'' of the equation. The ``inside'' approach appears to have a number of practical advantages:
+
+\begin{itemize}
+\item $\vec B$ becomes unity for a unit source.
+\item The coherency of a point source at the phase centre (Sect.~\ref{sec:coherency}) becomes equivalent to its brightness (and not one-half of its brightness).
+\item In the ``onion'' form of the ME (eq.~\ref{eq:me0-onion}), each successive layer of the onion corrsponds to measurable visibilities, without needing to carry an explicit factor of 2 around.
+\end{itemize}
+
+\section{\label{sec:what-is-the-point}What is the point of the RIME?}
+
+* Discuss why the RME is critically important. 
+
+* Trot out the usual obvious selling points.
+
+\subsection{The ubiquitousness of polarisation}
+
+* Stop thinking of polarization as a separate detail, must be considered as a whole to begin with (B matrix is important).
+
+* Polconversion, LOFAR example of differential FR.
+
+\subsection{Layers of intuition}
+
+* can consider problems physically, mathematically, or geometrically; ME ties the three layers together
+
+* example: diff FR. Trivial effect on the mathematical layer (2x2 form), not so trivial in physical terms.
+
+\section{\label{sec:calibration}Calibration with the ME}
+
+\subsection{Calibration vs. Imaging}
+
+\subsection{Phenomenological MEs}
+
+\subsection{\label{sec:implicit-mes}Implicit MEs}
+
+* selfcal
+
+* ambiguities of selfcal
+
+* fringe-fitting
+
+* closure errors
+
+\subsection{\label{sec:lsm}Source and sky models}
+
+* alternative source representation (shapelets, etc.)
+
+\section{\label{sec:ddes}Direction-Dependent Effects}
+
+* convolutional approaches
+
+* solving for DDEs
+
+* using parameterized models (MIM, pointing selfcal, etc.)
+
+\subsection{\label{sec:dde-examples}A DDE gallery}
+
+* pictures from simulations
+
+\section{\label{sec:3C147}3C147}
+
+* more glorious pictures
+
+* differential gain solutions
+
+\bibliographystyle{aa}
+
+\bibliography{me6_dde}
+
+
+\end{document}
