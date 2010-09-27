@@ -871,11 +871,11 @@ Mispointing is thought to be a major source of off-axis errors in WSRT and VLA m
 
 The environmental factors responsible for mispointing can also cause deformation of the dish surface. The resulting changes to $\jones{E}(l,m)$ are rather more difficult to predict and quantify, and little work has been done on the subject. \citet{Harp:ATA-beams} show significant thermal-related deformations at the ATA.
 
-\subsection{Calibration of DDEs\label{sec:cal-DDE}}
+\subsection{Calibrating \& correcting of DDEs\label{sec:cal-DDE}}
 
 \subsubsection{Peeling\label{sec:peeling}}
 
-The ``peeling'' algorithm was originally proposed by \citet{JEN:peeling} as a way of calibrating and removing DDEs from sources one by one, in order of decreasing brightness. Since its introduction, the term ``peeling'' has been misunderstood and diluted to the point where it is occasionally used to describe {\em any} technique incorporating direction-dependent solutions, but this is incorrect. In its original formulation, ``peeling'' refers to a very specific calibration algorithm:
+The ``peeling'' algorithm was originally proposed by \citet{JEN:peeling} as a way of calibrating and removing DDEs from sources one by one, in order of decreasing brightness. Since its introduction, the term ``peeling'' has been misunderstood and diluted to the point where it is occasionally used to describe {\em any} technique incorporating direction-dependent solutions, but this is incorrect. In its original formulation, peeling refers to a very specific calibration algorithm:
 
 \begin{enumerate}
 
@@ -893,19 +893,29 @@ The ``peeling'' algorithm was originally proposed by \citet{JEN:peeling} as a wa
 
 \end{enumerate}
 
+
+
+
+\subsubsection{Differential gains}
+
+The differential gains approach
+
+
 \subsubsection{AW-projection\label{sec:awproj}}
 
 
 
 \section{Addressing DDEs in 21cm WSRT observations of \label{sec:3C147}3C147}
 
-The field around the bright radio source 3C147 is a favourite showcase for dynamic range (DR) demonstrations. 3C147 itself is very bright (22Jy at 21cm), which ensures a high SNR for selfcal solutions, while the surrounding field boasts a spectacular collection of point-like fainter sources. The absense of significant extended emission has allowed very accurate sky models to be constructed. It is then not surprising that 3C147 was the first field to break the $10^6$ dynamic range barrier \citep{deBruyn:million,deBruyn:3C147}, on a single 12-hour synthesis. This spectacular result was achieved with nothing more than regular selfcal implemented in the NEWSTAR package. A major factor in achieving this result is the relatively low level of beam-related DDEs at the WSRT, as discussed in 
+The field around the bright radio source 3C147 is a favourite showcase for dynamic range (DR) demonstrations. 3C147 itself is very bright (22Jy at 21cm), which ensures a high SNR for selfcal solutions, while the surrounding field boasts a spectacular collection of mostly point-like fainter sources. The absense of significant extended emission has allowed very accurate sky models to be constructed. It is then not surprising that 3C147 was the first field to break the $10^6$ dynamic range barrier \citep{deBruyn:million,deBruyn:3C147}, on a single 12-hour synthesis. This spectacular result was achieved with nothing more than regular selfcal implemented in the NEWSTAR package. A major factor in achieving this result is the relatively low level of beam-related DDEs at the WSRT, as discussed in 
 Sect.~\ref{sec:E-Jones}.\footnote{By contrast, the (E)VLA, with its more significant DDEs, has not (yet) exceeded $10^6$.} An image of the 3C147 field at 1,600,000:1 dynamic range is shown in Fig.~\ref{fig:3C147}. The making of this image is the subject of this section. 
 
-\begin{figure}
-\begin{centering}\includegraphics[width=\columnwidth]{3C147}\par\end{centering}
+\begin{figure*}
+\sidecaption
+\centering
+\includegraphics[width=12cm]{3C147}
 \caption{\label{fig:3C147}3C147.}
-\end{figure}
+\end{figure*}
 
 
 The very same benign properties that allow the WSRT to achieve record DR also make it a perfect instrument for studying DDEs. The latter are prominent enough to clearly show up in high-DR maps (see e.g. left inset of Fig.~\ref{fig:3C147}), but not severe enough to hinder the building up of very deep sky models during normal selfcal.\footnote{Strictly speaking, this is only true in continuum mode. In spectral line mode, the 17 MHz ``ripple'' discussed in Sect.~\ref{sec:E-Jones:wsrt} becomes a very troublesome DDE. Further work is required on this subject.} The 3C147 observations by \citet{deBruyn:3C147} are a perfect example of this. We have therefore decided to reprocess this data using MeqTrees, to see if DDEs can be eliminated through the use of a suitable form of the RIME.
@@ -922,7 +932,9 @@ One of the objects of this study was to narrow down these possibilities.
 
 \subsection{Observations and NEWSTAR reduction}
 
-The observational data in question were obtained by de Bruyn in 2003. A single 12-hour synthesis was taken, using $8\times20$ MHz bands (64 channels each) from 1300 to 1460 MHz, with 30 s integration time. Due to a back-end problem, one of the cross-correlations was corrupted, so only the $XX$ and $YY$ correlations were usable. De Bruyn then successfully reduced the observation using the NEWSTAR package, achieving a world record 1,600,000:1 dynamic range \citep{deBruyn:3C147}. Only regular selfcal was done and no peeling was attempted, so the resulting image showed DDE-related artifacts around off-axis sources (Fig.~\ref{fig:3C147}, left inset.) One result of the reduction was a very deep NEWSTAR-format sky model for the field, containing about 300 point sources. This provided a fantastic platform from which to begin our DDE study with MeqTrees. We had a ready-made sky model that was known to be good enough to reach the thermal noise with this particular dataset, and we had intermediate images from de Bruyn's reduction that could be used as checkpoints.
+The observational data in question were obtained by de Bruyn in 2003. A single 12-hour synthesis was taken, using $8\times20$ MHz bands (of 64 channels each) from 1300 to 1460 MHz, with 30 s integration time. Due to a back-end problem, one of the cross-correlations was corrupted, so only the $XX$ and $YY$ correlations were usable. De Bruyn then successfully reduced the observation using the NEWSTAR package, achieving a world record 1,600,000:1 dynamic range \citep{deBruyn:3C147}. Only regular selfcal was done and no peeling was attempted, so the resulting image showed DDE-related artifacts around off-axis sources (Fig.~\ref{fig:3C147}, left inset.) One result of the reduction was a very deep NEWSTAR-format sky model for the field, containing about 300 point sources. This provided a fantastic platform from which to begin our DDE study with MeqTrees. We had a ready-made sky model that was known to be good enough to reach the thermal noise with this particular dataset, and we had intermediate images from de Bruyn's reduction that could be used as checkpoints.
+
+The same observation was repeated in 2006 with somewhat different correlator settings \citep[for details, see]{deBruyn:3C147}, and reduced in a similar manner.
 
 For his NEWSTAR reduction, de Bruyn self-calibrated each channel independently, rather than explicitly calibrating for a bandpass (see below.) This procedure corresponds to the following implicit form of the RIME :
 
@@ -946,7 +958,7 @@ The constituent parts of this equation are as follows:
 
 \end{description}
 
-The selfcal procedure consists of the following steps:
+The selfcal procedure consisted of the following steps:
 
 \begin{enumerate}
 \item Find $\jones{\tilde{G}}{p}$ that minimizes $|\coh{X}{pq} - \coh{D}{pq}|$ in a least-squares sense. Compute ``corrected data'' as $\jones{D}{pq}' = \jonesinv{\tilde{G}}{p} \coh{D}{pq} \jonesinv{\tilde{G}}{q}.$
@@ -958,7 +970,7 @@ Compute ``corrected data'' as $\jones{D}{pq}'' = \jones{D}{pq}' \div \coh{\tilde
 
 \end{enumerate}
 
-This operation is repeated for each band. Residual data is imaged and summed across all 8 bands. The sum image is deconvolved using H\"ogbom CLEAN, and the sky model is added back in using a Gaussian restoring beam.
+This procedure was repeated for each band. Residual data was imaged and summed across all 8 bands, then  deconvolved using H\"ogbom CLEAN. The sky model was then added back in using a Gaussian restoring beam.
 
 The solution intervals employed at steps 1 and 2 of de Bruyn's reductions were as follows:
 
@@ -1054,7 +1066,8 @@ Per-channel selfcal is achieved by setting the solution interval of $\jones{G}{p
 }
 \end{figure}
 
-The remaining artifacts in Fig.~\ref{fig:Gsol} are associated with the three next-brightest sources in the field: B ($38$mJy), C ($32$mJy), and D ($13$mJy). The furthest of these (C) is about 20' away from centre. The artifacts themselves are within $50\mu$Jy (thermal noise in one band is $30 \mu$Jy), or at a level of 1:1000 relative to the associated sources. This is why \citet{deBruyn:million} talks about an ``off-axis dynamic range'' of a 1000: while 3C147 itself (22Jy) is subtracted without a trace (down to the thermal noise), the off-axis sources are only subtracted to a precision of about 1000. Some of the artifact structure is doubtlessly due to slightly under- or overestimated sky model fluxes (this produces regular rings matching the WSRT PSF), which can be taken care of during subsequent deconvolution. Most of it, however, is due to DDEs and does not deconvolve, producing artifacts in the final 8-band images such as the one shown in the left inset of Fig.~\ref{fig:3C147} (the inset is, in fact, a close-up of source B).
+The remaining artifacts in Fig.~\ref{fig:Gsol} are associated with the three next-brightest sources\footnote{The source IDs used here follow the ``COPART'' (Clustering, Order, Position Angle, Radius, Type) convention, as implemented by the Tigger sky model management tool (available with MeqTrees.) A COPART source ID starts with an alphabetic designator (A, B, ... Z, aa, ab, ...) assigned to sources in order of decreasing brightness. This is already a unique identifier, and is sometimes used by itself for brevity, as in the paragraph above. A full ID also encodes approximate position relative to field center: two digits for the position angle (in units of $10\degr$), and one digit encodes for radial distance (in units of $10\arcmin$.) Optional suffixes incidate source type and clustering. Thus the full ID of source B is B232; being slightly extended, in this particular sky model it is actually represented by a cluster of six delta functions: B232, B232a, ... B232e.} in 
+the field: B (42~mJy), C (52~mJy), and D (22~mJy). The furthest of these (B) is about 20$\arcmin$ away from centre. The artifacts themselves are within $50 \mu$Jy (thermal noise in one band is $30 \mu$Jy), or at a level of 1:1000 relative to the associated sources. This is why \citet{deBruyn:million} talks about an ``off-axis dynamic range'' of a 1000: while 3C147 itself (22~Jy) is subtracted without a trace (down to the thermal noise), the off-axis sources are only subtracted to a precision of about 1000. Some of the artifact structure is doubtlessly due to slightly under- or overestimated sky model fluxes (this produces regular rings matching the WSRT PSF), which can be taken care of during subsequent deconvolution. Most of it, however, is due to DDEs and does not deconvolve, producing artifacts in the final 8-band images such as the one shown in the left inset of Fig.~\ref{fig:3C147} (the inset is, in fact, a close-up of source B).
 
 \subsection{Interferometer-based errors\label{sec:3C147:closure-errors}}
 
@@ -1074,7 +1087,7 @@ The latter fact suggests an intrinsic time variability, but solving for $\coh{M}
 
 This implies that closure errors cannot be reliably solved for on observations shorter than 12 hours, unless a ``complete'' (i.e. down to the noise) sky model of the center of the field is available.
 
-\subsection{Pointing errors\label{sec:3C147:pointing}}
+\subsection{Pointing selfcal\label{sec:3C147:pointing}}
 
 Since the main cause of artifacts in WSRT images is commonly considered to be pointing error (see Sect.~\ref{sec:pointing}), we decided to implement a version of the pointing selfcal algorithm suggested by \citet{SB:pointing}. This proved to be a straightforward exercise in MeqTrees, since only a small modification of the RIME of eq.~(\ref{eq:3C147:perchan}) was required: 
 
@@ -1093,12 +1106,16 @@ Per-antenna pointing offsets $\delta l_p,\delta m_p$ were then treated as solvab
 The results of this proved inconclusive. Even though the solution converged to some physically-sensible offsets (on the order of arcmin), no tangible reduction of artifacts was observed in residual images. This could be due to a number of reasons:
 
 \begin{enumerate}
-\item The $\cos^3$ approximation is not good enough -- unlikely, as it has been independently verified at least for the core of the main lobe, which the B, C and D sources are well within.
-\item With only three sources sufficiently bright to exhibit DDEs, we simply don't have enough constraints for a pointing solution on this field.
+\item The $\cos^3$ approximation is not good enough -- unlikely, as it has been independently verified at least for the core of the main lobe, which the sources in question sources are well within.
+\item With only a few sources sufficiently bright to exhibit DDEs, we simply don't have enough constraints for a pointing solution on this field.
+\item The model fluxes/positions for the sources in question are not sufficiently accurate.
 \item The dominant DDE affecting this observation is not pointing error. This will be elaborated on further in Sect.~\ref{sec:de-analysis}. 
+\item There is something wrong with our implementation of pointing selfcal, especially since the figures in Sect.~\ref{sec:de-analysis} suggest that mispointings \emph{are} detectable.
 \end{enumerate}
 
-Consideration of points 2 and 3 eventually led us to look for a field containing multiple bright off-axis sources, and to request a special observation of this field with deliberate mispointing. The results of this study will be presented in a separate paper. In the meantime, we had to look for alternative approaches to DDEs in the 3C147 field.
+Trying to get a better grip on the problem, we eventually settled on a ``controlled experiment'':
+locating a field containing multiple bright off-axis sources, and observing it with deliberately exaggerated mispointings, to see if these can be more readily recovered from the data. This experiment became known as the ``QMC Project'' (in honour of the long-defunct Quality Monitoring Committee of WSRT), and was successfully carried out. The results will be presented in a follow-up paper \citep{QMC}. 
+In the meantime, we had to look for alternative approaches to DDEs in the 3C147 field.
 
 \subsection{Differential gains: the ``flyswatter''\label{sec:diffgains}}
 
@@ -1124,18 +1141,68 @@ The $\Delta\jones{E}{sp}$ term is meant to subsume {\bf all} DDEs associated wit
 \caption{\label{fig:dEsol}The flyswatter. On the left is a single-band residual image after  $\jones{G}{p}$ and $\coh{M}{pq}$ solutions only. On the right is the same image with differential gain solutions for sources B, C, and D.}
 \end{figure}
 
-Figure~\ref{fig:dEsol} shows the effect of $\Delta\jones{E}{}$ solutions. All artifacts associated with sources B, C and D disappeared completely, to the point where faint artifacts around fainter sources became just about visible. 
-These were also eliminated once $\Delta\jones{E}{}$ solutions were enabled for those sources. In fact, any source to which a solvable $\Delta\jones{E}{}$ term was assigned promptly vanished from the residual maps, hence our name for the differential gains approach: the ``flyswatter'' algorithm. 
+Figure~\ref{fig:dEsol} shows the effect of $\Delta\jones{E}{}$ solutions. All artifacts associated with sources B, C and D disappeared completely, to the point where faint artifacts around fainter sources became just about visible.  These were also eliminated once $\Delta\jones{E}{}$ solutions were enabled for those sources. In fact, any source to which a solvable $\Delta\jones{E}{}$ term was assigned promptly vanished from the residual maps, hence our name for the differential gains approach: the ``flyswatter'' algorithm. 
 
-The showcase image of Fig.~\ref{fig:3C147} was made with differential gains solutions on the seven off-axis source clusters listed in Tab.~\ref{tab:sources}. This image is completely artifact-free. (The insets show a close-up of source B with and without $\Delta\jones{E}{}$ solutions.) Presumably, all remaining sources in the field are too faint for any DDE-related artifacts to be visible.
+Once 8-band residual images were created, the increased sensitivity made it apparent that four more sources were exhibiting a small amount of DDEs. A more in-depth look at the sky model also showed that all seven sources were in fact slightly extended; the NEWSTAR model represented each by a tight cluster of point sources. Since all ``sources'' in such a cluster are subject to the same DDE, it seemed sensible to make sure the same $\Delta\jones{E}{sp}$ term was applied to all of them. This was easily done using Tigger, a sky model manager/viewer tool included with MeqTrees. Tigger automatically detects source clusters and assign source identifiers appropriately (e.g. B232, B232a, ...  B232e) It was then a simple matter to tell the Calico framework to use the \emph{same} $\Delta\jones{E}{s_0 p}$ term for all sources $s$ associated with cluster $s_0$. 
 
-\subsubsection{Relationship to peeling}
+%plot-de-solutions.py --circle-ampl -o eps --portrait --borders 0.05,0.98,0.05,0.98 --title-fontsize 0 -r MS/3C*/dE* --circle-minsize=0 --circle-maxsize=0 --label-fontsize=16 --names-only --radius 70
+\begin{figure}
+\begin{minipage}[c]{.45\columnwidth}
+\includegraphics[width=\textwidth]{source_plot}
+\end{minipage}\hfill\begin{minipage}[c]{.5\columnwidth}
+\begin{tabular}{lr@{ }lr@{.}l}
+\hline
+\hline
+ID & \multicolumn{2}{c}{position} & \multicolumn{2}{c}{total flux} \\
+% \multicolumn{2}{c}{source ID} & \multicolumn{2}{c}{position} & \multicolumn{2}{c}{total flux} \\
+\hline
+B232  & 20' & SW & 42 & 3 mJy\\
+C270  &  4' & W  & 51 & 8 mJy\\
+D141  & 14' & SE & 21 & 8 mJy\\
+F012  & 25' & N  & 12 & 3 mJy \\
+H283  & 37' & W  &  9 & 4 mJy \\
+K063  & 31' & NE &  8 & 2 mJy \\
+ae317 & 74' & NW &  2 & 2 mJy \\
+%  B232 & (NEWS1000)   & 20' & SW & 42 & 3 mJy\\
+%  C270 & (NEWS7)      &  4' & W  & 51 & 8 mJy\\
+%  D141 & (NEWS9)      & 14' & SE & 21 & 8 mJy\\
+%  F012 & (NEWS1009)   & 25' & N  & 12 & 3 mJy \\
+%  H283 & (NEWS1037)   & 37' & W  &  9 & 4 mJy \\
+%  K063 & (NEWS1041)   & 31' & NE &  8 & 2 mJy \\
+%  ae317 & (NEWS3159)  & 74' & NW &  2 & 2 mJy \\
+\hline
+\end{tabular}
+\end{minipage}
 
-The differential gain approach is closely related to the peeling algorithm (Sect.~\ref{sec:peeling}). It can be considered a form of ``simultaneous'' peeling. In fact, solving for $\Delta\jones{E}{}$ on a single off-axis source is equivalent to peeling that source (with suitable solution intervals chosen for the selfcal step.) The $\Delta\jones{E}{}$ approach overcomes a lot of the drawbacks of peeling (cross-contamination of solutions, the need for repeated selfcal cycles) by doing a single simultaneous solution in one step.
+\caption{\label{fig:source-plot}Positions (relative to nominal pointing center) and aggregate fluxes (apparent) of the seven off-axis source clusters for which $\Delta\jones{E}{}$ solutions were obtained. Circles are at  radius of $30\arcmin$ and $1\degr$. For reference, the half-maximum point of the WSRT voltage beam is $\sim25\arcmin$ at 1.4~GHz.}
+\end{figure}
 
-\subsubsection{Flyswatter limitations}
+The seven source clusters for which differential gain solutions were eventually obtained are summarized in Fig.~\ref{fig:source-plot}. Two of them are somewhat noteworthy. Source C270 is very close to center, and therefore shouldn't be affected by DDEs as much as the other sources. It is, however, a complicated and highly polarized source, so perhaps the artifacts it exhibited after regular selfcal were primarily due to sky model inaccuracies, which the $\Delta\jones{E}{}$ solutions absorbed (see discussion in Sect.~\ref{sec:de-analysis-model}). Source ae317 is almost the opposite: it is very faint, but far enough off-axis to be in a sidelobe of the primary beam, and so subject to especially severe DDEs.
 
-While it can help produce spectacular artifact-free images such as Fig.~\ref{fig:3C147}, the flyswatter has some serious caveats and drawbacks that need to be explored. First of all, it is a brute force approach, in the sense that it squashes all effects into a single $\Delta\jones{E}{}$ term. This includes errors in the sky model! Indeed, any missing source flux or error in source position can be accomodated with a suitable $\Delta\jones{E}{}$. Even unmodelled source structure can ``leak'' into differential gain solutions. For example, if a source is slightly resolved on longer baselines, but is a point source in the sky model, $\Delta\jones{E}{}$ solutions can compensate for the discrepancy with a slightly lower amplitude on antennas that form predominantly long baselines (RTC and RTD, in the case of the WSRT). Thus, differential gains are good for subtracting sources, but at the cost of mashing up properties of the source per se. (One does not use a flyswatter to probe a fly's anatomy!)
+We should note that the differential gains approach is closely related to the peeling algorithm (Sect.~\ref{sec:peeling}). It can be considered a form of ``simultaneous'' peeling. In fact, solving for $\Delta\jones{E}{}$ on a single off-axis source is equivalent to peeling that source (with suitable solution intervals chosen for the selfcal step.) The $\Delta\jones{E}{}$ approach overcomes a lot of the drawbacks of peeling (cross-contamination of solutions, the need for repeated selfcal cycles) by doing a single simultaneous solution in one step.
+
+
+\subsection{The showcase result} 
+
+The ultimate result of our calibration of the 2003 observation is shown in Fig.~\ref{fig:3C147}. This image is a true showcase for the differential gains approach. The precise steps leading to this image were as follows:
+
+\begin{enumerate}
+
+\item Each of the 8 bands was independently calibrated using per-channel selfcal, interferometer-based errors, and $\Delta\jones{E}{}$ solutions on seven source clusters, as described above. Corrected residuals were generated.
+
+\item The residuals for all 8 bands were imaged together (in MFS mode) to produce a single residual image. This revealed a large number of fainter sources not visible in the per-band maps.
+
+\item The 8-band image was deconvolved using Cotton-Schwab CLEAN \citep{Schwab:csclean}.
+
+\item The sky model was added back into the deconvolved image, using a Gaussian restoring beam.
+
+\end{enumerate}
+
+The resulting image is completely artifact-free. Presumably, all other sources in the field were too faint to exhibit any DDE-related artifacts. With a dynamic range of 1,600,000:1, this image is the deepest and cleanest single-synthesis radio map in the world to date. 
+
+\subsection{Flyswatter limitations}
+
+While it can help produce spectacular images, the flyswatter has some serious caveats and drawbacks that need to be explored. First of all, it is a brute force approach, in the sense that it squashes all effects into a single $\Delta\jones{E}{}$ term. This includes inaccuracies in the sky model! Indeed, any missing source flux or error in source position can be accomodated with a suitable $\Delta\jones{E}{}$. Even unmodelled source structure can ``leak'' into differential gain solutions (Sect.~\ref{sec:de-analysis-model}). Thus, differential gains are good for subtracting sources, but at the cost of mashing up information on the source per se. (One does not use a flyswatter to probe a fly's anatomy!)
 
 Secondly, solvable differential gains can lead to a proliferation of DoF's. Per-channel selfcal has $N_\mathrm{ant}$ unknowns per $N_\mathrm{ant}(N_\mathrm{ant}-1)/2$ measurements, or $2/(N_\mathrm{ant}-1)$ unknowns per measurement; differential gains add $2N_\mathrm{src}/(N_\mathrm{ant}-1)N_\mathrm{time}N_\mathrm{freq}$ unknowns per measurement, where $N_\mathrm{time}$ and $N_\mathrm{freq}$ are the sizes of the solution interval for $\Delta\jones{E}{}$. This ratio remains facourable for small $N_\mathrm{src}$ and large $N_\mathrm{time}$ and/or $N_\mathrm{freq}$ (as is the case for our 3C147 reduction), but one must be careful.
 
@@ -1145,46 +1212,223 @@ One way to mitigate the solver bottleneck is to decompose the $\Delta\jones{E}{s
 
 \subsection{Analysis of differential gain solutions\label{sec:de-analysis}}
 
-\begin{table}
+It is time to see whether any useful information can be gleaned from the differential gains solutions themselves. As a result of the reduction, we had obtained: per each source direction (7 of these: see Fig.~\ref{fig:source-plot}), per each antenna (14), per each band (8), per 30-minute interval (24 of these in a 12-hour synthesis), two complex numbers representing the apparent differential gain of the X and Y dipole (``differential'' being relative to the gain in the direction of 3C147 -- almost at the center of the field -- which had been taken care of by regular selfcal.)
+
+We then adopted the following approach. Given the relatively low fractional bandwidth, we didn't expect much variation with frequency in $\Delta\jones{E}{}$. We therefore treated each set of 8 per-band solutions as independent samples of the same variable. The mean of the 8 samples was used as an estimator of variable, and the standard deviation of the 8 samples as an estimator of the error (i.e. the error bar.)
+
+Since it quickly became apparent that the $\Delta\jones{E}{}$ solutions were exhibiting some very interesting behaviour, we applied exactly the same procedure to the 2006 observations, so that comparisons could be made. The plots below show the results from both observations. 
+
+% plot-de-solutions.py --ampl --phase -o eps -r --portrait --title-fontsize 0 -W 290 -H 100 --borders 0.02,1.02,0.01,1.08 MS/3C*/dE* --output-prefix o2003 -c o2003
+% plot-de-solutions.py --ampl --phase -o eps -r --portrait --title-fontsize 0 -W 290 -H 100 --borders 0.02,1.02,0.01,1.08 MS/m30*/dE* --output-prefix o2006 -c o2006
+\begin{figure*}
+\sidecaption
+\parbox[b]{12cm}{
+\includegraphics[width=12cm]{o2003_dE_mean} \\
+\includegraphics[width=12cm]{o2006_dE_mean}
+}
+\caption{\label{fig:dEampl}Differential gain-amplitudes ($||\Delta\jones{E}{}||$) as a function of time for the 2003 (top) and 2006 (bottom) observations. Rows correspond to sources, columns to antennas. The vertical plot scale is fixed within each row, but differs from row to row. Horizontal lines indicate the $||\Delta\jones{E}{}||=1$ level.}
+\end{figure*}
+
+\begin{figure*}
+\sidecaption
+\parbox[b]{12cm}{
+\includegraphics[width=12cm]{o2003_dEphase_mean}
+\includegraphics[width=12cm]{o2006_dEphase_mean}
+}
+\caption{\label{fig:dEphase}Differential gain-phases ($\arg\Delta\jones{E}{}$, in degrees) as a function of time for the 2003 (top) and 2006 (bottom) observations. Rows correspond to sources, columns to antennas. The vertical plot scale is fixed within each row, but differs from row to row. Horizontal lines indicate the $\arg\Delta\jones{E}{}=0$ level.}
+\end{figure*}
+
+Figure~\ref{fig:dEampl} is a summary of the differential gain-amplitudes per source, per antenna. The precise quantity plotted here was computed as follows. First, we computed the norm of the $\Delta\jones{E}{}$ matrix (diagonal by construction) as 
+
+\[
+\left|\left|\matrixtt{a}{0}{0}{b}\right|\right| \equiv \sqrt{|a|+|b|},
+\]
+
+i.e. as the geometric mean of the X and Y gain-amplitudes. We then normalized (divided) this value by the mean value per source (that is, the mean across all time intervals, bands, and antennas), which was meant to take out the effect of incorrect model fluxes (see below.) The resulting ``normalized norm'' was then plotted as a function of time, per source, per antenna.
+
+Figure~\ref{fig:dEphase} is a similar plot of the differential gain-phases, computed as
+
+\[
+\arg\matrixtt{a}{0}{0}{b} \equiv \frac{\arg a + \arg b}{2}.
+\]
+
+The most striking feature of Figs.~\ref{fig:dEampl} and \ref{fig:dEphase} is the high SNR. They show a high degree of temporal continuity in the solutions, and statistically significant structure. This strongly suggests that the solutions represent real physical or numerical effects. As to the nature of these effects, we still do not have satisfactory answers, though it is hoped that the QMC project \citep{QMC} mentioned earlier will shed some more light on the issues. The rest of this section discusses some of the more prominent questions, and proposes some rather speculative explanations.
+ 
+\subsubsection{Absorbing errors in the sky model\label{sec:de-analysis-model}}
+
+As already mentioned, a major caveat of the flyswatter approach is that $\Delta\jones{E}{}$ solutions will tend to absorb inaccuracies in the source model. By analogy (and for exactly the same reasons), classic selfcal 
+alone cannot solve for absolute positions or fluxes. Indeed, if the true position of a source $\vec l = (l,m)$ is offset from the model position $\vec l^\mathrm{(mod)} = (l+\delta l,m + \delta m)$, while the true brightness $\coh{B}{}$ differs from the model brightness by a multiplicative matrix factor: $\coh{B}{}^\mathrm{(mod)} = \jones{A}{} \coh{B}{} \jonesT{A}{}$ (the latter being a straightforward generalization of a scalar factor $a^2$), then the coherency term of the RIME for the model source may be written out as
+
+\begin{eqnarray*}
+\coh{X}{pq}^\mathrm{(mod)} & = & K_{p}(l+\delta l,m+\delta m) \coh{B}{}^\mathrm{(mod)} K^\dagger_{q}(l+\delta l,m+\delta m) \\
+ & = & K_{p}(\delta l,\delta m) K_{p}(l,m) \jones{A}{}\coh{B}{}\jonesT{A}{} K^\dagger_{q}(l,m) K^\dagger_{q}(\delta l,\delta m) \\
+ & = & (K_{p}(\delta l,\delta m)\jones{A}{})(K_{p}(l,m)\coh{B}{}K^\dagger_{q}(l,m))(K_{q}(\delta l,\delta m)\jones{A}{})^\dagger \\
+ & = & (K_{p}(\delta l,\delta m)\jones{A}{}) 
+       \cdot \coh{X}{pq} \cdot 
+       (K_{q}(\delta l,\delta m)\jones{A}{})^\dagger.
+\end{eqnarray*}
+
+If a solvable differential gain is then assigned to the source, the model can be made to fit the data by absorbing the $K_{p}(\delta l,\delta m)\jones{A}{}$ factor into the $\Delta\jones{E}{ps}$ solutions.
+
+Even more insidiously, differential gains can absorb some source structure. Consider a source that is slightly extended in one direction, enough to be resolved on the longest baselines. An E-W array like the WSRT has a one-dimensional instantaneous {\em fan beam}. It will ``see'' the source as a point source when the fan beam is aligned with the source orientation, and start resolving it when the fan beam becomes perpendicular to the source. In other words, the apparent flux of the source will remain constant in time on short baselines, and vary in time on the long baselines as the source resolves. If such a source is represented by a point source in the sky model, the model flux will be constant on all baselines. Now, if some antennas are predominantly involved in long baselines (RTC and RTD, in the case of WSRT), $\Delta\jones{E}{}$ solutions can compensate for some of the flux discrepancy by changing the gain-amplitudes of these antennas. We would expect to see a variation of $||\Delta\jones{E}{}||$ with a 12-hour period. Since most of the baselines to RTC and RTD are mutually redundant (0-C equals 1-D, etc.), their variation in $||\Delta\jones{E}{}||$ should be very similar. 
+
+This is exactly what we're seeing in Fig.~\ref{fig:dEampl}! The plots very strongly suggest that the top three sources (B, C and D) are indeed slightly resolved. If this is the case, then the dominant contribution to $||\Delta\jones{E}{}||$ on antennas RTC and RTD is due to source structure rather than any actual DDE. 
+
+\subsubsection{Amplitude behaviour}
+
+If the behaviour of differential amplitude on RTC and RTD is due to source structure, this still leaves effects on the other antennas unexplained. First let us consider what a pointing error would look like. With the exception of source ae317 (for which the solutions are much too noisy anyway), the other six sources are well within the main lobe of the primary beam, where the beam gain can be expected to decrease smoothly with distance from pointing center. We should therefore expect to see $||\Delta\jones{E}{sp}||>1$ if antenna $p$ mispoints \emph{towards} source $s$ (the source appears brighter on antenna $p$), and $||\Delta\jones{E}{sp}||<1$ if it mispoints \emph{away}. WSRT dishes are equatorially mounted, so mispointings due to mechanical or electronic errors in either axis drive would be stationary with respect to the sky, and thus cause constant 
+$||\Delta\jones{E}{}||$ offsets. Mispointings due to wind pressure, thermal or gravitational deformation, on the other hand, would be intrinsically time-variable (but would probably correlate between antennas.)
+
+Quite a few plots in Fig.~\ref{fig:dEampl} do show (mostly) static offsets. It can be illuminating to present $||\Delta\jones{E}{}||$ in a format we call the ``rogues gallery'' (Figs.~\ref{fig:rogues-2003} and \ref{fig:rogues-2006}). This shows, for each of the 14 antennas, a 12-hour average $||\Delta\jones{E}{}||$ per source, using circles of varying size placed at the position of the source. The magnitude of $(||\Delta\jones{E}{}||-1)$ is indicated by circle size, and the sign by colour. A static mispointing in, e.g., a Northern direction would show up as blue circles in the top half of the plot (i.e. sources appearing brighter), and red circles in the bottom half.
+
+\newlength{\roguewidth}
+%\setlength{\roguewidth}{2.4cm} % for 12 cm figure
+%\setlength{\roguewidth}{3.4cm} % for double-column figure
+\setlength{\roguewidth}{.2\columnwidth} % for single-column figure
+
+%plot-de-solutions.py --circle-ampl -o eps --portrait --radius 40 --circle-borders 0.05,0.98,0.05,0.9 --title-fontsize 40 -r o2003.cache --circle-minsize=0 --circle-maxsize=200 --label-fontsize=0 --output-prefix o2003
+%plot-de-solutions.py --circle-ampl -o eps --portrait --radius 40 --circle-borders 0.05,0.98,0.05,0.9 --title-fontsize 40 -r o2006.cache --circle-minsize=0 --circle-maxsize=200 --label-fontsize=0 --output-prefix o2006
+
+\begin{figure}
 \centering
-\begin{tabular}{ll|r@{ }l|r@{.}l}
-\hline
-\multicolumn{2}{c}{source ID} & \multicolumn{2}{|c|}{position} & \multicolumn{2}{c}{total flux} \\
-\hline
-B232 & (NEWS1000)   & 20' & SW & 42 & 3 mJy\\
-C270 & (NEWS7)      &  4' & W  & 51 & 8 mJy\\
-D141 & (NEWS9)      & 14' & SE & 21 & 8 mJy\\
-F012 & (NEWS1009)   & 25' & N  & 12 & 3 mJy \\
-H283 & (NEWS1037)   & 37' & W  &  9 & 4 mJy \\
-K063 & (NEWS1041)   & 31' & NE &  8 & 2 mJy \\
-ae317 & (NEWS3159)  & 74' & NW &  2 & 2 mJy \\
-\hline
+\begin{tabular}{@{}c@{}c@{}c@{}c@{}c@{}}
+\includegraphics[width=\roguewidth]{o2003_dE_ant0} &
+\includegraphics[width=\roguewidth]{o2003_dE_ant1} &
+\includegraphics[width=\roguewidth]{o2003_dE_ant2} &
+\includegraphics[width=\roguewidth]{o2003_dE_ant3} &
+\includegraphics[width=\roguewidth]{o2003_dE_ant4} \\
+\includegraphics[width=\roguewidth]{o2003_dE_ant5} &
+\includegraphics[width=\roguewidth]{o2003_dE_ant6} &
+\includegraphics[width=\roguewidth]{o2003_dE_ant7} &
+\includegraphics[width=\roguewidth]{o2003_dE_ant8} &
+\includegraphics[width=\roguewidth]{o2003_dE_ant9} \\
+\includegraphics[width=\roguewidth]{o2003_dE_antA} &
+\includegraphics[width=\roguewidth]{o2003_dE_antB} &
+\includegraphics[width=\roguewidth]{o2003_dE_antC} &
+\includegraphics[width=\roguewidth]{o2003_dE_antD} 
 \end{tabular}
-\caption{\label{tab:sources}Positions (relative to the center of the field) and apparent fluxes of sources for which differential gain solutions were obtained. The source IDs given are those used by NEWSTAR and Tigger (the latter uses letters to identify sources in order of decreasing brightness, and three digits to encode source position angle and distance from center of field.)}
-\end{table}
+\caption{\label{fig:rogues-2003}``Rogues gallery'' plot for the 2003 observation. This shows the 12-hour average $||\Delta\jones{E}{}||$ per source, as seen by each antenna. Blue circles correspond to values of $||\Delta\jones{E}{}||>1$, red circles to values of $||\Delta\jones{E}{}||<1$, and areas are proportional to $|\,||\Delta\jones{E}{}||-1\,|$. Line thickness indicates the statistical significance of $|\,||\Delta\jones{E}{}||-1\,|$; filled circles are for detections of over $3\sigma$. The large grid circle is at radius $30\arcmin$.}
+\end{figure}
+
+\begin{figure}
+\centering
+%\sidecaption
+\begin{tabular}{@{}c@{}c@{}c@{}c@{}c@{}}
+\includegraphics[width=\roguewidth]{o2006_dE_ant0} &
+\includegraphics[width=\roguewidth]{o2006_dE_ant1} &
+\includegraphics[width=\roguewidth]{o2006_dE_ant2} &
+\includegraphics[width=\roguewidth]{o2006_dE_ant3} &
+\includegraphics[width=\roguewidth]{o2006_dE_ant4} \\
+\includegraphics[width=\roguewidth]{o2006_dE_ant5} &
+\includegraphics[width=\roguewidth]{o2006_dE_ant6} &
+\includegraphics[width=\roguewidth]{o2006_dE_ant7} &
+\includegraphics[width=\roguewidth]{o2006_dE_ant8} &
+\includegraphics[width=\roguewidth]{o2006_dE_ant9} \\
+\includegraphics[width=\roguewidth]{o2006_dE_antA} &
+\includegraphics[width=\roguewidth]{o2006_dE_antB} &
+\includegraphics[width=\roguewidth]{o2006_dE_antC} &
+\includegraphics[width=\roguewidth]{o2006_dE_antD} 
+\end{tabular}
+\caption{\label{fig:rogues-2006}``Rogues gallery'' plot for the 2006 observation, using the same scale as Fig.~\ref{fig:rogues-2003}}
+\end{figure}
+
+
+The galleries show exactly such a pattern for antennas RT5 through RT8 (and perhaps RT4), for both the 2003 and, to a lesser extent, the 2006 observations. It is a little bit strange that 4 (or even 5) adjacent antennas would so consistently mispoint North, and do the same three years later. Perhaps this is another, poorly understood consequence of unmodelled source structure. (Note that antennas RT4--8, being in the middle of the array, form up predominantly shorter baselines; while the long-baseline antennas RTC and RTD suggest a somewhat opposite picture. It is perhaps unfortunate that the three sources exhibiting complicated structure all lie in the bottom half of the field.) Another puzzling feature is the consistently low $||\Delta\jones{E}{}||$ for sources F, H and K on antenna RTC in 2003 (and to a far lesser extent in 2006). If due to source structure, why does it not repeat on RTD? Perhaps RTC is mispointing to the South?
+
+Antennas RT0--2, RT9 and RTA, on the other hand, show completely different patterns, with little to no similarity between 2003 and 2006. Some of these are consistent with a static mispointing. Some antennas (RT8 and RT9, and RTB especially) also show a hint of time variability in $||\Delta\jones{E}{}||$.
+
+In any case, it is clear that the complicated interaction between source structure and differential gain-amplitudes makes the latter extremely difficult to interpret. Note also that our source model was built by NEWSTAR based on regular selfcal, so there's bound to be some contamination from DDE-related artifacts in the source parameters. Robust methods for disentangling source structure from DDEs have yet to be developed!
+
+\subsubsection{Phase behaviour}
+
+%for t in o2003 o2006; do plot-de-solutions.py --phase-slope -o eps -r --portrait --title-fontsize 0 -W 290 -H 40 --borders 0.03,1.12,0.01,1.6 --circle-borders 0.01,0.99,0.01,0.99 $t.cache --phase-slope-dlm --phase-slope-time-offset -0.096 --output-prefix $t; done
+
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{o2003_dEphase_array_slopes}\\
+\includegraphics[width=\columnwidth]{o2006_dEphase_array_slopes}
+\caption{\label{fig:dEphase-slope}Phase slopes over the array as a function of time (in deg/m) in the direction of the seven sources for the 2003 (top) and 2006 observations (bottom). The green lines indicate phase slopes corresponding to the fitted position offsets (Fig.~\ref{fig:dEphase-dlm}), the red lines -- phase slopes corresponding to an overall field rotation of $45\arcsec$.}
+\end{figure}
+
+%for t in o2003 o2006; do plot-de-solutions.py --phase-slope -o eps -r --portrait --title-fontsize 0 $t.cache --phase-slope-time-offset -0.096 --output-prefix $t --label-fontsize 20; done
+\begin{figure}
+\centering
+\includegraphics[width=.5\columnwidth]{o2003_dE_lm_offsets}%
+\includegraphics[width=.5\columnwidth]{o2006_dE_lm_offsets}\\
+\caption{\label{fig:dEphase-dlm}Fitted position offsets corresponding to the phase slopes of Fig.~\ref{fig:dEphase-slope} (2003 observation on the left, 2006 on the right). Arrows are not to scale: the biggest offset is in fact just under $1\arcsec$.}
+\end{figure}
+
+A rather prominent feature of the phase plots in Fig.~\ref{fig:dEphase} is their continuity from antenna to antenna, and the fact that the phases at the two ends of the array exhibit opposite temporal trends. This is suggestive of an evolving phase slope over the array. Fitting such a slope (per source) produces some very striking results (Figs.~\ref{fig:dEphase-slope} and \ref{fig:dEphase-slope-res}). The dominant phase effect is clearly global rather than antenna-based, and is extremely consistent across both observations.
+
+A phase slope over the array can be interpreted as an apparent position offset. It appears that the slope behaviour in Fig.~\ref{fig:dEphase-slope} can be fitted quite well by \emph{constant} position offsets. 
+The best-fitting position offsets are indicated in Fig.~\ref{fig:dEphase-dlm}, and the corresponding slope curves are plotted in green on Fig.~\ref{fig:dEphase-slope}. 
+
+Figure~\ref{fig:dEphase-dlm} immediately suggests a field rotation. And indeed, the entire collection of phase slopes (for both the 2003 and 2006 observation), is, to first order, consistent with a rotation of $45\arcsec$ around the phase centre. The corresponding slope curves are plotted in red. While there are some significant differences in the brighter sources, it seems clear that the dominant effect is not an instrumental DDE at all, but a systematic rotation of the sky model. The model positions are derived by NEWSTAR from direct fits to the visibilities, and de Bruyn (priv. comm.) has independently verified them to precisions of .... Note that a $45\arcsec$ rotation can also be introduced by a clock error of about 2.9 s, or a corresponding rotational error in conversion of UVW coordinates from apparent to J2000. Since NEWSTAR and MeqTrees use completely different toolchains and visibility data formats, we cannot exclude a coordinate conversion error somewhere along the line. This needs to be urgently investigated. If indeed the entire sky model is slightly rotated, then perhaps the image of Fig.~\ref{fig:3C147} can be further improved upon!
+
+The brighter sources B, C, and (to a lesser extent) D show second-order effects that significantly deviate from the fitted slopes. This is where we should look for the ``true'' DDEs, though unmodelled source structure leaking into the phases cannot be discounted either. 
+
+\subsection{Feeding differential gains back into the sky model\label{sec:model-improvement}}
+
+The results above suggested we could improve our sky model by feeding back in some information extracted from the $\Delta\jones{E}{}$ solutions. In the previous section, we obtained a correction to the model positions of  the seven sources.\footnote{For the moment, we've left aside the issue of whether the positional offsets are ultimately due to a global field rotation. Improving the positions of seven of the brightest off-axis sources should already produce an superior sky model.} Section~\ref{sec:de-analysis-model} suggests that we could also provide corrections for the $I$ and $Q$ fluxes by applying the per-source average $\Delta\jones{E}{}$ amplitudes:
+
+\begin{eqnarray*}
+\coh{B}{s}^\mathrm{(corr)} & = & \overline{|\Delta\jones{E}{s}|} \coh{B}{s} \overline{|\Delta\jones{E}{s}|} \\
+\overline{|\Delta\jones{E}{s}|} & \equiv & \matrixtt{\overline{|\Delta e_{xs}|}}{0}{0}{\overline{|\Delta e_{ys}|}} = \frac{1}{N_\mathrm{ant}N_t N_\nu} \sum_{p,i,j} |\Delta\jones{E}{sp}(t_i,\nu_j)|,
+\end{eqnarray*}
+
+where $t_i$ and $\nu_j$ represent the time and frequency solution intervals of $\Delta\jones{E}{}$. In terms of the $I$ and $Q$ fluxes, the correction becomes:
+
+\begin{eqnarray*}
+I^\mathrm{(corr)} = \Sigma \cdot I + \Delta \cdot Q, & \; &  Q^\mathrm{(corr)} = \Delta \cdot I + \Sigma \cdot Q, \\
+\Sigma = \frac{1}{2}\left( \overline{|\Delta e_{xs}|}^2 + \overline{|\Delta e_{ys}|}^2 \right), 
+& \; & \Delta = \frac{1}{2}\left( \overline{|\Delta e_{xs}|}^2 - \overline{|\Delta e_{ys}|}^2 \right).
+\end{eqnarray*}
+
+We therefore applied these corrections for $I$, $Q$, and position to our sky models (independently for the 2003 and 2006 observations), and repeated the calibration procedure. An improvement in single-band residuals was immediately apparent (Fig.~\ref{fig:residuals-newmodel}) -- after $\jones{G}{p}$ and $\coh{M}{pq}$ solutions, the seven off-axis sources subtracted noticeably better. Single-band residuals after $\Delta\jones{E}{sp}$ solutions, on the other hand, look pretty much the same (this is not surprising, since differential gains had already taken care of the off-axis sources in the original reduction), with a very slight improvement around 3C147 itself, which can be explained by improved $\jones{G}{p}$ solutions due to the more accurate sky model.
+
+\begin{figure}
+\begin{centering}
+\includegraphics[width=.5\columnwidth]{spw2_oldmodel}%
+\includegraphics[width=.5\columnwidth]{spw2_newmodel}\par
+\end{centering}
+\caption{\label{fig:residuals-newmodel}Calibration with an improved sky model. This shows single-band residual images after $\jones{G}{p}$ and $\coh{M}{pq}$ solutions. The left image is from the original reduction, the right image uses a sky model improved via our $\Delta\jones{E}{}$ analysis. Crosses indicate the positions of sources for which the model was improved, plus 3C147 itself (source A).}
+\end{figure}
+
+Presumably, the remaining residual structures in Fig.~\ref{fig:residuals-newmodel} are more representative of the DDEs themselves, since inaccuracies in the sky model have been significantly reduced. We would also expect the differential gain solutions to be more indicative of the actual DDEs (apart from the issue of resolved sources affecting $||\Delta\jones{E}{}||$ on antennas RTC and RTD, which the improved sky models do not address at all.)
+
+
+
+
+%plot-de-solutions.py --phase-slope-res -o eps -r --portrait --title-fontsize 0 -W 290 -H 100 --borders 0.02,1.02,0.01,1.08 MS/3C*/dE*
+%plot-de-solutions.py --phase-slope-res -o eps -r --portrait --title-fontsize 0 -W 290 -H 100 --borders 0.02,1.02,0.01,1.08 MS/m30*/dE* --output-prefix o2006
 
 \begin{figure*}
-\begin{centering}
-\includegraphics[width=2\columnwidth]{dE_mean}
-\end{centering}
-\caption{\label{fig:dEampl}dE amplitudes}
+\sidecaption
+\parbox[b]{12cm}{
+\includegraphics[width=12cm]{dEphase_array_slopes_res}
+\includegraphics[width=12cm]{o2006_dEphase_array_slopes_res}
+}
+\caption{\label{fig:dEphase-slope-res}Residual phases w.r.t. slope fits.}
 \end{figure*}
 
-\begin{figure*}
-\begin{centering}
-\includegraphics[width=2\columnwidth]{dEphase_mean}
-\end{centering}
-\caption{\label{fig:dEphase}dE phases}
-\end{figure*}
 
-Given that we have obtained
+\section{Conclusions}
 
-\subsubsection{Implications for calibratability of future telescopes}
+Since its original formulation by \citet{ME1}, the Radio Interferometer Measurement Equation (RIME) has 
+provided the mathematical underpinnings for novel calibration methods and algorithms. Several authors have developed carious approaches to the DDE problem based on the RIME. Different versions of the formalism have been used for this: they are mathematically equivalent, and have been reformulated into one consistent framework within this paper. Besides its explanatory power, the RIME formalism can be wonderfully simple and intuitive; this 
+fact has become somewhat obscured by the many different directions that it has been developed in. It is hoped that the first part of this paper has gone some way to making the RIME simple again. Finally, a number of misunderstandings and controversies has inevitably accrued themselves to the formalism over the years. Some of these have been addressed here .
 
-All currently mooted schemes of DDE calibration for LOFAR \citep{JEN:LOFAR3}, the MWA \citep{Mitchell:MWA-cal} and the ionosphere in general \citep{Intema:SPAM,Cotton:FBC} revolve around the use of ``beacon sources'' to probe the ionosphere and/or the primary beam. It is rather difficult to envisage a closed-loop scheme without beacons (how else does one sample a DDE?), so future telescopes such as the SKA will most likely use something very similar. Any such scheme predicates on there being a sufficient number of sufficiently bright in-beam beacons for any direction on the sky. This is not a problem at the LOFAR and MWA end of the spectrum, since the low-frequency sky is so much brighter, but it has been a bit of a worry for the higher frequencies, where FoVs are narrower and sources are fainter.
+Besides its obvious explanatory ability, one of the biggest selling points of the RIME formalism is the flexibility it offers for describing observational effects. Unfortunately, to date only three software packages have exploited the power of the RIME (CASA, MeqTrees, and the LOFAR BBS system). Of these, only MeqTrees allows for truly arbitrary forms of the RIME. This paper has explored some practical applications of one such form of the RIME: a form that includes differential gain terms.
 
-Our 3C147 results suggest that calibration beacons can be a lot fainter than previously thought. What has been established is that for this particular configuration of the WSRT, sources as faint as 8~mJy can provide meaningful DDE solutions, while sources fainter than 2~mJy probably cannot. These bounds can be scaled to future telescope designs by comparing their expected sensitivity with that of the 3C147 observation.
+We have demonstrated that the differential gain approach (the ``flyswatter'') can be a powerful way of dealing with DDEs on a source-by-source basis. This has been used with WSRT data to produce artifact-free maps of 3C147 at record dynamic ranges of well over a million-to-one. While the differential gain solutions themselves absorb inaccuracies in the sky model as well as the DDEs themselves, we have demonstarted that at least flux and positions corrections can be recovered, so iterative improvements to the sky model are possible.
 
+The nature of the remaining DDEs (as seen in the differential gain solutions) has not yet been adequately explained. Some of the amplitude effects are consistent with pointing error. There phase behaviour is even more difficult to understand, but may be due to unmodelled source structure. Further work is required on the subject. 
+
+We have shown that differential gain-phase solutions can be used to detect position shifts to within small fractions of the synthesized beam size. Offsets as small as $0.2\arcsec$ have been reliably detected. There is a very clear indication of a systematic rotational offset of $\sim45\arcsec$ in the sky model generated by NEWSTAR, when interpreted using MeqTrees. This is may be due to a coordinate conversion error somewhere in the visibility data processing toolchain, and needs to be investigated further.
+
+Finally, we should consider some wider implications of our results. All currently mooted schemes of DDE calibration for LOFAR \citep{JEN:LOFAR3}, the MWA \citep{Mitchell:MWA-cal} and the ionosphere in general \citep{Intema:SPAM,Cotton:FBC} revolve around the use of ``beacon sources'' to probe the ionosphere and/or the primary beam. It is rather difficult to envisage a closed-loop scheme without beacons (how else would one sample a DDE?), so future telescopes such as the SKA will most likely need to use something very similar. Any such scheme predicates on there being a sufficient number of sufficiently bright in-beam beacons for any direction on the sky. This is not a problem at the LOFAR and MWA end of the spectrum, since the low-frequency sky is so much brighter, but it has been a bit of a worry for the higher frequencies, where FoVs are narrower and sources are fainter.
+
+Our 3C147 results suggest that calibration beacons can be a lot fainter than previously thought. What has been established is that for this particular configuration of the WSRT, sources as faint as 2~mJy can provide meaningful DDE solutions. This result can be scaled to future telescope designs by comparing their expected sensitivity with that of the 3C147 observation.
 
 \bibliographystyle{aa}
 
