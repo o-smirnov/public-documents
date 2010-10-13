@@ -210,7 +210,7 @@ Or in expanded form:
 
 which quite elegantly ties together the observed visibilities $\coh{V}{pq}$ with the intrinsic source brightness $\coh{B}{}$, and the per-antenna terms $\jones{J}{p}$ and $\jones{J}{q}$.
 
-Note that eq.~(\ref{eq:me0}) holds in any coordinate system. The vector $\vec e$, the brightness matrix $\coh{B}{}$ that is derived from it, and the linear transformations $\jones{J}{p}$ and $\jones{J}{q}$ are distinct mathematical entities that are independent of coordinate systems; choosing a coordinate basis associates a specific {\em representation} with $\vec e$,  $\coh{B}{}$ and $\jones{J}{}$, manifesting itself in a 2-vector or a $2\times2$ matrix populated with specific complex numbers. For example, it is quite possible (and sometimes desirable) to rewrite the RIME in a circular polarisation basis. This is discussed further in Sect.~\ref{sec:circular}. In this paper, we shall use an orthonormal $xyz$ basis unless otherwise stated.
+Note that eq.~(\ref{eq:me0}) holds in any coordinate system. The vector $\vec e$, the brightness matrix $\coh{B}{}$ that is derived from it, and the linear transformations $\jones{J}{p}$ and $\jones{J}{q}$ are distinct mathematical entities that are independent of coordinate systems; choosing a coordinate basis associates a specific {\em representation} with $\vec e$,  $\coh{B}{}$ and $\jones{J}{}$, manifesting itself in a 2-vector or a $2\times2$ matrix populated with specific complex numbers. For example, it is quite possible (and sometimes desirable) to rewrite the RIME in a circular polarization basis. This is discussed further in Sect.~\ref{sec:circular}. In this paper, we shall use an orthonormal $xyz$ basis unless otherwise stated.
 
 \subsubsection{A note on typographical convention}
 
@@ -682,7 +682,7 @@ I \\ Q \\ U \\ V
 The equivalent of the ``onion'' form of eq.~(\ref{eq:me0-onion}) is then:
 
     \begin{equation}\label{eq:me:mueller-onion}
-    \vec v_{pq} = ( \jones{J}{pn} \otimes \jonesT{J}{qn} ) ... ( \jones{J}{p1} \otimes \jonesT{J}{q1} ) \jones{S}{} \jones{I}
+    \vec v_{pq} = ( \jones{J}{pn} \otimes \jonesT{J}{qn} ) ... ( \jones{J}{p1} \otimes \jonesT{J}{q1} ) \jones{S}{} \jones{I}{}
 = {\cal J}_{pqn} ...  {\cal J}_{pq1} \jones{S}{} \jones{I}{}
     \end{equation}
 
@@ -693,7 +693,7 @@ Likewise, the full-sky RIME of eq.~(\ref{eq:me-allsky}) can be written in the $4
 \vec v_{pq} = {\cal G}_{pq} \iint\limits_{lm} {\cal E}_{pq}(l,m) \jones{S}{} \jones{I}{}(l,m) {\rm e}^{-2\pi i(u_{pq} l+v_{pq} m+w_{pq} (n-1))} \,dl\,dm 
     \end{equation}
 
-This form of the RIME is particularly favoured when describing imaging problems \citep{SB:imageplane,Rau:DDEs}. It emphasizes that an interferometer performs a linear operation on the sky distribution $\jones{I}(l,m)$, via the linear operators ${\cal G}_{pq}$, ${\cal E}_{pq}(l,m)$, and the Fourier Transform $\cal F$, while hiding the internal structure of ${\cal G}$ and ${\cal E}$.
+This form of the RIME is particularly favoured when describing imaging problems \citep{SB:imageplane,Rau:DDEs}. It emphasizes that an interferometer performs a linear operation on the sky distribution $\jones{I}{}(l,m)$, via the linear operators ${\cal G}_{pq}$, ${\cal E}_{pq}(l,m)$, and the Fourier Transform $\cal F$, while hiding the internal structure of ${\cal G}$ and ${\cal E}$.
 
 On the other hand, if we're interested in the underlying physics of signal propagation (as is often the case for calibration problems), then the $4\times4$ form of the RIME becomes extremely opaque. When considering any specific set of propagation effects (and its corresponding Jones chain), the outer product operation turns simple-looking $2\times2$ Jones matrices into an intractable sea of indices; see \citet[eq. 4]{SB:imageplane} and \citet[Appendix A]{ME1} for examples. The $2\times2$ form provides a more transparent description of calibration problems, and for this reason is also far better suited to teaching the RIME. An excellent example of this transparency is given in Sect.~\ref{sec:DFR}, where we consider the effect of differential Faraday rotation.
 
@@ -721,7 +721,7 @@ A final pitfall of the Jones-specific view is that it tends to sterotype approac
 
 In Sect.~\ref{sec:derivation}, we mentioned that the RIME holds in any coordinate system. \citet{ME1} briefly mentioned coordinate transforms in this context, but a few additional words on the subject are required.
 
-Field vectors $\vec e$ and Jones matrices $\jones{J}{}$ may be represented [by a particular set of complex values] in any coordinate system, by picking a pair of complex basis vectors in the plane orthogonal to the direction of propagation. We have used an orthonormal $xy$ system until now. Another useful system is that of circular polarisation coordinates $rl$, whose basis vectors (represented in the $xy$ system) are $\vec e_r=\frac{1}{\sqrt{2}}(1,-i)$ and $\vec e_l=\frac{1}{\sqrt{2}}(1,i)$. Any other pair of basis vectors may of course be used. In general, for any two coordinate systems S and T, there will be a corresponding $2\times2$ {\em conversion matrix} $\jones{T}{}$, such that $\vec e_\mathrm{T}=\jones{T}{} \vec e_\mathrm{S}$, where $\vec e_\mathrm{S}$ and $\vec e_\mathrm{T}$ represent the same vector in the S and T coordinate systems. Likewise, the representation of the linear operator $\jones{J}{}$ transforms as $\jones{J}{\mathrm{T}}=\jones{T}{} \jones{J}{\mathrm{S}} \jonesinv{T}{}$, while the brightness matrix $\coh{B}{}$ (or indeed any coherency matrix) transforms as $\coh{B}{\mathrm{T}}=\jones{T}{} \coh{B}{\mathrm{S}} \jonesT{T}{}.$
+Field vectors $\vec e$ and Jones matrices $\jones{J}{}$ may be represented [by a particular set of complex values] in any coordinate system, by picking a pair of complex basis vectors in the plane orthogonal to the direction of propagation. We have used an orthonormal $xy$ system until now. Another useful system is that of circular polarization coordinates $rl$, whose basis vectors (represented in the $xy$ system) are $\vec e_r=\frac{1}{\sqrt{2}}(1,-i)$ and $\vec e_l=\frac{1}{\sqrt{2}}(1,i)$. Any other pair of basis vectors may of course be used. In general, for any two coordinate systems S and T, there will be a corresponding $2\times2$ {\em conversion matrix} $\jones{T}{}$, such that $\vec e_\mathrm{T}=\jones{T}{} \vec e_\mathrm{S}$, where $\vec e_\mathrm{S}$ and $\vec e_\mathrm{T}$ represent the same vector in the S and T coordinate systems. Likewise, the representation of the linear operator $\jones{J}{}$ transforms as $\jones{J}{\mathrm{T}}=\jones{T}{} \jones{J}{\mathrm{S}} \jonesinv{T}{}$, while the brightness matrix $\coh{B}{}$ (or indeed any coherency matrix) transforms as $\coh{B}{\mathrm{T}}=\jones{T}{} \coh{B}{\mathrm{S}} \jonesT{T}{}.$
 
 Of particular importance is the matrix for conversion from linear to circularly polarized coordinates. This matrix is commonly designated as $\jones{H}{}$ (being the mathematical equivalent of an electronic {\em hybrid} sometimes found in antenna receivers):
 
@@ -729,7 +729,7 @@ Of particular importance is the matrix for conversion from linear to circularly 
 \jones{H}{} = \frac{1}{\sqrt{2}} \matrixtt{1}{i}{1}{-i} \;\;\; \jonesinv{H}{} = \frac{1}{\sqrt{2}} \matrixtt{1}{1}{-i}{i}
 \]
 
-Consequently, the brightness matrix $\coh{B}{}$, when represented in circular polarisation coordinates, has the following form (we'll use the indices ``$\odot$'' and ``$+$'' where necessary to disambiguate between circular and linear representations):
+Consequently, the brightness matrix $\coh{B}{}$, when represented in circular polarization coordinates, has the following form (we'll use the indices ``$\odot$'' and ``$+$'' where necessary to disambiguate between circular and linear representations):
 
 \[
 \coh{B}{\odot} = \jones{H}{} \coh{B}{+} \jonesT{H}{} = \matrixtt{I+V}{Q+iU}{Q-iU}{I-V}
@@ -774,13 +774,13 @@ Q&=&\langle |e_x|^2\rangle  - \langle |e_y|^2\rangle , \\
 
 This implies that a {\em unit} source of $I=1, Q=U=V=0$ corresponds to complex amplitudes of $\langle |e_x|^2\rangle =\langle |e_y|^2\rangle = 1/2$. What is less clear is how to relate this to the outputs of a correlator. That is, given an ideal interferometer and a unit source at the phase centre, what visibility matrix $\coh{V}{pq}$ should we expect to see? (In other words, what is the gain factor of an ideal interferometer?) This is something for which no unambiguous definition exists. Historically, two conventions have emerged:
 
-\paragraph{Convention-$\scriptstyle 1/2$.} Unit correlations correspond to unit complex amplitudes, so a 1 Jy source produces correlations of 1/2 each: 
+\paragraph{Convention-$\scriptstyle 1/2$.} Unity correlation correspond to unity complex amplitudes, so a 1 Jy source produces correlations of 1/2 each: 
 
 \[
 \coh{V}{pq} = \matrixtt{\langle |e_x|^2\rangle }{0}{0}{\langle |e_y|^2\rangle } = \frac{1}{2}\matrixtt{1}{0}{0}{1}
 \]
 
-\paragraph{Convention-1.} Unit correlations correspond to unit Stokes $I$:
+\paragraph{Convention-1.} Unity correlations correspond to unity Stokes $I$:
 
 \[
 \coh{V}{pq} = 2\matrixtt{\langle |e_x|^2\rangle }{0}{0}{\langle |e_x|^2\rangle } = \matrixtt{1}{0}{0}{1}
@@ -856,7 +856,7 @@ Compute ``corrected data'' as $\coh{D}{pq}'' = \coh{D}{pq}' \div \coh{\tilde{M}}
 
 \end{description}
 
-Calibration procedure implemented by other 2GC packagages may differ in detail, but are very similar in principle. The crucial common concepts are: (a) the use of an equation such as (\ref{eq:newstar-rime}), which clearly separates the model visibilities ($\coh{X}{pq}$) from antenna-based errors ($\jones{G}{p}$), and (b) the procedure of \emph{correcting} visibilities (whether on-the-fly or in storage) by applying the inverse of the $\jones{G}{p}$ solutions. Both concepts break down when DDEs become involved, as will be discussed in Sect.~\ref{sec:ddes}.
+Calibration procedures implemented by other 2GC packagages may differ in detail, but are very similar in principle. The crucial common concepts are: (a) the use of an equation such as (\ref{eq:newstar-rime}), which clearly separates the model visibilities ($\coh{X}{pq}$) from antenna-based errors ($\jones{G}{p}$), and (b) the procedure of \emph{correcting} visibilities (whether on-the-fly or in storage) by applying the inverse of the $\jones{G}{p}$ solutions. Both concepts break down when DDEs become involved, as will be discussed in Sect.~\ref{sec:ddes}.
 
 \subsection{Explicit RIMEs}
 
@@ -871,7 +871,7 @@ a list of NEWSTAR-like components), and $\jones{J}{p}$ is composed of several di
 
 Conceptually, calibration in CASA is very similar to the procedure described in the previous section, but the use of an explicit RIME confers several advantages. The known terms of the Jones chain (eq.~\ref{eq:casa}) can be taken into account properly, while the solvable terms can be solved for in different combinations. The caveats of using such a specific form of the RIME have already been discussed in Sect.~\ref{sec:jones-specific}.
 
-Note that although CASA also relies on the essentially 2GC-rooted concepts of model and corrected visibilities, the framework has been successfully used for the development of algorithms for calibration and correction of DDEs, namely \emph{W-projection} \citep{Cornwell:wproj}, \emph{pointing selfcal} \citep{SB:pointing} and \emph{AW-projection} \citep{SB:imageplane}. W-projection has been supported by CASA for a long time; the others are currently experimental, but will be made available in future releases (Bhatnagar priv. comm.). We will discuss these issues further in Sect.~\ref{sec:ddes}.
+Note that although CASA also relies on the essentially 2GC-rooted concepts of model and corrected visibilities, the framework has been successfully used for the development of algorithms for calibration and correction of DDEs, namely \emph{W-projection} \citep{Cornwell:wproj}, \emph{pointing selfcal} \citep{SB:pointing} and \emph{AW-projection} \citep{SB:imageplane}. We will discuss these issues further in Sect.~\ref{sec:ddes}.
 
 \subsection{\label{sec:phenomenological}Phenomenological RIMEs}
 
@@ -905,7 +905,7 @@ To give a counter-example, in the presense of significant Faraday rotation (time
 
 The reasoning used above to construct phenomenological RIMEs illustrates one of the biggest benefits that the RIME formalism has brought to the field of calibration. Pre-RIME, descriptions of signal propagation effects were \emph{ad hoc} and approximate, while arguments about the order in which they should be calibrated for were difficult to follow. The RIME formalism has recast all this in terms of straightforward and rigorous matrix algebra.
 
-The second benefit of the RIME formalism is the clarity it has brought to polarization calibration. Note that the implicit RIME given above (eq.~\ref{eq:newstar-rime}) ignores polarization effects almost completely. NEWSTAR does have some polarization calibration capabilities (as do other 2GC packages), but these are specifically tuned to the WSRT case. The RIME formalism allows for a much more general description of polarization effects. The $\jones{D}{}$ and $\jones{P}{}$ terms of the CASA RIME (eq.~\ref{eq:casa}) are an example, but see also the discussion of differential Faraday rotation in Sect.~\ref{sec:DFR}. The RIME also gives us a handle on the fundamental problem of polarisation selfcal, that of the \emph{unitary ambiguity} \citep{ME4,ME5}, which is a general form of the flux ambiguity inherent to selfcal. 
+The second benefit of the RIME formalism is the clarity it has brought to polarization calibration. Note that the implicit RIME given above (eq.~\ref{eq:newstar-rime}) ignores polarization effects almost completely. NEWSTAR does have some polarization calibration capabilities (as do other 2GC packages), but these are specifically tuned to the WSRT case. The RIME formalism allows for a much more general description of polarization effects. The $\jones{D}{}$ and $\jones{P}{}$ terms of the CASA RIME (eq.~\ref{eq:casa}) are an example, but see also the discussion of differential Faraday rotation in Sect.~\ref{sec:DFR}. The RIME also gives us a handle on the fundamental problem of polarization selfcal, that of the \emph{unitary ambiguity} \citep{ME4,ME5}, which is a general form of the flux ambiguity inherent to selfcal. 
 
 Finally, the RIME gives us the mathematical language to tackle the problem of DDEs, which will be the subject of the next section.
 
@@ -930,7 +930,7 @@ DDEs are a multiplication in the $lm$ plane, which corresponds to a convolution 
 \coh{V}{pq} = ( \jones{U}{p} \circ \coh{X}{} \circ \jonesT{U}{q} )
 \end{eqnarray}
 
-where ``$\circ$'' is a matrix convolution (i.e. following the same rules as matrix multiplication, with each elementary multiplication replaced by a convolution), and the convolution kernels $\jones{U}{p}$ are Fourier transform of the sky-Jones terms $\jones{E}{p}$. We can rewrite this equation to emphasize the time variability, and the fact that any given interferometer $pq$ only samples one point $\vec u_{pq}$ of the $uv$ plane at a time:
+where ``$\circ$'' is a matrix convolution (i.e. following the same rules as matrix multiplication, with each elementary multiplication replaced by a convolution), and the convolution kernels $\jones{U}{p}$ are Fourier transforms of the sky-Jones terms $\jones{E}{p}$. We can rewrite this equation to emphasize the time variability, and the fact that any given interferometer $pq$ only samples one point $\vec u_{pq}$ of the $uv$ plane at a time:
 
 \begin{eqnarray}\label{eq:dde-convolution-t}
 \coh{V}{pq}(t) & = & \coh{X}{pq}[t](\vec u_{pq}(t)), \\
@@ -1026,11 +1026,11 @@ The ionosphere becomes a particularly troublesome DDE at low frequencies, owing 
 
 \subsubsection{Ionospheric phase}
 
-Ionospheric phase delay is caused by excess pathlength due to refraction. In the RIME formalism, it corresponds to a scalar Jones term: $Z_p=\mathrm{e}^{i\zeta_p}$, where $\zeta_p\propto T \nu^{-1}$, and $T$ is the Total Electron Content along the line-of-sight. Phase delay can easily reach $10^2-10^4 \mathrm{rad}$ at lower frequencies; since TEC can vary on short timescales and small spatial scales, $Z_p$ can become a rather severe DDE. \citet{Lonsdale:4regimes} identifies four observational regimes, based on relative sizes of the array ($A$), the projected size of the FoV ($V$), and the scale structure of the ionosphere ($S$). These can be easily understood in terms of the RIME (remembering that $Z_p$ is scalar and can therefore be commuted to any part of the RIME):
+Ionospheric phase delay is caused by excess pathlength due to refraction. In the RIME formalism, it corresponds to a scalar Jones term: $Z_p=\mathrm{e}^{i\zeta_p}$, where $\zeta_p\propto T \nu^{-1}$, and $T$ is the Total Electron Content along the line-of-sight. Phase delay can easily reach $10^2-10^4\,\mathrm{rad}$ at lower frequencies; since TEC can vary on short timescales and small spatial scales, $Z_p$ can become a rather severe DDE. \citet{Lonsdale:4regimes} identifies four observational regimes, based on relative sizes of the array ($A$), the projected size of the FoV ($V$), and the scale structure of the ionosphere ($S$). These can be easily understood in terms of the RIME (remembering that $Z_p$ is scalar and can therefore be commuted to any part of the RIME):
 
 In {\bf Regime 1}, we have a \emph{compact array} ($A \ll S$) and a \emph{narrow FoV} ($V\ll S$). Under these conditions, $Z_p$ is a DIE. and moreover, is the same for all antennas: $Z_p(\vec l) \equiv Z_0$. Therefore $Z_p Z_q^\herm \equiv 1$, and the array does not ``see'' the ionosphere at all.
 
-In {\bf Regime 2}, we have an \emph{extended array} ($A \ge S$) and a narrow FoV. $Z_p$ remains a DIE, and can be subsumed in the overall complex gain calibration (i.e. can be commuted to and absorbed into in $\jones{G}{p}$).
+In {\bf Regime 2}, we have an \emph{extended array} ($A \ge S$) and a narrow FoV. $Z_p$ remains a DIE, and can be subsumed in the overall complex gain calibration (i.e. can be commuted to and absorbed into the $\jones{G}{p}$ term).
 
 {\bf Regime 3} corresponds to a compact array and a wide FoV ($V\ge S$). Since all stations see the same ionosphere, $Z_p$ becomes a trivial DDE in the sense of eq.~(\ref{eq:trivial-ddes}). This can be dealt with by image-plane-based algorithms such as \emph{field-based calibration} \citep{Cotton:FBC}.
 
@@ -1045,7 +1045,7 @@ Faraday rotation (FR) is rotation of the EM field vector that occurs during prop
 \beta \propto \nu^{-2} \int_\mathrm{LoS} B_{\parallel} n_e ds,
 \end{equation}
 
-where ``LoS'' stands for integration over the line-of-sight, $B_{\parallel}$ is the component of the magnetic field parallel to the LoS, and $n_e$ is the electron density. In a circular-polarisation coordinate basis (Sect.~\ref{sec:circular}), $\jones{F}{}$ becomes a differential phase delay of the left- and right-polarized components:
+where ``LoS'' stands for integration over the line-of-sight, $B_{\parallel}$ is the component of the magnetic field parallel to the LoS, and $n_e$ is the electron density. In a circular-polarization coordinate basis (Sect.~\ref{sec:circular}), $\jones{F}{}$ becomes a differential phase delay of the left- and right-polarized components:
 
 \[
 \jones{F}{\odot} = \jones{H}{}\jones{F}{}\jonesinv{H}{} = \matrixtt{\mathrm{e}^{i\beta}}{0}{0}{\mathrm{e}^{-i\beta}}
@@ -1561,8 +1561,8 @@ Quite a few plots in Fig.~\ref{fig:dEampl} do show (mostly) static offsets. It c
 %\setlength{\roguewidth}{3.4cm} % for double-column figure
 \setlength{\roguewidth}{.2\columnwidth} % for single-column figure
 
-%plot-de-solutions.py --circle-ampl -o eps --portrait --radius 40 --circle-borders 0.05,0.98,0.05,0.9 --title-fontsize 40 -r o2003.cache --circle-minsize=0 --circle-maxsize=200 --label-fontsize=0 --output-prefix o2003
-%plot-de-solutions.py --circle-ampl -o eps --portrait --radius 40 --circle-borders 0.05,0.98,0.05,0.9 --title-fontsize 40 -r o2006.cache --circle-minsize=0 --circle-maxsize=200 --label-fontsize=0 --output-prefix o2006
+%plot-de-solutions.py --circle-ampl -o eps --portrait --radius 40 --circle-borders 0.05,0.98,0.05,0.9 --circle-title-fontsize 40 -r o2003.cache --circle-minsize=0 --circle-maxsize=200 --circle-label-fontsize=0 --circle-axis-fontsize=10 --output-prefix o2003
+%plot-de-solutions.py --circle-ampl -o eps --portrait --radius 40 --circle-borders 0.05,0.98,0.05,0.9 --circle-title-fontsize 40 -r o2006.cache --circle-minsize=0 --circle-maxsize=200 --circle-label-fontsize=0 --circle-axis-fontsize=10 --output-prefix o2006
 
 \begin{figure}
 \centering
