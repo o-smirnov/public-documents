@@ -10,14 +10,14 @@
 
 \maketitle
 
-The WSRT has turned 40 this year, but despite the respectable age, it still retains the world dynamic range crown. The image of Figure 1 is an example. It shows the field around the bright source 3C147 at 21cm. The image was has a dynamic range of 1,600,000:1, when no other instrument has yet exceeded a million! This dynamic range was achieved by Ger de Bruyn using the NEWSTAR package, with only a single 12-hour synthesis.
+The WSRT has turned 40 this year, but despite the respectable age, it still retains the world dynamic range crown. The image of Figure 1 is an example. It shows the field around the bright source 3C147 at 21cm. The image was has a DR of 1,600,000:1, when no other instrument has yet exceeded a million! This DR was achieved by Ger de Bruyn using the NEWSTAR package, with only a single 12-hour synthesis.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{fig1-3C147-rgb}
 \caption{A 21cm WSRT map of 3C147, at a dynamic range of 1,600,000:1, and absolutely no off-axis artifacts.}
 \end{figure}
  
-The image is even more remarkable for what it {\em doesn't} show. Traditional selfcal does not deal with direction-dependent effects (DDEs; also called {\em off-axis errors}), which manifest themselves as artifacts around off-center sources (left inset). Due to its careful design, WSRT has a comparatively low level of DDEs, so they only become apparent when we reach such high dynamic ranges -- some may even call it a ``luxury'' problem. To eliminate DDEs (right inset), we have reduced the data using MeqTrees, applying {\em differential gain solutions} ($\Delta E$) in the direction of the off-center sources. The result is the completely artifact-free, noise-limited image of Fig. 1.
+The image is even more remarkable for what it {\em doesn't} show. Traditional selfcal, such as that done by NEWSTAR, does not deal with direction-dependent effects (DDEs; also called {\em off-axis errors}), which manifest themselves as artifacts around off-center sources (left inset). Due to its careful design, WSRT has a comparatively low level of DDEs, so they only become apparent when we reach such high dynamic ranges -- some may even call it a ``luxury problem.'' To eliminate DDEs (right inset), we have reduced Ger's data again using MeqTrees, applying {\em differential gain solutions} ($\Delta E$) in the direction of the off-center sources. The result is the completely artifact-free, noise-limited image of Fig. 1.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{o2003_dEphase_array_slopes}
