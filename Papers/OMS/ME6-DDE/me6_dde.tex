@@ -28,7 +28,7 @@
 \begin{document}
 
 
-\title{Revisiting the Measurement Equation: Understanding And Calibrating Direction-Dependent Effects  In Radio Interferometers}
+\title{Revisiting the Measurement Equation: Understanding And Calibrating Direction-Dependent Effects In Radio Interferometers}
 
 \author{O.M.\ Smirnov}
 
@@ -71,7 +71,7 @@ yield meaningful DDE solutions, and thus can be used as potential calibration be
 %optional conclusions
 {}
 
-\keywords{Methods: numerical - Methods: data analysis - Techniques:
+\keywords{Methods: numerical - Methods: analytical - Methods: data analysis - Techniques:
 interferometric - Techniques: polarimetric}
 
 \maketitle
@@ -933,17 +933,24 @@ In other words, we can multiply all the per-antenna uv-Jones terms by $\jones{A}
 \coh{V}{pq} = \jones{G}{p} \coh{X}{pq} \jonesT{G}{q} = (\jones{G}{p} \jones{U}{}) \coh{X}{pq} (\jones{G}{q} \jones{U}{} )^\herm.
 \]
 
-Thus, given a known but unpolarized sky, we can only determine $\jones{G}{p}$ to within an arbitrary unitary ambiguity factor $\jones{U}{}$. In other words, {\em we cannot fix the polarization response of our system without polarized calibrators.} 
+Thus, given a known but unpolarized sky, we can only determine $\jones{G}{p}$ to within an arbitrary unitary ambiguity factor $\jones{U}{}$. In other words, {\em we cannot fix the polarization response of our system without polarized calibrators.} A physical example of such an ambiguity is rotation of all dipoles by the same angle: this cannot be detected through observations of an unpolarized source.
 
-As it turns out, even a polarized calibrator {\em alone} is insufficient, though the matrix algebra gets a bit complicated at this point. Because the $\coh{B}{}$ matrix is Hermitian positive-definite by construction,\footnote{This follows from $I \ge Q+U+V,$ but the full proof is somewhat laborious.} it has a Cholesky decomposition $\coh{L}{}\coh{L}{}^H=\coh{B}{}$. For any unitary $\jones{U}{}$, we then have:
+As it turns out, even a polarized calibrator {\em alone} is insufficient, though the matrix algebra gets a bit complicated at this point. The $\coh{B}{}$ matrix is Hermitian positive-definite by construction, and has a Cholesky 
+decomposition,\footnote{A Hermitian matrix $\jones{P}{}$ is {\em positive-definite} if $\vec z^\herm\jones{P}{}\vec z > 0$ for all non-zero complex vectors $\vec z$. That $\coh{B}{}$ is positive-definite follows from Sylvester's criterion \citep{Gilbert:SylvestersCriterion}, because $I+Q>0$ and $\mathrm{det}\,\coh{B}{}=I^2-Q^2-U^2-V^2>0$. In fact, the Cholesky decomposition for $\coh{B}{}$ can be worked out directly: $L=\matrixtt{\sqrt{I+Q}}{0}{(U-iV)/\sqrt{I+Q}}{\sqrt{I-Q}}.$} 
+i.e. there exists a lower-triangular $\coh{L}{}$ such that $\coh{L}{}\coh{L}{}^H=\coh{B}{}$. For any unitary $\jones{U}{}$, we then have:
 
 \[
 (\coh{L}{} \jones{U}{} \coh{L}{}^{-1}) \coh{B}{} (\coh{L}{} \jones{U}{} \coh{L}{}^{-1})^H = 
 \coh{L}{} \jones{U}{} (\coh{L}{}^{-1}\coh{L}{})(\coh{L}{}^H\coh{L}{}^{H-1}) \jonesT{U}{}\coh{L}{}^H = \coh{L}{}\coh{L}{}^H = \coh{B}{}.
 \]
 
-Therefore, given a single polarized calibrator, we still have an ambiguity factor of 
-$\coh{L}{} \jones{U}{} \coh{L}{}^{-1}$! The upshot of this is that full polarization calibration of an interferometer requires either {\em multiple} calibrator sources, and/or additional assumptions about the sky (e.g. $V=0$, which was a common assumption in the pre-RIME era). \citet{ME5} explores these issues in more detail.
+Therefore, given a single polarized calibrator, we still have an ambiguity factor of $\coh{L}{} \jones{U}{} \coh{L}{}^{-1}$! Physical examples of this are somewhat more elaborate, but perhaps the simplest one is that a source with $Q$ polarization only is insensitive to a certain combination of dipole rotation and gain adjustment. Indeed, for $\coh{B}{}=\matrixtt{I+Q}{0}{0}{I-Q},$ we have $L=\matrixtt{\sqrt{I+Q}}{0}{0}{\sqrt{I-Q}},$ and, given a rotational $\jones{U}{}$, the resulting ambiguity factor is
+
+\[
+\coh{L}{} \, \mathrm{Rot}(\phi) \, \coh{L}{}^{-1} = \matrixtt{\cos\phi}{-\sqrt{\frac{I+Q}{I-Q}}\sin\phi}{\sqrt{\frac{I-Q}{I+Q}}\sin\phi}{\cos\phi}.
+\]
+
+The upshot of this is that unambiguous calibration of the polarization response of an interferometer requires {\em multiple} polarized calibrator sources, and/or additional assumptions about the sky (e.g. $V=0$, which was a common assumption in the pre-RIME era). \citet{ME5} explores these issues in more detail.
 
 We should note that though the matrix equations above may seem somewhat complicated, they are far more succinct and complete than any scalar equations that have been used to describe polarization calibration prior to the RIME. Once again, the RIME provides a rigorous mathematical language to describe what is otherwise an extremely tricky problem.
 
