@@ -6,7 +6,6 @@
 
 \bibpunct{(}{)}{;}{a}{}{,} % to follow the A&A style
 
-
 % shortcut to typeset a 2x2 matrix... there are a lot of these
 \newcommand{\matrixtt}[4]{\left( \begin{array}{cc}#1&#2\\#3&#4\\\end{array} \right)}
 
@@ -24,6 +23,9 @@
 \newcommand{\jonesTinv}[2]{\vec {#1}^{{\herm}-1}_{#2}}
 % this typesets a coherency matrix
 \newcommand{\coh}[2]{\mathsf{{#1}}_{{#2}}}
+
+\newcommand{\EDIT}[1]{{\bf #1}}
+
 
 \begin{document}
 
@@ -80,7 +82,8 @@ interferometric - Techniques: polarimetric}
 
 The Measurement Equation of a generic radio interferometer (henceforth referred to as the RIME) was formulated by \citet{ME1} after almost 50 years of radio astronomy. Prior to the RIME, mathematical models of radio interferometers (as implemented by a number of software packages such as AIPS, Miriad, NEWSTAR, DIFMAP) were somewhat \emph{ad hoc} and approximate. Despite this (and in part thanks to the careful design of existing instruments), the technique of {\em selfcalibration} \citep{Cornwell:selfcal} has allowed radio astronomers to achieve spectacular results. However, by the time the RIME was formulated, even older and well-understood instruments such as the Westerbork Synthesis Radio Telescope (WSRT) and the Very Large Array (VLA) were beginning to expose the limitations of these approximate models. New instruments (and upgrades of older observatories), such as the current crop of Square Kilometer Array \citep{Schilizzi:SKA} ``pathfinders'', and indeed the SKA itself, were already beginning to loom on the horizon. These new instruments exhibit far more subtle and elaborate observational effects, due not only to their greately increased sensitivity, but also to new features of their design. In particular, while traditional selfcal only deals with direction-independent effects (DIEs), calibration of these new instruments requires us to deal with direction-dependent effects (DDEs), or effects that vary across the field of view (FoV) of the instrument. Following \citet{meqtrees}, I shall refer to \emph{generations} of calibration methods, with first-generation calibration (1GC) predating selfcal, 2GC being traditional selfcal as implemented by the abovementioned packages, and 3GC corresponding to the burgeoning field of DDE-related methods and algorithms. 
 
-It is indeed quite fortunate that the emergence of the RIME formalism has provided us with a complete and elegant mathematical framework for dealing with observational effects, and ultimately DDEs. Oddly enough, outside of a small community of algorithm developers that have enthusiastically accepted the formalism and put it to good use, uptake of RIME by radio astronomers at large has been slow. Even more worryingly, almost 15 years after the first publication, the formalism is hardly ever taught to the new generation of students. This is worrying, because in my estimation, the RIME should be the cornerstone of every entry-level interferometry course! In part, this slow acceptance has been shaped by the availability of software. Today's radio astronomers rely almost exclusively on the 2GC software packages mentioned above, whose internal paradigms are rooted in the selfcal developments of the 1980s and lack an explicit RIME.\footnote{All 2GC packages do use some specific and limited form of the RIME implicitly. This will be discussed further in Sect.~\ref{sec:calibration}.} The continued success of legacy packages means that the {\em thinking} about interferometry and calibration is still largely shaped by pre-RIME paradigms. What has not helped this situation is that new software exploiting the power of the RIME has been slow to emerge, and practical results even more so (but see Sect.~\ref{sec:3C147} of this paper).  
+It is indeed quite fortunate that the emergence of the RIME formalism has provided us with a complete and elegant mathematical framework for dealing with observational effects, and ultimately DDEs. Oddly enough, outside of a small community of algorithm developers that have enthusiastically accepted the formalism and put it to good use, uptake of RIME by radio astronomers at large has been slow. Even more worryingly, almost 15 years after the first publication, the formalism is hardly ever taught to the new generation of students. This is worrying, because in my estimation, the RIME should be the cornerstone of every entry-level interferometry course! In part, this slow acceptance has been shaped by the availability of software. Today's radio astronomers rely almost exclusively on the 2GC software packages mentioned above, whose internal paradigms are rooted in the selfcal developments of the 1980s and lack an explicit RIME.\footnote{All 2GC packages do use some specific and limited form of the RIME implicitly. This will be discussed further in Sect.~\ref{sec:calibration}.} \EDIT{On the other hand, relatively few observations were really sensitive enough to push the limits of (or have their science goals compromised by) 2GC.}
+The continued success of legacy packages has meant that the {\em thinking} about interferometry and calibration has still been largely shaped by pre-RIME paradigms. What has not helped this situation is that new software exploiting the power of the RIME has been slow to emerge, and practical results even more so (but see Sect.~\ref{sec:3C147} of this paper).  
 
 On the other hand, from my personal experience of teaching the RIME at several workshops, once the penny drops, people tend to describe it in terms such as ``obvious'', ``simple'', ``intuitive'', ``elegant'' and ``powerful''. This points at an explanatory gap in the literature. The first part of this paper therefore tries to address this gap, recasting existing ideas into one consistent mathematical framework, and showing where other approaches to the RIME fit in. Section~\ref{sec:derivation} revisits the ideas of the original RIME papers I \citep{ME1} and IV \citep{ME4}, deriving the RIME from first principles. It then demonstrates how the fundamentals of interferometry itself (and the van Cittert-Zernike theorem in particular) follow from the RIME (rather than the other way around!), in the process showing how the formalism can incorporate DDEs. This section also looks at alternative formulations of the RIME and their practical implications, and shows where they fit into the formalism. It also tries to clear up some controversies and misunderstandings that have accumulated over the years. Section~\ref{sec:calibration} discusses calibration in RIME terms, and explicates the links between the RIME and 2GC implementations of selfcal. 
 
@@ -237,7 +240,7 @@ eq.~(\ref{eq:jones-chain}). This results in the rather pleasing ``onion'' form o
     \coh{V}{pq} = \jones{J}{pn}(...(\jones{J}{p2} (\jones{J}{p1} \coh{B}{}  \jones{J}{q1}^\herm)\jonesT{J}{q2}) ... )\jonesT{J}{qm}
     \end{equation}
 
-Intuitively, this corresponds to various effects in the signal path applying sequential layers of ``corruptions'' to the original source brightness $\coh{B}{}$. Note that the two signal paths can in principle be entirely dissimilar, making the ``onion'' assymetric (hence the use of $n\ne m$ for the outer indices). One of the strengths of the RIME is its ability to describe heterogenous interferometer arrays with dissimilar signal propagation paths.
+Intuitively, this corresponds to various effects in the signal path applying sequential layers of ``corruptions'' to the original source brightness $\coh{B}{}$. Note that the two signal paths can in principle be entirely dissimilar, making the ``onion'' assymetric (hence the use of $n\ne m$ for the outer indices). An example of this is VLBI with \emph{ad hoc} arrays composed of different types of telescopes. One of the strengths of the RIME is its ability to describe heterogenous interferometer arrays with dissimilar signal propagation paths.
 
 \subsubsection{An elementary Jones taxonomy\label{sec:taxonomy}}
 
@@ -294,7 +297,7 @@ It is important for our purposes that, while in general matrix multiplication is
 \begin{enumerate}
 \item Scalar matrices commute with everything.
 \item Diagonal matrices commute among themselves.
-\item Rotation matrices commute among themselves.
+\item Rotation matrices commute among themselves\footnote{\EDIT{Note that this is only true for $2\times2$ matrices. Higher-order rotations do not commute.}}.
 \end{enumerate}
 
 Rules 2 and 3 are not very satisfactory as stated, because ``diagonal'' and ``rotation'' are properties defined in a specific coordinate frame, while (non-)commutation is defined independently of coordinates: two linear operators $\jones{A}{}$ and $\jones{B}{}$ either commute or they don't, so their matrix representations must necessarily commute (or not) irrespective of what they look like for a particular basis. Let us adopt a practical generalization: 
@@ -309,7 +312,7 @@ Equation~(\ref{eq:me0}) is universal in the sense that the $\jones{J}{p}$ and $\
 
 Phase difference is due to the geometric pathlength difference from source to antennas $p$ and $q$. For reasons discussed in Sect.~\ref{sec:smearing}, we want to minimize this difference for a specific direction, so a correlator will usually introduce additional delay terms to compensate for the pathlength difference in the chosen direction, effectively ``steering'' the interferometer. This direction is called the {\em phase centre}. The conventional approach is to consider phase differences on {\em baseline} $pq$, but for our purposes let's pick an arbitrary zero point, and consider the phase difference at each antenna $p$ relative to the zero point.
 
-Let us adopt the conventional coordinate system and notations \citep[see e.g.][]{tms}, with the $z$ axis pointing towards the phase centre, and consider antenna $p$ located at coordinates $\vec u_p=(u_p,v_p,w_p)$. The phase difference at point $\vec u_p$ relative to $\vec u=0$, for a signal arriving from direction $\vec\sigma$, is given by
+Let us adopt the \EDIT{conventional coordinate system\footnote{Note that there is some unfortunate confusion in coordinate systems used in radio interferometry. The \citet{IAU74} defines Stokes parameters in a right-handed coordinate system with $x$ and $y$ in the plane of the sky towards North and East, and the $z$ axis pointing towards the observer. The conventional $lm$ frame has $l$ pointing East and $m$ North. In practice, this means that rotation through parallactic angle must be applied in one direction in the $lm$ frame, and in the opposite direction in the polarization frame. The formulations of the present paper are not affected.}} and notations \citep[see e.g.][]{tms}, with the $z$ axis pointing towards the phase centre, and consider antenna $p$ located at coordinates $\vec u_p=(u_p,v_p,w_p)$. The phase difference at point $\vec u_p$ relative to $\vec u=0$, for a signal arriving from direction $\vec\sigma$, is given by
 
   \[
   \kappa_p = 2\pi\lambda^{-1}(u_p l+v_p m+w_p (n-1)),
@@ -334,7 +337,7 @@ Substituting the exponents for $K_p$ from eq.~(\ref{eq:K}), and remembering that
   \coh{V}{pq} = \coh{B}{}  {\rm e}^{-2\pi i(u_{pq} l+v_{pq} m+w_{pq} (n-1))},\;\vec u_{pq} = \vec u_p - \vec u_q,
   \end{equation}
  
-which expresses the visibility as a function of {\em baseline $uvw$ coordinates} $\vec u_{pq}$. I shall call the visibility matrix given by eqs.~(\ref{eq:me-point-source}) or (\ref{eq:me-point-source-uvw}) the {\em source coherency}, and write it as $\coh{X}{pq}$. In the traditional view of radiointerferometry, $\coh{X}{pq}$ is a measurement of the coherency function $\coh{X}{}(u,v,w)$ at point $u_{pq},v_{pq},w_{pq}$ (with $\coh{X}{}$ being a $2\times2$ complex matrix rather than the traditional scalar complex function). For the purposes of this paper, let us adopt an operational definition of {\em source coherency} as being the visibility that would be measured by a corruption-free interferometer. For a point source, the coherency is given by eq.~(\ref{eq:me-point-source}).
+which expresses the visibility as a function of {\em baseline $uvw$ coordinates} $\vec u_{pq}$. I shall call the visibility matrix given by eqs.~(\ref{eq:me-point-source}) or (\ref{eq:me-point-source-uvw}) the {\em source coherency}, and write it as $\coh{X}{pq}$. In the traditional view of radio interferometry, $\coh{X}{pq}$ is a measurement of the coherency function $\coh{X}{}(u,v,w)$ at point $u_{pq},v_{pq},w_{pq}$ (with $\coh{X}{}$ being a $2\times2$ complex matrix rather than the traditional scalar complex function). For the purposes of this paper, let us adopt an operational definition of {\em source coherency} as being the visibility that would be measured by a corruption-free interferometer. For a point source, the coherency is given by eq.~(\ref{eq:me-point-source}).
 
 \subsubsection{A single corrupted point source}
 
@@ -442,7 +445,7 @@ If this is met, we can then rewrite the full-sky RIME as:
 where $\coh{X}{pq} = \coh{X}{}(u_{pq},v_{pq})$, and the matrix function $\coh{X}{}(\vec u)$ is simply the (element-by-element) two-dimensional Fourier transform\footnote{Note that I'm using $\vec u$ as a shorthand for both $(u,v)$ and $(u,v,w)$, depending on context.}
 of the matrix function $\coh{B}{\rm app}(\vec l)$. I shall also write this as $\coh{X}{}={\cal F}\coh{B}{\mathrm{app}}$. The similarity to eq.~(\ref{eq:me-point-source-corrupted}) of a single point source is readily apparent. For obvious reasons, I shall call $\coh{X}{}(\vec u)$ the {\em sky coherency}. Effectively, we have derived the van Cittert-Zernike theorem (VCZ), the cornerstone of radio interferometery \citep[Sect.~14.1]{tms}, from the basic RIME! 
 
-This approach turns the RIME formalism on its head. Note that eq.~(\ref{eq:me-allsky-simple}) is pretty much the original coherency matrix formulation of \citet[eq.~2]{ME4}. In the RIME papers, Hamaker et al. defer to VCZ, treating the coherency as a ``given'' (while recasting it to matrix form) to which Jones matrices then apply. By treating phase ($K$) as a Jones matrix in its own right, I have shown that the Jones formalism naturally extends to the $(l,m)$ plane, and that VCZ is actually a consequence of the RIME rather than being something extrinsic to it. This also opens the door to studying DDEs as part of the same formalism, to which I shall return in Sect.~\ref{sec:ddes}.
+\EDIT{Such an approach turns the original original coherency matrix formulation of \citet{ME4} on its head. Note that Eq.~(\ref{eq:me-allsky-simple}) here is the same as Eq.~(2) of that work. In the RIME papers, Hamaker et al. defer to VCZ, treating the coherency as a ``given'' (while recasting it to matrix form) to which Jones matrices then apply. Treating phase ($K$) as a Jones matrix in its own right \citep{JEN:note185} allows for a natural extension of the Jones formalism into the $(l,m)$ plane, and shows that VCZ is actually a consequence of the RIME rather than being something extrinsic to it. This also allows DDEs to be incorporated into the same formalism, in a manner similar to that suggested for $w$-projection \citep{Cornwell:wproj}. I shall return to this subject in Sect.~\ref{sec:ddes}.}
 
 \subsubsection{Time variability and the fundamental assumption of selfcal\label{sec:timevar}}
 
@@ -617,7 +620,7 @@ Equation (\ref{eq:smearing}) is straightforward to apply numerically, and is ind
 \subsubsection{\label{sec:closure-errors}Interferometer-based errors}
 
 The term {\em interferometer-based errors} refers to measurement errors that cannot be represented by per-antenna terms.
-These are also called {\em closure errors}, since they violate the closure relationships of Sect.~\ref{sec:closures}. When formulating eq.~(\ref{eq:me0}), we assumed that the visibility matrix $\coh{V}{pq}$ output by the correlator is a perfect measurement of correlations between antenna voltages. In practice, this hasn't usually been the case, as older (analog) correlators introduce their own corruptions into the signal chain. Assuming these are linear, and following \citet{JEN:note185}, we could rewrite the full-sky RIME of eq.~(\ref{eq:me-allsky-simple}) as: 
+These are also called {\em closure errors}, since they violate the closure relationships of Sect.~\ref{sec:closures}. When formulating eq.~(\ref{eq:me0}), we assumed that the visibility matrix $\coh{V}{pq}$ output by the correlator is a perfect measurement of correlations between antenna voltages. \EDIT{Closure errors represent additional baseline-based effects.} Assuming these are linear, and following \citet{JEN:note185}, we could rewrite the full-sky RIME of eq.~(\ref{eq:me-allsky-simple}) as: 
 
     \begin{equation}\label{eq:me:closure-errors}
     \coh{V}{pq} = \coh{M}{pq} \ast ( \jones{J}{p} \coh{X}{pq}  \jonesT{J}{q} ) + \coh{A}{pq},
@@ -627,19 +630,27 @@ where $\coh{M}{pq}$ is a $2\times2$ matrix of multiplicative interferometer erro
 
 Given a model for $\coh{X}{pq}$, observed data $\coh{V}{pq}$, and self-calibrated per-antenna terms $\jones{J}{p}$, it is trivial to estimate $\coh{M}{}$ and $\coh{A}{}$ using eq.~(\ref{eq:me:closure-errors}). It is also trivial to see that the equation is ill-conditioned: any model $\coh{X}{}$ can be made to fit the data by choosing suitable values for $\coh{M}{}$ and $\coh{A}{}$. We therefore need to assume some additional constraints, such as closure errors being fixed (or only slowly varying) in time and/or frequency. 
 
-In practice, a solution for $\coh{M}{}$ and/or $\coh{A}{}$ will tend to subsume other baseline-dependent effects such as smearing and decoherence (Sect.~\ref{sec:smearing}), and also any source structure not represented by the sky model. This is dangerous, as it can actually attenuate sources in the final images, as shown in Sect.~\ref{sec:3C147:closure-errors}. Closure error solutions can be necessary, but one must be very conservative with their application, lest they become just another ``fudge factor'' in the equations.
+\EDIT{In practice, closure errors arise due to a combination of effects:
 
-The new generation of all-digital (or ``software'') correlators should, in principle, be corruption-free. In this case, all remaining baseline-dependent effects will be due to eq.~(\ref{eq:me-allsky-simple}) being an incomplete model, whether due to missing source structure in the sky mode, or because it fails to include decoherence. A solution for $\coh{M}{}$ and/or $\coh{A}{}$ may still be required to eliminate artifacts around bright sources.
+\begin{itemize}
+\item The traditional ``purely instrumental'' cause is the use of analog components in the signal chain and parts of the correlator, which is typical of the previous generations of radio interferometers. New telescope designs tend to digitize the signal much closer to the receiver, and use all-digital correlators, presumably\footnote{It should be noted that none of these next-generation instruments have as yet operated long enough to establish this conclusively.} eliminating instrumental closure errors. 
+\item Smearing and decoherence (Sect.~\ref{sec:smearing}) is a baseline-based effect, and will thus manifest itself as a closure errors, unless it is properly taken into account in the model for $\coh{X}{pq}$.
+\item In general, any source structure or flux not represented by the model $\coh{X}{pq}$ will also show up as a closure error.
+\end{itemize}
+
+A solution for $\coh{M}{}$ and/or $\coh{A}{}$ will tend to subsume all these effects. This is dangerous, as it can actually attenuate sources in the final images, as illustrated in Sect.~\ref{sec:3C147:closure-errors}. One must thus be very conservative with closure error solutions, lest they become just another ``fudge factor'' in the equations.
+}
 
 \subsubsection{A three-dimensional RIME?\label{sec:3D-rime}}
 
-Recent work by \citet{Carozzi:ME3D} highlights a limitation of the $2\times2$ Jones formalism. They point out that,  because we're measuring a 3D brightness distribution, the radiation from off-center sources is only approximately paraxial (equivalently, the EM waves are only approximately transverse). From this it follows that a 2D description 
-of the EMF based on a rank-2  vector ($\vec e$) can only be approximate, and a rank-3 formalism is proposed. 
-Strictly speaking, it is only in the specific case of a dual-polarization interferometer {\em with plane-parallel receptors} -- what the Carozzi \& Woan  call a {\em plane-polarized} interferometer -- that the 3D description can be reduced to the Jones formalism, via a projection of the EMF distribution onto the receptor plane. 
+\EDIT{Recent work by \citet{Carozzi:ME3D} highlights a limitation of the $2\times2$ Jones formalism. They point out that 
+since we're measuring a 3D brightness distribution, the radiation from off-center sources is only approximately paraxial (equivalently, the EM waves are only approximately transverse). From this it follows that a 2D description of the EMF 
+based on a rank-2  vector (the $\vec e$ used above) is insufficient, and a rank-3 formalism is proposed. 
 
-Classical dish arrays are plane-polarized by design, but deviate from this in practice due to pointing errors and other misalignments. Aperture arrays such as LOFAR are plane-polarized to an even lesser extent, due to the curvature of the Earth. The main implication of the Carozzi-Woan result is that any deviation from the plane-polarized case introduces an observational effect that {\em cannot be described by the Jones formalism}, and will show up as a closure violation (Sect.~\ref{sec:closures}). Further work is urgently needed to estimate the magnitude of this effect -- if it proves to be significant, then a re-think of current calibration approaches may be required!
+The main implication of the Carozzi-Woan result for the $2\times2$ formalism is that the latter is still valid in general (at least for dual-receptor arrays), but the full-sky RIME of Eq.~(\ref{eq:me-allsky0}) must be augumented with an additional direction-dependent Jones term called the \emph{$xy$-projected transformation matrix}, designated as $\jones{T}{}^{(xy)}$ (see their Eq.~34), which corresponds to a projection of the 3D brightness distribution onto the plane of the receptors. If all the receptors of the array are plane-parallel (Carozzi \& Woan call this a {\em plane-polarized} interferometer), $\jones{T}{}^{(xy)}$ is a trivial DDE (in the sense of Eq.~\ref{eq:trivial-ddes}), manifesting itself as a polarization aberration that increases with $l,m$ (see their Fig.~2). For non-parallel receptors, $\jones{T}{}^{(xy)}$ should be a non-trivial DDE!
 
-For the plane-polarized case, the $2\times2$ RIME is fully valid. Carozzi \& Woan also discuss a wide-field polarization aberration that arises even in the plane-polarized case; in the $2\times2$ formalism this aberration  is naturally described via the Jones term representing primary beam gain.
+Classical dish arrays are plane-polarized by design, but deviate from this in practice due to pointing errors and other misalignments. The resulting effect is expected to be tiny given the typically narrow FoV of a dish, but it would be intriguing to see whether it can be detected in deliberately mispointed WSRT observations, given the extremely high dynamic range routinely achieved at the WSRT. On the other hand, an aperture array such as LOFAR should show a far more significant deviation from the plane-polarized case (due to the curvature of the Earth, as well as the all-sky FoV), but due to LOFAR's (as yet) relatively low dynamic range and extreme instrumental polarization, the effect may also prove difficult to detect. In any case, further work on the subject is urgently required.
+}
 
 \subsection{\label{sec:formulations}Alternative formulations}
 
@@ -668,13 +679,15 @@ I+Q \\ U+iV \\ U-iV \\ I-Q
 \end{array} \right ), 
 \]
 
-which then give us the $4\times4$ form of eq.~(\ref{eq:me0}):
+which then gives us the $4\times4$ form of eq.~(\ref{eq:me0}):
 
     \begin{equation}\label{eq:me:mueller}
     \vec v_{pq} = ( \jones{J}{p} \otimes \jonesT{J}{q} ) \jones{S}{} \jones{I}{} = {\cal J}_{pq} \jones{S}{} \jones{I}{}
     \end{equation}
 
-Here, ${\cal J}_{pq}=\jones{J}{p} \otimes \jones{J}{q}$ is a $4\times4$ Mueller matrix describing the combined effect of the signal paths to antennas $p$ and $q$, $\jones{I}{}$ is a column vector of the Stokes parameters $IQUV$, and $\jones{S}{}$ is a conversion matrix that turns the Stokes vector into the brightness vector:
+Here, ${\cal J}_{pq}=\jones{J}{p} \otimes \jones{J}{q}$ is a $4\times4$ matrix describing the combined effect of the signal paths to antennas $p$ and $q$, $\jones{I}{}$ is a column vector of the Stokes parameters $(I,Q,U,V)$, and $\jones{S}{}$ is a conversion matrix that turns the Stokes vector into the \EDIT{brightness vector
+\footnote{Strictly speaking, a Mueller matrix represents a linear operation on Stokes vectors. For Eq.~(\ref{eq:me:mueller}), the Mueller matrix is to $\jonesinv{S}{}{\cal J}_{pq}\jones{S}{}$.}}:
+
 
 \[
 \left ( \begin{array}{c}
@@ -686,7 +699,8 @@ I \\ Q \\ U \\ V
 \end{array} \right ) 
 \]
 
-The equivalent of the ``onion'' form of eq.~(\ref{eq:me0-onion}) is then:
+ 
+The equivalent of the ``onion'' form of Eq.~(\ref{eq:me0-onion}) is then:
 
     \begin{equation}\label{eq:me:mueller-onion}
     \vec v_{pq} = ( \jones{J}{pn} \otimes \jonesT{J}{qn} ) ... ( \jones{J}{p1} \otimes \jonesT{J}{q1} ) \jones{S}{} \jones{I}{}
@@ -704,7 +718,9 @@ This form of the RIME is particularly favoured when describing imaging problems 
 
 On the other hand, if we're interested in the underlying physics of signal propagation (as is often the case for calibration problems), then the $4\times4$ form of the RIME becomes extremely opaque. When considering any specific set of propagation effects (and its corresponding Jones chain), the outer product operation turns simple-looking $2\times2$ Jones matrices into an intractable sea of indices; see \citet[eq. 4]{SB:imageplane} and \citet[Appendix A]{ME1} for typical examples. The $2\times2$ form provides a more transparent description of calibration problems, and for this reason is also far better suited to teaching the RIME. An excellent example of this transparency is given in Sect.~\ref{sec:DFR}, where I consider the effect of differential Faraday rotation.
 
-There are also some computational issues raised by the $4\times4$ formalism. Multiplication of two $2\times2$ matrices invokes 12 floating-point operations (flops). Each extra pair of Jones terms in the $2\times2$ form of the RIME then costs 24 flops (per time/frequency/baseline/etc). Multiplication of two $4\times4$ matrices costs 112 flops, and the outer product operation another 16. Therefore, in the general case, a Mueller-form RIME is roughly 5 times more computationally expensive than the equivalent Jones form. For many applications the bottleneck may lie elsewhere, but for some radio interferometry simulations, my profiling (using MeqTrees) has often shown matrix multiplication being the major consumer of CPU time.
+\EDIT{There are also potential computational issues raised by the $4\times4$ formalism. A naive implementation of, e.g., Eq.~(\ref{eq:me:mueller-onion}) incurs a series of $4\times4$ matrix multiplications for each interferometer and time/frequency point. Multiplication of two $4\times4$ matrices costs 112 floating-point operations (flops), and the outer product operation another 16. Therefore, each pair of Jones terms in the chain incurs 128 flops. The same equation in $2\times2$ form invokes 12 floating-point operations (flops) per matrix multiplication, or 24 per each pair of Jones terms. This is roughly 5 times fewer than the $4\times4$ case. 
+
+Often, the true computational bottleneck lies elsewhere, i.e. in solving (for calibration) or gridding (for imaging), in which case these considerations are irrelevant. However, when running massive simulations (that is, using the RIME to predict visibilities), my profiling of MeqTrees has often shown matrix multiplication to be the major consumer of CPU time. In this case, implementing calculations using the $2\times2$ form represents a significant optimization.}
 
 \subsubsection{Jones-specific formulations\label{sec:jones-specific}} 
 
@@ -720,9 +736,10 @@ Such a ``Jones-specific'' approach has considerable merit, in that it shows how 
 
 The first pitfall of this approach is that it tends to place the trees firmly before the forest. A major virtue of the RIME is its elegance and simplicity, but this gets obscured as soon as elaborate chains of Jones matrices are written out.  I submit that the RIME's slow acceptance among astronomers at large is, in some part, due to the literature being full of equations similar to (\ref{eq:casa}). That they are just specific cases of what is at core a very simple and elegant equation is a point perhaps so obvious that some authors do not bother noting it, but it cannot be stressed enough!
 
-The second pitfall is that an equation like (\ref{eq:casa}), when implemented in software, can be both too specific, and insufficiently flexible. For instance, the calibration described in Sect.~\ref{sec:3C147} cannot be done in CASA, despite using a much simpler form of the RIME, because it includes a Jones term that was not anticipated in the CASA design. A second major virtue of the RIME is its ability to describe different propagation effects; this is immediately compromised if only a specific and limited set of these is chosen for implementation.
+The second pitfall is that an equation like (\ref{eq:casa}), when implemented in software, can be both too specific, and insufficiently flexible. \EDIT{(Note that the CASA implementation specifies both the time/frequency behaviour, and the form of the Jones terms, e.g. $\jones{G}{}$ is diagonal and variable in time, $\jones{B}{}$ is diagonal and variable in frequency,
+$\jones{D}{}$ has a specific ``leakage'' form, etc.)} For instance, the calibration described in Sect.~\ref{sec:3C147} cannot be done in CASA, despite using an ostensibly much simpler form of the RIME, because it includes a Jones term that was not anticipated in the CASA design. A second major virtue of the RIME is its ability to describe different propagation effects; this is immediately compromised if only a specific and limited set of these is chosen for implementation.
 
-A final pitfall of the Jones-specific view is that it tends to sterotype approaches to calibration. Equation~(\ref{eq:casa}) is a huge improvement on the \emph{ad hoc} approaches of older software systems, but in the end it is just some model of an interferometer that happens to work well enough for ``classically-designed'' instruments such as the VLA and WSRT, in their most common regimes. It is {\bf not} universally true that polarization effects can be completely described by a direction-independent leakage matrix ($\jones{D}{p}$), or bandpass by $\jones{B}{p}$ -- it just happens to be a practical first-order model, which completely breaks down for a new instrument such as LOFAR. (And in fact, even WSRT results can be improved by departing from this model, as Sect.~\ref{sec:3C147} will show.) We must therefore take care that our thinking about calibration does not fall into a rut marked out by a specific series of Jones terms.
+A final pitfall of the Jones-specific view is that it tends to sterotype approaches to calibration. Equation~(\ref{eq:casa}) is a huge improvement on the \emph{ad hoc} approaches of older software systems, but in the end it is just some model of an interferometer that happens to work well enough for ``classically-designed'' instruments such as the VLA and WSRT, in their most common regimes. It is {\bf not} universally true that polarization effects can be completely described by a direction-independent leakage matrix ($\jones{D}{p}$), or bandpass by $\jones{B}{p}$ -- it just happens to be a practical first-order model, which completely breaks down for a new instrument such as LOFAR, \EDIT{where e.g. ``leakage'' is strongly direction-dependent.} In fact, even WSRT results can be improved by departing from this model, as Sect.~\ref{sec:3C147} will show. We must therefore take care that our thinking about calibration does not fall into a rut marked out by a specific series of Jones terms.
 
 \subsubsection{\label{sec:circular}Circular vs. linear polarizations}
 
@@ -1013,7 +1030,7 @@ Similarly to the WSRT $\cos^3$ model, the VLA primary beam has a reasonable anal
 
 \subsubsection{Parallactic angle rotation}
 
-An alt-az mount telescope, without a dish derotator such as that designed into ASKAP \citep{ASKAP}, has an intrinsically time-variable beamshape in the $lm$ frame, as the nominal beam pattern rotates with parallactic angle. Like any DDE, this causes significant spatial artifacts around off-axis sources that cannot be addressed by classical selfcal. This has been a serious dynamic range limitation at the VLA, but some recent developements promise to alleviate the problem. \citet{Uson-Cotton:VLA-beam} describe a CLEAN-like algorithm (implemented in the Obit package) that corrects these artifacts during deconvolution; the RIME-derived AW-projection method of \citet{SB:imageplane} can correct them during imaging. Both methods rely on an \emph{a priori} beam model, and thus are limited by the fidelity of the latter.
+An alt-az mount telescope, without a dish derotator such as that designed into ASKAP \citep{ASKAP}, has an intrinsically time-variable beamshape in the $lm$ frame, as the nominal beam pattern rotates with parallactic angle. Like any DDE, this causes significant spatial artifacts around off-axis sources that cannot be addressed by classical selfcal. This has been a serious dynamic range limitation at the VLA, but some recent developements promise to alleviate the problem. \citet{Uson-Cotton:VLA-beam} describe a CLEAN-like algorithm (implemented in the Obit package) that corrects these artifacts during deconvolution; the RIME-derived AW-projection method of \citet{SB:imageplane} can correct them during imaging. Both methods rely on an \emph{a priori} beam model, and \EDIT{are presumably} limited by its fidelity. \EDIT{Note also that both methods have, to date, only been applied at the VLA, for which the Brisken simulations provide a very detailed beam model. They have yet to be tested with the somewhat approximate models available for other instruments.}
 
 The WSRT's equatorial mounts (and ASKAP's derotator) keep the beamshape stationary in the $lm$ frame, thus avoiding this problem entirely.
 
@@ -1074,15 +1091,32 @@ The ionosphere becomes a particularly troublesome DDE at low frequencies, owing 
 
 \subsubsection{Ionospheric phase}
 
-Ionospheric phase delay is caused by excess pathlength due to refraction. In the RIME formalism, it corresponds to a scalar Jones term: $Z_p=\mathrm{e}^{i\zeta_p}$, where $\zeta_p\propto T \nu^{-1}$, and $T$ is the Total Electron Content along the line-of-sight. Phase delay can easily reach $10^2-10^4\,\mathrm{rad}$ at lower frequencies; since TEC can vary on short timescales and small spatial scales, $Z_p$ can become a rather severe DDE. \citet{Lonsdale:4regimes} identifies four observational regimes, based on relative sizes of the array ($A$), the projected size of the FoV ($V$), and the scale structure of the ionosphere ($S$). These can be easily understood in terms of the RIME (remembering that $Z_p$ is scalar and can therefore be commuted to any part of the RIME):
+Ionospheric phase delay is caused by excess pathlength due to refraction. In the RIME formalism, it corresponds to a scalar Jones term: $Z_p=\mathrm{e}^{i\zeta_p}$, where $\zeta_p\propto T \nu^{-1}$, and $T$ is the Total Electron Content along the line-of-sight. Phase delay can easily reach $10^2-10^4\,\mathrm{rad}$ at lower frequencies, with variations on relatively short timescales and small spatial scales, thus making for a rather severe DDE. \EDIT{Following \citet{Lonsdale:4regimes}, we can identify distinct observational regimes based on the size of the array ($A$), the projected size of the FoV ($V$), and the scale structure of the ionosphere ($S$), i.e. the spatial scale on which ionospheric phase is approximately linear. The first criterion is FoV size:
 
-In {\bf Regime 1}, we have a \emph{compact array} ($A \ll S$) and a \emph{narrow FoV} ($V\ll S$). Under these conditions, $Z_p$ is a DIE. and moreover, is the same for all antennas: $Z_p(\vec l) \equiv Z_0$. Therefore $Z_p Z_q^\herm \equiv 1$, and the array does not ``see'' the ionosphere at all.
+\begin{description}
+\item[Narrow FoV:] $V\ll S$, making ionosheric phase effectively constant over the FoV ($Z_p(\vec l)\equiv Z_p(0)$), and thus a DIE.
+Since $Z_p$ is scalar, it can be commuted to any position in the RIME and absorbed into another Jones term, such as the per-antenna complex gain that is solved for during regular selfcal.
+\item[Wide FoV:] $V\ge S$, and therefore $Z_p$ is properly direction-dependent.
+\end{description}
 
-In {\bf Regime 2}, we have an \emph{extended array} ($A \ge S$) and a narrow FoV. $Z_p$ remains a DIE, and can be subsumed in the overall complex gain calibration (i.e. can be commuted to and absorbed into the $\jones{G}{p}$ term).
+The second criterion is array size:
 
-{\bf Regime 3} corresponds to a compact array and a wide FoV ($V\ge S$). Since all stations see the same ionosphere, $Z_p$ becomes a trivial DDE in the sense of eq.~(\ref{eq:trivial-ddes}). This can be dealt with by image-plane-based algorithms such as \emph{field-based calibration} \citep{Cotton:FBC}.
+\begin{description}
+\item[Tiny array:] $A\ll S$. Ionospheric phase is constant on scales of $A$, thus $Z_p=Z_q$ for all $p,q$. This makes $Z_p Z^\herm_q=1$, so the interferometer does not ``see'' the ionosphere at all.
+\item[Compact array:] $A\approx S$. Ionospheric phase is approximately linear on scales of $A$. Crucially, this means that for any direction $\vec l$ and baseline $pq$, the observed phase difference $\zeta_p-\zeta_q$ is proportional to the projection of the baseline $\vec u$ onto the ionospheric screen, and thus:
 
-{\bf Regime 4} is that of an extended array and wide FoV (for example, LOFAR). This is the truly troublesome case, with $Z_p$ being a non-trivial DDE.
+\begin{equation}\label{eq:Zjones-shift}
+Z_p Z^\herm_q \simeq e^{\eta u_{pq} + \xi v_{pq}}
+\end{equation}
+
+\item[Extended array:] $A>S$. Different stations of the array are looking through completely different parts of the ionosphere.
+\end{description}
+
+The tiny array case is trivial and not considered further. Lonsdale Regimes 1 and 2 correspond to narrow FoVs with compact or extended arrays: these can be dealt with using regular selfcal. In Regime 3 (wide FoV, compact array), the ionosphere manifests itself as an apparent ``distortion'' of the field: each source is shifted by its own (time-variable) offset $\eta,\xi$. This can be easily seen by inserting the $Z$-Jones given by Eq.~(\ref{eq:Zjones-shift}) into the full-sky RIME of Eq.~(\ref{eq:me-allsky}), and merging it with the complex exponent. 
+
+Finally, Lonsdale Regime 4 corresponds to an extended array and wide FoV. This is the regime in which MWA and LOFAR are expected to operate. $Z_p Z^\herm_q$ then results in a baseline- and direction-dependent phase offset, which causes each source in the field to be ``smeared'' with a different PSF. Selfcal tends to take care of the offset towards the dominant source, thus producing an image which is adequate in the vicinity of the dominant source, but gets increasingly distorted away from it. 
+}
+
 
 \subsubsection{Faraday rotation\label{sec:DFR}\label{sec:FR}}
 
@@ -1109,7 +1143,7 @@ This has changed with the advent of large low-frequency arrays such as LOFAR. In
 
 or in other words, all the original $I$ flux will be detected as $V$! This clearly shows that DFR is not only a polarimetric concern, but is a mainstream calibration problem.
 
-Perhaps the most striking feature of eq.~(\ref{eq:DFR}) is how it describes a complicated physical effect with very trivial mathematics. This is a great example of the simplicity brought by the $2\times2$ formalism. Interestingly, this very effect was predicted by \citet{ME1} in the original RIME paper, but (perhaps owing to the relative opacity of the $4\times4$ Mueller formalism, with which it was described) was not immediately recalled when actual DFR was detected. Anderson (priv. comm.) claims that the VLBI community was aware of DFR during the 1970s, and that this was a major reason for choosing circularly polarized receptors (which allows the DFR to be subsumed into the overall phase calibration), but I haven't been able to locate a citation for this.
+Perhaps the most striking feature of eq.~(\ref{eq:DFR}) is how it describes a complicated physical effect with very trivial mathematics. This is a great example of the simplicity brought by the $2\times2$ formalism. Interestingly, this very effect was predicted by \citet{ME1} in the original RIME paper, but (perhaps owing to the relative opacity of the $4\times4$ Mueller formalism, with which it was described) was not immediately recalled when actual DFR was detected\footnote{According to James Anderson (priv. comm.), the VLBI community was aware of the implications of DFR during the 1970s, and this was a major reason for choosing circularly polarized receptors. Recall that in the circular polarization frame, DFR (or indeed any geometric rotation) becomes a simple phase effect, and can be subsumed into the overall phase calibration. I haven't been able to locate a citation for this. There are other compelling reasons for using circular receptors in VLBI: parallactic rotation being easier to deal with is one of them.}.
 
 \subsubsection{Refraction, curvature and absorption}
 
@@ -1208,6 +1242,8 @@ The \emph{peeling} algorithm was originally proposed by \citet{JEN:peeling} as a
 \coh{D}{pq}^{(1)} = \coh{D}{pq} - \jones{\tilde{G}}{p} \coh{X}{s_0 pq} \jonesT{\tilde{G}}{q}
 \]
 
+\item Optionally, the $\coh{D}{pq}^{(1)}$ visibilities are corrected by applying $\jonesinv{\tilde{G}}{p}$.
+
 \item Optionally, the $\coh{D}{pq}^{(1)}$ visibilities are phase-shifted to the position of the next-brightest source $s_1$ and averaged down in time and frequency (to smear out the contribution of other sources).
  
 \item The $\coh{D}{pq}^{(1)}$ visibilities are presumably dominated by source $s_1$. We now go back and repeat the procedure for $s_1$.
@@ -1218,15 +1254,13 @@ Peeling has the considerable advantage that all existing 2GC calibration package
 
 The major drawback of peeling is that it can be very expensive computationally. Note that the solutions at step 1 are subject to selfcal contamination $\Xi_{s_0,s_1}$. This error is ``frozen in'' at step 2, when the fitted visibilities (for source $s_0$) are subtracted from the data. It can then further contaminate the solutions for $s_1$ (in addition to the contamination $\Xi_{s_1,s_2}$. If the source being peeled is truly dominant, then this contamination can be negligible, but if the brightness of $s_0$ and $s_1$ is comparable, it can become pretty severe. These errors can be driven down by repeated iterations through the peeling cycle (with clever subtraction of sources), at the cost of significant CPU and I/O overhead. This makes peeling impractical when dealing with more than just a few sources. 
 
-\subsubsection{Differential gains}
+\subsubsection{Differential gains\label{sec:dEs}}
 
 The \emph{differential gains} approach is closely related to peeling. It may be thought of as a generalized, simultaneous form of peeling. A detailed practical example will be discussed in Sect.~\ref{sec:3C147}, but the essense is to use a RIME of the form:
 
-%\begin{equation}\label{eq:de}
-\[
+\begin{equation}\label{eq:de}
 \coh{V}{pq} = \jones{G}{p} \left( \sum_s \Delta\jones{E}{sp} \coh{X}{spq} \Delta\jonesT{E}{sq} \right)  \jonesT{G}{q},
-\]
-%\end{equation}
+\end{equation}
 
 and solve for $\jones{G}{p}$ on small time/frequency scales (as per normal selfcal), then \emph{simultaneously} solve for $\Delta\jones{E}{ps}$ on larger time/frequency scales, for a subset of fainter sources. The $\jones{G}{p}$ solutions then subsume all DDEs in the direction of the dominant source, while the $\Delta\jones{E}{ps}$ terms account for the \emph{difference} towards the fainter sources. If some of the DDEs are known \emph{a priori}, suitable terms for them can be inserted into the equation above in addition to $\Delta\jones{E}{ps}$. The differential gain solution will then account only for the remaining unknown DDEs.
 
@@ -1258,6 +1292,28 @@ Once again, I suggest that the two approaches should be treated as complementary
 
 Note that the sets of sources involved at steps 2, 3 and 4 are conceptually similar to ``Cat I'' and ``Cat II'' sources proposed for LOFAR calibration \citep{JEN:LOFAR3}, but here I suggest three sets rather than two. The exact partitioning of sources into sets determines the accuracy vs. computing cost trade-off.
 
+\subsubsection{Comparative summary of approaches}
+
+\EDIT{It may be interesting to compare the different approaches to a particular class of DDE, for instance pointing error. Pointing errors introduce an $E$-Jones as given by Eq.~(\ref{eq:mispointing}). To date, three relevant approaches have been proposed: pointing selfcal \citep{SB:pointing}, peeling (Sect.~\ref{sec:peeling}) and differential gains (Sect.~\ref{sec:dEs}). Of these, peeling is by far the best tested, since it is available with all 2GC software packages. Differential gains are available in MeqTrees; pointing selfcal is implemented in an experimental version of CASA (Bhatnagar priv. comm.), but is not publically available at time of writing. This makes a quantitative comparison impossible, but the algorithms may be compared in principle.
+
+The peeling approach and differential gains are very similar in that they attempt to solve for the same \emph{phenomenological} effect: a direction-dependent complex gain term. In essense, peeling approximates a full-sky RIME as:
+
+\[
+\coh{V}{pq} = \jones{G}{1p}(\coh{X}{1pq} + \jones{G}{2p}(\coh{X}{2pq} + \jones{G}{2p}(...)\jonesT{G}{3q})\jonesT{G}{2q})\jonesT{G}{1q},
+\]
+
+where $\coh{X}{spq}$ is the model coherency of source $s$ (typically a phase-shifted delta function, for a point source model, but Gaussian sources are also possible in e.g. NEWSTAR). Peeling consists of a least-squares solution for for one set of gains at a time (as in regular selfcal), followed by ``temporary'' subtraction of sources for which a solution has been obtained. Differential gains uses an equation like (\ref{eq:de}). First, a regular selfcal step is done to obtain $\jones{G}{p}$ solutions on short time/frequency scales. This is followed by a simultaneous least-squares solution for all the $\jones{\Delta E}{sp}$ terms, on longer time/frequency scales. 
+
+Peeling is subject to selfcal contamination at each stage of the process, due to the as-yet-unsolved-for contributions of fainter sources. This is especially severe when sources have comparable flux. Differential gains overcomes this by solving for all sources simultaneously. In principle, it should be possible to drive contamination arbitrarily low (and thus achieve the same result as differential gains) via several iterations of the peeling cycle, but this is both labour-intensive, and requires many passes through the data.
+
+Both approaches solve for per-antenna, per-direction gains, while overlooking the fact that physically, these are due to a single per-antenna pointing offset (and thus ignoring Eq.~\ref{eq:mispointing}). Pointing selfcal tries to solve for the true offset itself. In effect, it uses a RIME of the form of Eq.~(\ref{eq:dde-convolution}), where the convolutional terms $\jones{U}{p}={\cal F}\jones{E}{p}$ are the aperture illumination patterns, i.e. the Fourier transforms of the primary beams $\jones{E}{p}$, and $\coh{X}{}$ are the full-sky model coherencies. At the heart of the algorithm is a clever minimization scheme, which essentially decomposes $\jones{U}{p}$ into first- and second-order terms of the pointing offsets $\delta l_p,\delta m_p$. This assumes that the primary beam has a functional form, and that it is (at least to zeroth order) Gaussian. 
+
+The advantage of pointing selfcal is that a single per-antenna pointing offset is obtained, and that the entire model sky (including extended emission!), rather than discrete components, is used to constrain the solution. Peeling and differential gains solve for the total effective gain in each direction, and are less well-constrained by definition. On the other hand, the latter two approaches will happily absorb all unknown DDEs into the direction-dependent solution, while it is yet unclear to what extent pointing selfcal is robust in the presense of other DDEs. The fact that the entire sky is used to constrain the solution also seems to be a double-edged sword. In particular, it is not clear how pointing selfcal is affected by having a bright source near a null or a sidelobe, where the primary beam is particularly poorly approximated by the functional form. 
+
+In terms of performance, pointing selfcal should in principle be the fastest method of the three, since it solves for the least number of unknowns, and also allows for the entire sky to be predicted via an FFT. Differential gains are slower, due to the use of DFTs for source prediction, but the true bottleneck is the far larger number of unknowns. Peeling, on the other hand, is I/O-bound due to the large number of data passes, which will usually make it the slowest of the lot. 
+}
+
+
 \section{Addressing DDEs in 21cm WSRT observations of \label{sec:3C147}3C147}
 
 The field around the bright radio source 3C147 is a favourite showcase for dynamic range (DR) demonstrations. 3C147 itself is very bright (22Jy at 21cm), which ensures a high SNR for selfcal solutions, while the surrounding field boasts a spectacular collection of mostly point-like fainter sources. The absense of significant extended emission has allowed very accurate sky models to be constructed. It is then not surprising that 3C147 was the first field to break the $10^6$ dynamic range barrier \citep{deBruyn:million,deBruyn:3C147}, on a single 12-hour synthesis. This spectacular result was achieved with regular selfcal implemented in the NEWSTAR package. A major contributing factor is the relatively low level of beam-related DDEs at the WSRT, as discussed in 
@@ -1267,7 +1323,7 @@ Sect.~\ref{sec:EJones}.\footnote{By contrast, even the post-upgrade Expanded VLA
 \sidecaption
 \centering
 \includegraphics[width=12cm]{3C147}
-\caption{\label{fig:3C147}The ``showcase'' image of the field around the bright radio source 3C147, produced after reduction with MeqTrees. The image is noise-limited, and has a dynamic range of 1.6 million. This DR was already achieved by de Bruyn using regular selfcal in NEWSTAR, but the resulting images contained artifacts around off-axis sources (left inset) due to DDEs. A MeqTrees reduction incorporating differential gains, described in this section, has completely eliminated the artifacts (right inset). This image also appears in \citet{meqtrees}.}
+\caption{\label{fig:3C147} ``Showcase'' image of the field around the bright radio source 3C147, produced after reduction with MeqTrees. The image is noise-limited, and has a dynamic range of 1.6 million. This DR was already achieved by de Bruyn using regular selfcal in NEWSTAR, but the resulting images contained artifacts around off-axis sources (left inset) due to DDEs. A MeqTrees reduction incorporating differential gains, described in this section, has completely eliminated the artifacts (right inset). This image also appears in \citet{meqtrees}.}
 \end{figure*}
 
 
@@ -1460,7 +1516,7 @@ The $\Delta\jones{E}{sp}$ term is meant to subsume {\bf all} DDEs associated wit
 \includegraphics[width=.5\columnwidth]{before_dE}%
 \includegraphics[width=.5\columnwidth]{after_dE}\par
 \end{centering}
-\caption{\label{fig:dEsol}The flyswatter. On the left is a single-band residual image after  $\jones{G}{p}$ and $\coh{M}{pq}$ solutions only. On the right is the same image with differential gain solutions for sources B, C, and D.}
+\caption{\label{fig:dEsol}Results if the flyswatter. On the left is a single-band residual image after  $\jones{G}{p}$ and $\coh{M}{pq}$ solutions only. On the right is the same image with differential gain solutions for sources B, C, and D.}
 \end{figure}
 
 Figure~\ref{fig:dEsol} shows the effect of $\Delta\jones{E}{}$ solutions. All artifacts associated with sources B, C and D disappeared completely, to the point where artifacts around fainter sources became just about visible. These were later eliminated once $\Delta\jones{E}{}$ solutions were enabled for those sources. In fact, any source to which a solvable $\Delta\jones{E}{}$ term was assigned promptly vanished from the residual maps, hence my name for the differential gains approach: the ``flyswatter'' algorithm. 
@@ -1659,7 +1715,8 @@ The galleries show exactly such a pattern for antennas RT5 through RT8 (and perh
 
 Antennas RT0--2, RT9 and RTA, on the other hand, show completely different patterns, with little to no similarity between 2003 and 2006. Some of these are consistent with a static mispointing. Some antennas (RT8 and RT9, and RTB especially) also show a hint of time variability in $||\Delta\jones{E}{}||$.
 
-In any case, it is clear that the complicated interaction between source structure and differential gain-amplitudes makes the latter extremely difficult to interpret. Note also that my (or rather de Bruyn's) source model was built by NEWSTAR based on regular selfcal, so there's bound to be some contamination from DDE-related artifacts in the source parameters. Robust methods for disentangling source structure from DDEs have yet to be developed!
+In any case, it is clear that the complicated interaction between source structure and differential gain-amplitudes makes the latter extremely difficult to interpret. Note also that my (or rather de Bruyn's) source model was built by NEWSTAR based on regular selfcal, so there's bound to be some contamination from DDE-related artifacts in the source parameters. 
+Truly robust methods for disentangling source structure from DDEs have yet to be developed. \EDIT{It is also clear that an approach that parameterizes the DDEs in a ``global'' way, such as pointing selfcal, is the way forward -- what is not yet clear is how much the global solution itself can be affected by unmodelled structure in the brighter sources, and what to do about it.}
 
 \subsection{Phase behaviour}
 
@@ -1794,8 +1851,8 @@ My 3C147 results suggest that calibration beacons can be a lot fainter than prev
 
 \begin{acknowledgements}
 
-The author wishes to thank a succession of managers for putting up with him all these years, and Jan Noordam for 
-making this process considerably easier (especially for the managers), and for many other things besides. Ger de Bruyn has been more than generous with data, models and wisdom. Johan Hamaker started it all, and Wim Brouw has provided an avalanche of insights. Last but not least, the MeqTrees team has been instrumental in making everything work.
+I would like to thank a succession of managers for putting up with me all these years, and Jan Noordam for 
+making this process considerably easier (especially for the managers), and for many other things besides. Ger de Bruyn has been more than generous with data, models and wisdom. Johan Hamaker started it all, and Wim Brouw has provided an avalanche of insights. Last but certainly not least, the rest of the MeqTrees team has been instrumental in making everything work.
 
 \end{acknowledgements}
 
