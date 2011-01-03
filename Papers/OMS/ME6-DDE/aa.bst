@@ -1,1 +1,1 @@
-../aa.bst
+link ../bibtex/aa.bst
