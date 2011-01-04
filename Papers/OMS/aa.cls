@@ -1,5 +1,5 @@
 % This is aa.cls
-% A&A DOCUMENT CLASS -- version 6.1 for LaTeX2e
+% A&A DOCUMENT CLASS -- version 7.0 for LaTeX2e
 %
 % LaTeX document class for Astronomy and Astrophysics journal
 %
@@ -21,7 +21,7 @@
 %%   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %%   Right brace   \}     Tilde         \~}
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
-\ProvidesClass{aa}[2006/06/01 v6.1
+\ProvidesClass{aa}[2010/20/02 v7.0
 ^^JLaTeX document class for Astronomy and Astrophysics journal]
 \newcommand\@ptsize{}
 \newif\if@restonecol
@@ -207,10 +207,18 @@
 \renewcommand\dbltopfraction{.9}
 \renewcommand\dblfloatpagefraction{.95}
 %
+%% Januray 2010
+\def\ps@firstplain{%
+    \def\@oddfoot{\hfill\small\thepage}
+    \let\@evenfoot\@empty
+    \let\@evenhead\@empty
+    \let\@oddhead\@empty}%
+%
 \def\ps@headings{%
-    \let\@oddfoot\@empty\let\@evenfoot\@empty
-    \def\@evenhead{\small\rlap{\thepage}\hfil\leftmark\hfil}%
-    \def\@oddhead{\small\hfil\rightmark\hfil\llap{\thepage}}%
+    \def\@oddfoot{\hfill\small\thepage}
+    \def\@evenfoot{\small\thepage\hfill}
+    \def\@evenhead{\hfil\leftmark\hfil}%
+    \def\@oddhead{\small\hfil\rightmark\hfil}%
     \let\@mkboth\@gobbletwo
     \let\sectionmark\@gobble
     \let\subsectionmark\@gobble
@@ -320,8 +328,8 @@
  \begingroup
  \parindent=0pt
  \parskip=0pt
- \setcounter{inst}{1}%
- \def\and{\par\stepcounter{inst}%
+ \refstepcounter{inst}%July 2009
+ \def\and{\par\refstepcounter{inst}%July 2009
  \hangindent\instindent
  \noindent
  \hbox to\instindent{\hss$^{\theinst}$\enspace}\ignorespaces}%
@@ -443,7 +451,8 @@ to\/}: \ignorespaces#1}}\endgroup\ignorespaces}
  \else
    \twocolumn[\@maketitle]%
  \fi
- \thispagestyle{empty}
+%% January 2010 \thispagestyle{empty}
+ \thispagestyle{firstplain}
  \global\@topnum\z@
  \if@normhead
     \@thanks
@@ -1144,7 +1153,16 @@ to\/}: \ignorespaces#1}}\endgroup\ignorespaces}
 \trivlist\item[\hskip\labelsep
 {\it\noteaddname}]}
 \def\endnoteadd{\endtrivlist\addvspace{6pt}}
-
+% July 2009
+\def\tablefoot#1{\par\vspace*{2ex}%
+ \parbox{\hsize}{\leftskip0pt\rightskip0pt
+ {\noindent\small\textbf{Notes.}~#1\par}}}
+\def\tablefootmark#1{$^{#1}$\,\ignorespaces}
+\def\tablefoottext#1#2{$^{(#1)}$~#2}
+\def\tablebib#1{\par\vspace*{2ex}%
+ \parbox{\hsize}{\leftskip0pt\rightskip0pt
+ {\noindent\small\textbf{References.}~#1\par}}}
+%%%
 \DeclareOldFontCommand{\rm}{\normalfont\rmfamily}{\mathrm}
 \DeclareOldFontCommand{\sf}{\normalfont\sffamily}{\mathsf}
 \DeclareOldFontCommand{\tt}{\normalfont\ttfamily}{\mathtt}
@@ -1230,7 +1248,7 @@ to\/}: \ignorespaces#1}}\endgroup\ignorespaces}
            \renewcommand\theenumiv{\@arabic\c@enumiv}}%
       \sloppy\clubpenalty4000\widowpenalty4000%
       \sfcode`\.\@m}
-     {\endlist\par\endgroup\if@longauth\kern6pt\hrule\kern6pt\institutename\@longauthfalse\fi
+     {\endlist\par\endgroup%
       \def\@noitemerr{\@latex@warning{Empty `thebibliography' environment}}}%
 
 
@@ -1318,7 +1336,7 @@ to\/}: \ignorespaces#1}}\endgroup\ignorespaces}
   \def\baselinestretch{1.5}
   \let\AALogo\relax
   \onecolumn
-  \AtEndDocument{\listofobjects}
+  \AtEndDocument{\if@longauth\kern6pt\hrule\kern6pt\institutename\@longauthfalse\fi\listofobjects}
 \else
 \if@onecolumn
 \onecolumn
@@ -1641,7 +1659,8 @@ to0pt{\kern0.52\wd0\vrule height0.45\ht0\hss}\box0}}}}
 %
 \uchyph=0
 % 
-\long\def\Online{\if@online\else\@onlinetrue
+\long\def\Online{\if@longauth\kern6pt\hrule\kern6pt\institutename\@longauthfalse\fi%
+\if@online\else\@onlinetrue
 \clearpage
 \def\ps@Onlheadings{%
     \let\@oddfoot\@empty\let\@evenfoot\@empty
@@ -1658,24 +1677,7 @@ to0pt{\kern0.52\wd0\vrule height0.45\ht0\hss}\box0}}}}
 %% \vfill
 %% \clearpage
 \fi}
-\AtBeginDocument{\@ifpackageloaded{natbib}{\let\bibpreamble\relax\newcommand{\bibfont}{\tiny}%
-\renewenvironment{thebibliography}[1]{%
- \bibsection\parindent \z@\bibpreamble\bibfont\list
-   {\@biblabel{\arabic{NAT@ctr}}}{\@bibsetup{#1}%
-    \setcounter{NAT@ctr}{0}}%
-    \ifNAT@openbib
-      \renewcommand\newblock{\par}
-    \else
-      \renewcommand\newblock{\hskip .11em \@plus.33em \@minus.07em}%
-    \fi
-    \sloppy\clubpenalty4000\widowpenalty4000
-    \sfcode`\.=1000\relax
-    \let\citeN\cite \let\shortcite\cite
-    \let\citeasnoun\cite
- }{\if@longauth\kern6pt\hrule\kern6pt\institutename\@longauthfalse\fi\def\@noitemerr{%
-  \PackageWarning{natbib}
-     {Empty `thebibliography' environment}}%
-  \endlist\vskip-\lastskip}}{}
+\AtBeginDocument{\@ifpackageloaded{natbib}{\let\bibpreamble\relax\let\bibfont\tiny}{}%July 2009
 \@ifpackageloaded{longtable}{%
 \def\LT@makecaption#1#2#3{%
   \LT@mcol\LT@cols c{\hbox to\z@{\hss\parbox[t]\LTcapwidth{%
@@ -1688,6 +1690,7 @@ to0pt{\kern0.52\wd0\vrule height0.45\ht0\hss}\box0}}}}
     \endgraf\vskip\baselineskip}%
   \hss}}}}{}
 }%AtBeginDocument
+\AtEndDocument{\if@longauth\kern6pt\hrule\kern6pt\institutename\@longauthfalse\fi}
 %
 \endinput
 %%
