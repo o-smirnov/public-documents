@@ -1,4 +1,4 @@
-\documentclass[referee]{aa}
+\documentclass{aa}
 
 \usepackage{graphicx}
 \usepackage{txfonts}
@@ -24,7 +24,7 @@
 % this typesets a coherency matrix
 \newcommand{\coh}[2]{\mathsf{{#1}}_{{#2}}}
 
-\newcommand{\EDIT}[1]{{\bf #1}}
+\newcommand{\EDIT}[1]{#1}
 
 
 \begin{document}
@@ -53,19 +53,23 @@ an example of extremely high-dynamic range calibration of WSRT observations of 3
 {A version of the RIME incorporating differential gains has been implemented in MeqTrees, and applied to the 3C 147 data. This was
 used to perform regular selfcal, then solve for interferometer-based errors and for differential gains.}%
 %results
-{The resulting image of the field around 3C 147 with a very high dynamic range (1.6 million), and none of the off-axis artifacts that plague regular selfcal. The differential gain solutions show good signal-to-noise, and may be used to extract information on DDEs and errors in the sky model.
+{The resulting image of the field around 3C 147 is thermal noise-limited, has a very high dynamic range (1.6 million), 
+and none of the off-axis artifacts that plague regular selfcal. The differential gain solutions show a high signal-to-noise 
+ratio, and may be used to extract information on DDEs and errors in the sky model.
 }%
 %optional conclusions
-{Sources as faint as 2 mJy have been shown to yield meaningful DDE solutions, and thus can be used as potential calibration beacons.}
+{The differential gain approach can eliminate DDE-related artifacts, and provide information for iterative improvements of sky models. 
+Perhaps most importantly, sources as faint as 2 mJy have been shown to yield meaningful differential gain solutions, 
+and thus can be used as potential calibration beacons in other DDE-related schemes.}
 
 \keywords{Methods: numerical - Methods: analytical - Methods: data analysis - Techniques:
-interferometric - Techniques: polarimetric}
+interferometric - Galaxies: quasars: individual: 3C 147}
 
 \maketitle
 
 \section*{Introduction}
 
-The field around the bright radio source 3C 147 is a favourite showcase for dynamic range (DR) demonstrations. 3C 147 itself is very bright (22Jy at 21cm), which ensures a high SNR for selfcal solutions, while the surrounding field boasts a spectacular collection of mostly point-like fainter sources. The absense of significant extended emission has allowed very accurate sky models to be constructed. It is then not surprising that 3C 147 was the first field to break the $10^6$ dynamic range barrier \citep{deBruyn:million,deBruyn:3c147}, on a single 12-hour synthesis. This spectacular result was achieved with regular selfcal implemented in the NEWSTAR package. A major contributing factor is the relatively low level of beam-related DDEs at the WSRT, as discussed in Paper II (Sect.~2.1)\footnote{By contrast, even the post-upgrade Expanded VLA (EVLA), with its more significant DDEs, has not yet (at time of writing) exceeded $10^6$.}. An image of the 3C 147 field at 1,600,000:1 dynamic range is shown in Fig.~\ref{fig:3c147}. The making of this image is the subject of Section~\ref{sec:calibration}.
+The field around the bright radio source 3C 147 is a favourite showcase for dynamic range (DR) demonstrations. 3C 147 itself is very bright (22Jy at 21cm), which ensures a high SNR for selfcal solutions, while the surrounding field boasts a spectacular collection of mostly point-like fainter sources. The absense of significant extended emission has allowed very accurate sky models to be constructed. It is then not surprising that 3C 147 was the first field to break the $10^6$ dynamic range barrier \citep{deBruyn:million,deBruyn:3c147}, on a single 12-hour synthesis. This spectacular result was achieved with regular selfcal implemented in the NEWSTAR package. A major contributing factor is the relatively low level of beam-related DDEs at the WSRT, as discussed in Paper II \citep[Sect.~2.1]{RRIME2}\footnote{By contrast, even the post-upgrade Expanded VLA (EVLA), with its more significant DDEs, has not yet (at time of writing) exceeded $10^6$.}. An image of the 3C 147 field at 1,600,000:1 dynamic range is shown in Fig.~\ref{fig:3c147}. The making of this image is the subject of Section~\ref{sec:calibration}.
 
 \begin{figure*}
 \sidecaption
@@ -74,13 +78,13 @@ The field around the bright radio source 3C 147 is a favourite showcase for dyna
 \caption{\label{fig:3c147} ``Showcase'' image of the field around the bright radio source 3C 147, produced after reduction with MeqTrees. The image is noise-limited, and has a dynamic range of 1.6 million. This DR was already achieved by de Bruyn using regular selfcal in NEWSTAR, but the resulting images contained artifacts around off-axis sources (left inset) due to DDEs. A MeqTrees reduction incorporating differential gains, as described in this paper, has completely eliminated the artifacts (right inset). This image also appears in \citet{meqtrees}.}
 \end{figure*}
 
-The very same benign properties that allow the WSRT to achieve record DR also make it a perfect instrument for studying DDEs. The latter are prominent enough to clearly show up in high-DR maps (see e.g. left inset of Fig.~\ref{fig:3c147}), but not severe enough to hinder the building up of very deep sky models during normal selfcal\footnote{Strictly speaking, this is only true in continuum mode. In spectral line mode, the 17 MHz ``ripple'' discussed in Paper II (Sect.~2.1.1) becomes a very troublesome DDE. Further work is required on this subject.}. The 3C 147 observations by \citet{deBruyn:3c147} are a perfect example of this. I have therefore decided to reprocess these data using MeqTrees, to see if DDEs can be eliminated through the use of a suitable form of the RIME.
+The very same benign properties that allow the WSRT to achieve record DR also make it a perfect instrument for studying DDEs. The latter are prominent enough to clearly show up in high-DR maps (see e.g. left inset of Fig.~\ref{fig:3c147}), but not severe enough to hinder the building up of very deep sky models during normal selfcal\footnote{Strictly speaking, this is only true in continuum mode. In spectral line mode, the 17 MHz ``ripple'' discussed in Paper II \citep[Sect.~2.1.1]{RRIME2} becomes a very troublesome DDE. Further work is required on this subject.}. The 3C 147 observations by \citet{deBruyn:3c147} are a perfect example of this. I have therefore decided to reprocess these data using MeqTrees, to see if DDEs can be eliminated through the use of a suitable form of the RIME.
 
 In the presence of a dominant source (in this case 3C 147 itself), selfcal solutions will tend to subsume all effects in the direction of that source. DDEs will then manifest themselves as artifacts around other sources, which need to be at a certain distance from the dominant source for the effect to become apparent. Since the dominant source is usually placed at or near the pointing center (i.e. on-axis), DDE-related artifacts are also called {\em off-axis artifacts.} The artifacts themselves are quite clear (Fig.~\ref{fig:3c147}, left inset): the nature of the effects reponsible for them, far less so. At least four possibilities have been postulated:
 
 \begin{itemize}
-\item Pointing errors (Paper II, Sect.~2.1.4).
-\item Differential tropospheric refraction (Paper II, Sect.~2.2.4).
+\item Pointing errors \citep[Paper II,][Sect.~2.1.4]{RRIME2}.
+\item Differential tropospheric refraction ({\em ibid.}, Sect.~2.2.4).
 \item Errors in antenna positions, including non-coplanarity.
 \item Other systematic coordinate errors.
 \end{itemize}
@@ -96,7 +100,7 @@ The observational data in question were obtained by de Bruyn in 2003. A single 1
 
 The same observation was repeated in 2006 with somewhat different correlator settings \citep[for details, see]{deBruyn:3c147}, and reduced in a similar manner.
 
-For his NEWSTAR reduction, de Bruyn self-calibrated each channel independently, rather than explicitly calibrating for a bandpass (see below). This procedure is described in Paper II, Sect.~1.1. It uses the following implicit form of the RIME:
+For his NEWSTAR reduction, de Bruyn self-calibrated each channel independently, rather than explicitly calibrating for a bandpass (see below). This procedure is described in Paper II \citep[Sect.~1.1]{RRIME2}. It uses the following implicit form of the RIME:
 
 \begin{eqnarray}\label{eq:newstar-rime}
 \coh{V}{pq} & = & \jones{G}{p} \left ( \coh{M}{pq} \ast \coh{X}{pq} \right ) \jonesT{G}{q}, \\
@@ -224,13 +228,13 @@ This implies that closure errors cannot be reliably solved for on observations s
 
 \subsection{Pointing selfcal\label{sec:3C 147:pointing}}
 
-Since the main cause of artifacts in WSRT images is commonly considered to be pointing error (see Paper II, Sect.~2.1.4), I decided to implement a form of the pointing selfcal algorithm suggested by \citet{SB:pointing}. This proved to be a straightforward exercise in MeqTrees, since only a small modification of the RIME of Eq.~(\ref{eq:3C 147:perchan}) was required: 
+Since the main cause of artifacts in WSRT images is commonly considered to be pointing error \citep[see Paper II,][Sect.~2.1.4]{RRIME2}, I decided to implement a form of the pointing selfcal algorithm suggested by \citet{SB:pointing}. This proved to be a straightforward exercise in MeqTrees, since only a small modification of the RIME of Eq.~(\ref{eq:3C 147:perchan}) was required: 
 
 \begin{equation}\label{eq:3C 147:pointing}
 \coh{V}{pq} = \coh{M}{pq} \ast \left ( \jones{G}{p} \left( \sum_s E_{sp} \coh{X}{spq} E^{\herm}_{sq} \right) \jonesT{G}{q} \right )
 \end{equation}
 
-Instead of a per-source beam gain $E_s=E(l_s,m_s)$ (where $E(l,m)$ is the $\cos^3$ approximation given by Paper II, Sect.~2.1.1), which I had been using in the previous equations, here I used a per-antenna, per-source beam gain $E_{sp}$, defined as follows:
+Instead of a per-source beam gain $E_s=E(l_s,m_s)$ \citep[where $E(l,m)$ is the $\cos^3$ approximation given by Paper II,][Sect.~2.1.1]{RRIME2}, which I had been using in the previous equations, here I used a per-antenna, per-source beam gain $E_{sp}$, defined as follows:
 
 \begin{equation}\label{eq:3C 147:offset-beam}
 E_{sp} = E(l_s+\delta l_p,m_s+\delta m_p)
@@ -254,7 +258,7 @@ In the meantime, I had to look for alternative approaches to DDEs in the 3C 147 
 
 \subsection{Differential gains: the ``flyswatter''\label{sec:diffgains}}
 
-In the spirit of ``phenomenological'' equations discussed in Paper II (Sect.~1.3), I decided to introduce a {\em differential gain} Jones ($\Delta E$-Jones) into my form of the RIME:
+In the spirit of ``phenomenological'' equations discussed in Paper II \citep[Sect.~1.3]{RRIME2}, I decided to introduce a {\em differential gain} Jones ($\Delta E$-Jones) into my form of the RIME:
 
 \begin{equation}\label{eq:3C 147:de}
 \coh{V}{pq} = \coh{M}{pq} \ast \left ( \jones{G}{p} \left( \sum_s \Delta\jones{E}{sp} E_s \coh{X}{spq} E^{\herm}_s \Delta\jonesT{E}{sq} \right)  \jonesT{G}{q} \right )
@@ -517,7 +521,7 @@ I^\mathrm{(corr)} = \Sigma \cdot I + \Delta \cdot Q, & \; &  Q^\mathrm{(corr)} =
 & \; & \Delta = \frac{1}{2}\left( \overline{|\Delta e_{xs}|}^2 - \overline{|\Delta e_{ys}|}^2 \right).
 \end{eqnarray*}
 
-I therefore applied these corrections for $I$, $Q$, and position to my sky models (independently for the 2003 and 2006 observations), and repeated the calibration procedure. An improvement in single-band residuals was immediately apparent (Fig.~\ref{fig:residuals-newmodel}) -- after $\jones{G}{p}$ and $\coh{M}{pq}$ solutions, the seven off-axis sources subtracted noticeably better. Residuals after $\Delta\jones{E}{sp}$ solutions, on the other hand, looked pretty much the same (this is not surprising, since differential gains had already taken care of the visible off-axis errors in the original reduction), with a very slight improvement around 3C 147 itself. 
+I therefore applied these corrections for $I$, $Q$, and position to my sky models (independently for the 2003 and 2006 observations), and repeated the calibration procedure. An improvement in single-band residuals was immediately apparent (Fig.~\ref{fig:residuals-newmodel}) -- after $\jones{G}{p}$ and $\coh{M}{pq}$ solutions, the seven off-axis sources subtracted noticeably better. Residuals after $\Delta\jones{E}{sp}$ solutions, on the other hand, looked pretty much the same (this is not surprising, since differential gains had already taken care of the visible off-axis errors in the original reduction), with a very slight improvement around 3C 147 itself,
 which can be explained by improved $\jones{G}{p}$ solutions due to the more accurate sky model.
 
 \begin{figure}

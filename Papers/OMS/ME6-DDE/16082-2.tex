@@ -1,4 +1,4 @@
-\documentclass[referee]{aa}
+\documentclass{aa}
 
 \usepackage{graphicx}
 \usepackage{txfonts}
@@ -24,7 +24,7 @@
 % this typesets a coherency matrix
 \newcommand{\coh}[2]{\mathsf{{#1}}_{{#2}}}
 
-\newcommand{\EDIT}[1]{{\bf #1}}
+\newcommand{\EDIT}[1]{#1}
 
 
 \begin{document}
@@ -67,7 +67,7 @@ interferometric - Techniques: polarimetric}
 \section*{Introduction}
 
 \EDIT{
-Paper I of this series extended the RIME formalism \citep{ME1,ME4} to the full-sky case, culminating in the following equation for the visibility matrix measured by interferometer $pq$:
+Paper I of this series \citep{RRIME1} extended the RIME formalism \citep{ME1,ME4} to the full-sky case, culminating in the following equation for the visibility matrix measured by interferometer $pq$:
  
 \begin{eqnarray}\label{eq:me-allsky}
 \coh{V}{pq} & = & \jones{G}{p} \left( \iint\limits_{lm} \coh{B}{pq} \mathrm{e} ^{-2\pi i(u_{pq} l+v_{pq} m)} \,dl\,dm \right) \jonesT{G}{q}, \\
@@ -95,9 +95,9 @@ The RIME, and recent developments in understanding of DDEs, have been eroding th
 
 \subsection{\label{sec:implicit-me-newstar}Implicit RIMEs}
 
-Existing 2GC packages all make use of some implicit version of the RIME. It is useful to consider at least one example in depth. In Paper III, I shall be comparing the results of a MeqTrees calibration using an explicit RIME to those obtained with the NEWSTAR package on the same data. NEWSTAR therefore makes for a perfect example.
+Existing 2GC packages all make use of some implicit version of the RIME. It is useful to consider at least one example in depth. In Paper III \citep{RRIME3}, I shall be comparing the results of a MeqTrees calibration using an explicit RIME to those obtained with the NEWSTAR package on the same data. NEWSTAR therefore makes for a perfect example.
 
-The exact form of the RIME implemented by NEWSTAR depends on the options used.\footnote{The version of the NEWSTAR RIME covered here does not include bandpass or polarization calibration. These options \emph{are} available in NEWSTAR, but they were not used for the calibration described in Paper III.} The one relevant to the reductions of Paper III is:
+The exact form of the RIME implemented by NEWSTAR depends on the options used.\footnote{The version of the NEWSTAR RIME covered here does not include bandpass or polarization calibration. These options \emph{are} available in NEWSTAR, but they were not used for the calibration described in Paper III \citep{RRIME3}.} The one relevant to the reductions of Paper III is:
 
 \begin{eqnarray}\label{eq:newstar-rime}
 \coh{V}{pq} & = & \jones{G}{p} \left ( \coh{M}{pq} \ast \coh{X}{pq} \right ) \jonesT{G}{q}, \\
@@ -110,7 +110,7 @@ The constituent parts of this equation are as follows:
 
 \item[$\coh{B}{s}$] is the source brightness. This can be further parameterized in terms of Stokes $IQUV$, spectral index and rotation measure.
 
-\item[$Q_{spq}$] is a per-source correction factor to account for time and bandwidth smearing (see Paper I, Sect.~5.2).
+\item[$Q_{spq}$] is a per-source correction factor to account for time and bandwidth smearing \citep[see Paper I,][Sect.~5.2]{RRIME1}.
 
 \item[$E_s$] is the primary voltage beam gain. NEWSTAR uses an analytic approximation of the WSRT beam (see Sect.~\ref{sec:EJones:wsrt}). This is implicitly treated as a trivial DDE, i.e. constant in time and the same across all stations.
 
@@ -118,7 +118,7 @@ The constituent parts of this equation are as follows:
 
 \item[$\jones{G}{p}$] is a {\em diagonal} matrix of complex per-station gain terms.
 
-\item[$\coh{M}{pq}$] is a $2\times2$ matrix of multiplicative interferometer errors (see Paper I, Sect.~5.3), and ``$\ast$'' is element-by-element multiplication). Here it is on the inside of the equation rather than on the outside as in Eq.~(24) of Paper I: this is due to the way NEWSTAR uses ``corrected data'' in its selfcal procedure.%\footnote{In this particular case it makes no difference: since only the $XX$ and $YY$ correlations are used, all matrices in Eq.~(\ref{eq:newstar-rime}) are diagonal, and for diagonal matrices ``$\ast$'' is equivalent to matrix multiplication, and commutes. For the full-polarization case, the NEWSTAR treatment of $\coh{M}{pq}$ is incompatible with Eq.~(\ref{eq:me:closure-errors}).}
+\item[$\coh{M}{pq}$] is a $2\times2$ matrix of multiplicative interferometer errors \citep[see Paper I,][Sect.~5.3]{RRIME1}, and ``$\ast$'' is element-by-element multiplication). Here it is on the inside of the equation rather than on the outside as in Eq.~(24) of Paper I: this is due to the way NEWSTAR uses ``corrected data'' in its selfcal procedure.%\footnote{In this particular case it makes no difference: since only the $XX$ and $YY$ correlations are used, all matrices in Eq.~(\ref{eq:newstar-rime}) are diagonal, and for diagonal matrices ``$\ast$'' is equivalent to matrix multiplication, and commutes. For the full-polarization case, the NEWSTAR treatment of $\coh{M}{pq}$ is incompatible with Eq.~(\ref{eq:me:closure-errors}).}
 
 \end{description}
 
@@ -160,9 +160,9 @@ a list of NEWSTAR-like components), and $\jones{J}{p}$ is composed of several di
 \jones{J}{p} = \jones{B}{p} \jones{G}{p} \jones{D}{p} \jones{E}{p} \jones{P}{p} \vec  T_p
 \end{equation}
 
-Each term has its own specific implementation (in case of known terms) and parameterization (in case of solvable terms). Finally, multiplicative interferometer-based errors ($\coh{M}{pq}$) may be optionally applied to either the outside of the equation (as per Eq.~24 of Paper I), or to $\coh{X}{pq}$ itself (a-la NEWSTAR, see Eq.~\ref{eq:newstar-rime} above). 
+Each term has its own specific implementation (in case of known terms) and parameterization (in case of solvable terms). Finally, multiplicative interferometer-based errors ($\coh{M}{pq}$) may be optionally applied to either the outside of the equation \citep[as per Eq.~24 of Paper I,][]{RRIME1}, or to $\coh{X}{pq}$ itself (a-la NEWSTAR, see Eq.~\ref{eq:newstar-rime} above). 
 
-Conceptually, calibration in CASA is very similar to the procedure described in the previous section, but the use of an explicit RIME confers several advantages. The known terms of the Jones chain (Eq.~\ref{eq:casa}) can be taken into account properly, while the solvable terms can be solved for in different combinations. The caveats of using such a specific form of the RIME have already been discussed in Paper I (Sect.~6.2).
+Conceptually, calibration in CASA is very similar to the procedure described in the previous section, but the use of an explicit RIME confers several advantages. The known terms of the Jones chain (Eq.~\ref{eq:casa}) can be taken into account properly, while the solvable terms can be solved for in different combinations. The caveats of using such a specific form of the RIME have already been discussed in Paper I \citep[Sect.~6.2]{RRIME1}.
 
 Note that although CASA also relies on the essentially 2GC-rooted concepts of model and corrected visibilities, the framework has been successfully used for the development of algorithms for calibration and correction of DDEs, namely \emph{W-projection} \citep{Cornwell:wproj}, \emph{pointing selfcal} \citep{SB:pointing} and \emph{AW-projection} \citep{SB:imageplane}. I will discuss these further in Sect.~\ref{sec:ddes}.
 
@@ -176,7 +176,7 @@ For example, a full-polarization bandpass-gain calibration of the WSRT can be do
 \coh{V}{pq} = \jones{G}{p} \jones{B}{p} \coh{X}{pq} \jonesT{B}{q} \jonesT{G}{q} 
 \]
 
-Here, $\jones{G}{p}$ is a solvable diagonal complex matrix with rapid variation in time, and none in frequency. This subsumes antenna/receiver gains ($G$-Jones, in CASA nomenclature) and atmospheric phase ($T$-Jones). $\jones{B}{p}$ is a solvable full $2\times2$ complex matrix with high variability in frequency, but little to none in time. This subsumes bandpass ($B$-Jones), polarization leakage ($D$-Jones) and on-axis beam gain ($E$-Jones). More real-life examples of phenomenological RIMEs will be discussed in Paper III.
+Here, $\jones{G}{p}$ is a solvable diagonal complex matrix with rapid variation in time, and none in frequency. This subsumes antenna/receiver gains ($G$-Jones, in CASA nomenclature) and atmospheric phase ($T$-Jones). $\jones{B}{p}$ is a solvable full $2\times2$ complex matrix with high variability in frequency, but little to none in time. This subsumes bandpass ($B$-Jones), polarization leakage ($D$-Jones) and on-axis beam gain ($E$-Jones). More real-life examples of phenomenological RIMEs will be discussed in Paper III \citep{RRIME3}.
 
 Where a specific Jones term is known from \emph{a priori} considerations, it can and should be inserted into a phenomenological RIME. For example, the equation above would not be suitable for polarization calibration of the VLA because of parallactic angle rotation. The equation would need to be rewritten with an extra $P$-Jones term, which is not solved for, but rather computed analytically:
 
@@ -184,7 +184,7 @@ Where a specific Jones term is known from \emph{a priori} considerations, it can
 \coh{V}{pq} = \jones{G}{p} \jones{B}{p} \jones{P}{p} \coh{X}{pq} \jonesT{P}{q} \jonesT{G}{q} \jonesT{B}{q} 
 \end{equation}
 
-One must be mindful of matrix (non)commutation when constructing phenomenological RIMEs. The reason the full CASA Jones chain of Eq.~(\ref{eq:casa}) can be captured by the much simpler Eq. ~(\ref{eq:phenom-vla}) is because some Jones matrices \emph{do} commute (see also Paper I, Sect.~1.6). In particular, $T$-Jones is scalar and so commutes with everything, while the CASA $B$-Jones and $G$-Jones are diagonal and so commute among themselves. This allows us to rewrite Eq.~(\ref{eq:casa}) as:
+One must be mindful of matrix (non)commutation when constructing phenomenological RIMEs. The reason the full CASA Jones chain of Eq.~(\ref{eq:casa}) can be captured by the much simpler Eq. ~(\ref{eq:phenom-vla}) is because some Jones matrices \emph{do} commute \citep[see also Paper I,][Sect.~1.6]{RRIME1}. In particular, $T$-Jones is scalar and so commutes with everything, while the CASA $B$-Jones and $G$-Jones are diagonal and so commute among themselves. This allows us to rewrite Eq.~(\ref{eq:casa}) as:
 
 \[
 \jones{J}{p} = (\jones{G}{p}\jones{T}{p})(\jones{B}{p}\jones{D}{p}\jones{E}{p})\jones{P}{p},
@@ -333,7 +333,7 @@ For the VLA, non-identical receptor beams are caused by the abovementioned squin
 
 Note that in contrast to the the WSRT case, the simulations of \citet{Brisken:VLA-beam} show that the VLA $E$-Jones has non-trivial elements on the off-diagonal. This is an example of \emph{direction-dependent polarization leakage}. Leakage has been commonly associated with slight errors in dipole orientation, electromagnetic cross-talk, etc., and treated as a direction-independent effect \citep{ME1,JEN:note185}; Brisken's results demonstrate that it is actually a DDE.
 
-Finally, it should be mentioned that the polarization aberration described by \citet{Carozzi:ME3D} can also be treated as direction-dependent instrumental polarization (see Paper I, Sect.~5.4). 
+Finally, it should be mentioned that the polarization aberration described by \citet{Carozzi:ME3D} can also be treated as direction-dependent instrumental polarization \citep[see Paper I,][Sect.~5.4]{RRIME1}.
 
 The RIME makes it explicit that effects as (variable) primary beam attenuation, instrumental polarization, and leakage, which are treated separately (if at all) in 2GC, can in fact be represented by a single Jones term, and treated via a single mechanism. Perhaps the most stark example of this is provided by aperture array beams, such as those of LOFAR \citep{Yatawatta:LOFAR-beam}. With the dipoles of an aperture array fixed on the ground, 
 $\jones{E}{}(l,m)$ towards any specific sky direction exhibits complex time-dependent behaviour in all four matrix elements. This completely blends the boundary between primary beams, leakage and instrumental polarization.
@@ -349,7 +349,7 @@ All telescopes mispoint to some extent. This is caused by gravitational load, th
 The offset $\delta l_p,\delta m_p$ is, in general, time-variable. Since the effect of mispointing on observed visibilities is roughly proportional to $\partial\jones{E}{}/\partial l$ and $\partial \jones{E}{}/\partial m$, it is lowest at the centre of the beam (where the beamshape is flat), and highest on the flank of the beam and around the nulls. Classical selfcal tends to  ``absorb'' the effect of mispointing in the direction of the dominant source
 into the per-station amplitude gain solutions. 
 
-Mispointing is thought to be a major source of off-axis errors in WSRT and VLA maps, and thus has been the subject of many studies. \citet{SB:pointing} proposes a modification to the selfcal algorithm called {\em pointing selfcal}, which consists of solving for the $\delta l_p,\delta m_p$ parameters during selfcal. This is predicated on having accurate models for both $\jones{E}{}(l,m)$ and the off-axis sources, and sufficient SNR to constrain the solution. Pointing selfcal has been shown to work with simulated data, and recently with real VLA observations (Bhatnagar, priv. comm.) Paper III will discuss a different approach to the pointing problem.
+Mispointing is thought to be a major source of off-axis errors in WSRT and VLA maps, and thus has been the subject of many studies. \citet{SB:pointing} proposes a modification to the selfcal algorithm called {\em pointing selfcal}, which consists of solving for the $\delta l_p,\delta m_p$ parameters during selfcal. This is predicated on having accurate models for both $\jones{E}{}(l,m)$ and the off-axis sources, and sufficient SNR to constrain the solution. Pointing selfcal has been shown to work with simulated data, and recently with real VLA observations (Bhatnagar, priv. comm.) Paper III \citep{RRIME3} will discuss a different approach to the pointing problem.
 
 The environmental factors responsible for mispointing can also cause deformation of the dish surface. The resulting changes to $\jones{E}{}(l,m)$ are rather more difficult to predict and quantify, and little work has been done on the subject. \citet{Harp:ATA-beams} show significant thermal-related deformations at the Allen Telescope Array (ATA).
 
@@ -362,7 +362,7 @@ The ionosphere becomes a particularly troublesome DDE at low frequencies, owing 
 Ionospheric phase delay is caused by excess pathlength due to refraction. In the RIME formalism, it corresponds to a scalar Jones term: $Z_p=\mathrm{e}^{i\zeta_p}$, where $\zeta_p\propto T \nu^{-1}$, and $T$ is the Total Electron Content along the line-of-sight. Phase delay can easily reach $10^2-10^4\,\mathrm{rad}$ at lower frequencies, with variations on relatively short timescales and small spatial scales, thus making for a rather severe DDE. Following \citet{Lonsdale:4regimes}, we can identify distinct observational regimes based on the size of the array ($A$), the projected size of the FoV ($V$), and the scale structure of the ionosphere ($S$), i.e. the spatial scale on which ionospheric phase is approximately linear. The first criterion is FoV size:
 
 \begin{description}
-\item[Narrow FoV:] $V\ll S$, making ionosheric phase effectively constant over the FoV ($Z_p(\vec l)\equiv Z_p(0)$), and thus a DIE.
+\item[Narrow FoV:] $V\ll S$, making ionospheric phase effectively constant over the FoV ($Z_p(\vec l)\equiv Z_p(0)$), and thus a DIE.
 Since $Z_p$ is scalar, it can be commuted to any position in the RIME and absorbed into another Jones term, such as the per-antenna complex gain that is solved for during regular selfcal.
 \item[Wide FoV:] $V\ge S$, and therefore $Z_p$ is properly direction-dependent.
 \end{description}
@@ -380,9 +380,9 @@ Z_p Z^\herm_q \simeq e^{\eta u_{pq} + \xi v_{pq}}
 \item[Extended array:] $A>S$. Different stations of the array are looking through completely different parts of the ionosphere.
 \end{description}
 
-The tiny array case is trivial and not considered further. Lonsdale Regimes 1 and 2 correspond to narrow FoVs with compact or extended arrays: these can be dealt with using regular selfcal. In Regime 3 (wide FoV, compact array), the ionosphere manifests itself as an apparent ``distortion'' of the field: each source is shifted by its own (time-variable) offset $\eta,\xi$. This can be easily seen by inserting the $Z$-Jones given by Eq.~(\ref{eq:Zjones-shift}) into the full-sky RIME of Eq.~(\ref{eq:me-allsky}), and merging it with the complex exponent. 
+The tiny array case is trivial and not considered further. Lonsdale regimes 1 and 2 correspond to narrow FoVs with compact or extended arrays: these can be dealt with using regular selfcal. In regime 3 (wide FoV, compact array), the ionosphere manifests itself as an apparent ``distortion'' of the field: each source is shifted by its own (time-variable) offset $\eta,\xi$. This can be easily seen by inserting the $Z$-Jones given by Eq.~(\ref{eq:Zjones-shift}) into the full-sky RIME of Eq.~(\ref{eq:me-allsky}), and merging it with the complex exponent. 
 
-Finally, Lonsdale Regime 4 corresponds to an extended array and wide FoV. This is the regime in which MWA and LOFAR are expected to operate. $Z_p Z^\herm_q$ then results in a baseline- and direction-dependent phase offset, which causes each source in the field to be ``smeared'' with a different PSF. Selfcal tends to take care of the offset towards the dominant source, thus producing an image which is adequate in the vicinity of the dominant source, but gets increasingly distorted away from it. 
+Finally, Lonsdale regime 4 corresponds to an extended array and wide FoV. This is the regime in which MWA and LOFAR are expected to operate. $Z_p Z^\herm_q$ then results in a baseline- and direction-dependent phase offset, which causes each source in the field to be ``smeared'' with a different PSF. Selfcal tends to take care of the offset towards the dominant source, thus producing an image which is adequate in the vicinity of the dominant source, but gets increasingly distorted away from it. 
 
 
 \subsubsection{Faraday rotation\label{sec:DFR}\label{sec:FR}}
@@ -394,7 +394,7 @@ Faraday rotation (FR) is rotation of the EM field vector that occurs during prop
 \beta \propto \nu^{-2} \int_\mathrm{LoS} B_{\parallel} n_e ds,
 \end{equation}
 
-where ``LoS'' stands for line-of-sight, $B_{\parallel}$ is the component of the magnetic field parallel to the LoS, and $n_e$ is the electron density. In a circular-polarization coordinate basis (Paper I, Sect.~6.3), $\jones{F}{}$ becomes a differential phase delay of the left- and right-polarized components:
+where ``LoS'' stands for line-of-sight, $B_{\parallel}$ is the component of the magnetic field parallel to the LoS, and $n_e$ is the electron density. In a circular-polarization coordinate basis \citep[see Paper I,][Sect.~6.3]{RRIME1}, $\jones{F}{}$ becomes a differential phase delay of the left- and right-polarized components:
 
 \[
 \jones{F}{\odot} = \jones{H}{}\jones{F}{}\jonesinv{H}{} = \matrixtt{\mathrm{e}^{i\beta}}{0}{0}{\mathrm{e}^{-i\beta}}
@@ -402,7 +402,7 @@ where ``LoS'' stands for line-of-sight, $B_{\parallel}$ is the component of the 
 
 The obvious observational effect of FR is a frequency-dependent rotation of the angle of polarization. FR associated with the interstellar medium can, for purposes of calibration, be considered an intrinsic property of the sky per se. Because of the $\nu^{-2}$ behaviour, ionospheric FR at higher frequencies is practically negligible. For all these reasons, FR has been an obscure effect, largely ignored outside of the field of polarimetry.
 
-This has changed with the advent of large low-frequency arrays such as LOFAR. In 2010, the first LOFAR long baseline (Effelsberg--Exloo) detected a strange effect: at certain frequencies, an \emph{unpolarized} source was showing significant signal in the $XY/YX$ correlations, and practically none in $XX/YY$ \citep{Wucknitz:DFR}. After considerable excitement, this was linked to \emph{differential FR} (DFR). This effect is an excellent example of the explanatory power of the RIME formalism, so it is worth considering in some detail. At low frequencies, ionospheric FR can be as high as several cycles \citep[e.g. 15 cycles at 100 MHz, see][Sect.~10.3]{tms} so the DFR between two stations of a long baseline can reach significant fractions of a cycle. Consider what happens when an unpolarized 1 Jy point source at phase centre ($K_p\equiv0$) is subject to an FR of $\pi/2[+2\pi n]$ on station $p$, and $0[+2\pi n]$ on station $q$. In the absense of other effects, the measured visibility will be:
+This has changed with the advent of large low-frequency arrays such as LOFAR. In 2010, the first LOFAR long baseline (Effelsberg--Exloo) detected a strange effect: at certain frequencies, an \emph{unpolarized} source was showing significant signal in the $XY/YX$ correlations, and practically none in $XX/YY$ \citep{Wucknitz:DFR}. After considerable excitement, this was linked to \emph{differential FR} (DFR). This effect is an excellent example of the explanatory power of the RIME formalism, so it is worth considering in some detail. At low frequencies, ionospheric FR can be as high as several cycles \citep[e.g. 15 cycles at 100 MHz, see][Sect.~10.3]{tms} so the DFR between two stations of a long baseline can reach significant fractions of a cycle. Consider what happens when an unpolarized 1 Jy point source at phase centre ($K_p\equiv0$) is subject to an FR of $\pi/2[+2\pi n]$ on station $p$, and $0[+2\pi n]$ on station $q$. In the absence of other effects, the measured visibility will be:
 
 \begin{equation}\label{eq:DFR}
 \coh{V}{pq} = \jones{F}{p}\coh{B}{}\jonesT{F}{q} = \matrixtt{0}{-1}{1}{0} \matrixtt{1}{0}{0}{1} \matrixtt{1}{0}{0}{1} = \matrixtt{0}{-1}{1}{0},
@@ -453,17 +453,17 @@ While W-projection has been in use for a while and is well-tested, the limitatio
 
 \subsubsection{Subtraction in the $uv$-plane\label{sec:subtraction-uv-plane}}
 
-Given a known sky model, the most straightforward way of dealing with a known DDE is to directly evaluate Eq.~(\ref{eq:me-allsky}) in the forward direction, and subtract it from the observed visibilities. This gives us the residuals $\coh{R}{pq} = \coh{D}{pq} - \coh{V}{pq}$, which can then be corrected for the DIEs. Once imaged, they will still be subject to DDEs on the same relative level. However, if a significant portion of the flux is accounted for by the sky model, then the \emph{absolute} level of DDE-related artifacts will be much lower, perhaps even below thermal noise (if the sky model is sufficiently deep -- and a sufficiently deep model is a requirement for calibration anyway). The sky model itself can be added (``restored'') directly into the residual images with no error. This method was used for the reduction of Paper III, and produced the ``showcase'' image of Fig.~1 therein.
+Given a known sky model, the most straightforward way of dealing with a known DDE is to directly evaluate Eq.~(\ref{eq:me-allsky}) in the forward direction, and subtract it from the observed visibilities. This gives us the residuals $\coh{R}{pq} = \coh{D}{pq} - \coh{V}{pq}$, which can then be corrected for the DIEs. Once imaged, they will still be subject to DDEs on the same relative level. However, if a significant portion of the flux is accounted for by the sky model, then the \emph{absolute} level of DDE-related artifacts will be much lower, perhaps even below thermal noise (if the sky model is sufficiently deep -- and a sufficiently deep model is a requirement for calibration anyway). The sky model itself can be added (``restored'') directly into the residual images with no error. This method was used for the reduction of Paper III \citep{RRIME3}, and produced the ``showcase'' image of Fig.~1 therein.
 
 For a sky model composed of discrete source components, this is also called the \emph{DFT approach}, since evaluating Eq.~(\ref{eq:me-allsky}) on a per-source basis is equivalent to doing a brute-strength Discrete Fourier Transform. There has been considerable debate in the literature and at meetings about the relative merits of the DFT approach vs. FFT-based methods such as AW-projection. DFTs have the advantage of maximum precision (at least to the extent that the DDE is known), but are very expensive computationally, since they scales linearly with the number of sources being modelled. AW-projection is approximate (see above), but its computational cost scales much better, as it only depends on resolution.
 
-It should be made clear that the two approaches are complementary rather than mutually exclusive, and can be favourably combined (provided compatible implementations are available, which is a matter of some urgency), by using DFTs for the brighter sources in the field, and AW-projection for the fainter ones. By choosing a flux threshold, one can then achieve a clear tradeoff between accuracy (and, ultimately, dynamic range) and computational cost. 
+It should be made clear that the two approaches are complementary rather than mutually exclusive, and can be favourably combined (provided compatible implementations are available, which is a matter of some urgency), by using DFTs for the brighter sources in the field, and AW-projection for the fainter ones. By choosing a flux threshold, one can then achieve a clear trade-off between accuracy (and, ultimately, dynamic range) and computational cost. 
 
 \subsection{Calibrating the unknown DDEs}
 
 \subsubsection{Selfcal contamination}
 
-None of the 2GC packages provide any explicit capabilities for calibration of the unknown DDEs, since they all assume an implicit RIME similar to Eq.~(\ref{eq:newstar-rime}), with a single direction-independent gain term. Consider a very simplified picture, with a field consisting of only two discrete point sources with brightnesses of $\coh{B}{0}$ and $\coh{B}{1}$, and assume DIEs of unity. The observed visibilities $\coh{D}{pq}$ are then given by Eq. (15) of Paper I, with $\jones{G}{p}\equiv1$:
+None of the 2GC packages provide any explicit capabilities for calibration of the unknown DDEs, since they all assume an implicit RIME similar to Eq.~(\ref{eq:newstar-rime}), with a single direction-independent gain term. Consider a very simplified picture, with a field consisting of only two discrete point sources with brightnesses of $\coh{B}{0}$ and $\coh{B}{1}$, and assume DIEs of unity. The observed visibilities $\coh{D}{pq}$ are then given by Eq. (15) of Paper I \citep{RRIME1}, with $\jones{G}{p}\equiv1$:
 
 \begin{eqnarray}\label{eq:selfcal-dpq}
 \coh{D}{pq} & = & \jones{E}{0p} \coh{X}{0pq} \jonesT{E}{0q} + \jones{E}{1p} \coh{X}{1pq} \jonesT{E}{1q} + \coh{N}{}, \\
@@ -493,7 +493,7 @@ $\jones{\tilde G}{p}$ can achieve a perfect fit of $\coh{D}{pq}$ to $\coh{V}{pq}
 
 I shall call $\Xi_{0,1}$ the \emph{selfcal contamination} factor [of source 1 into source 0]. I do not have a formal proof for a lower boundary on the error terms in Eq.~(\ref{eq:contamination}), but extensive simulations with MeqTrees suggest that it is also proportional to $\Xi_{0,1}$. We can therefore summarize these considerations as follows: in the presence of DDEs, traditional selfcal will tend to subsume the DDEs in the direction of the dominant source into its selfcal gain solutions; the fitted visibilities will be subject to \emph{contamination} from the ummodelled DDEs towards the next-brightest source, with a relative error proportional to $\Xi_{0,1}$.
 
-Similar considerations apply to any discrepancies (i.e. missing sources, etc.) in the sky model. Ultimately, selfcal contamination makes itself felt via artifacts in the resulting images, which can be extraordinarily complicated and counterintuitive (see Fig.~17 in Paper III for an example).
+Similar considerations apply to any discrepancies (i.e. missing sources, etc.) in the sky model. Ultimately, selfcal contamination makes itself felt via artifacts in the resulting images, which can be extraordinarily complicated and counterintuitive \citep[for an example, see Fig.~17 of Paper III,][]{RRIME3}.
 
 \subsubsection{Peeling\label{sec:peeling}}
 
@@ -523,7 +523,7 @@ The major drawback of peeling is that it can be very expensive computationally. 
 
 \subsubsection{Differential gains\label{sec:dEs}}
 
-The \emph{differential gains} approach is closely related to peeling. It may be thought of as a generalized, simultaneous form of peeling. A detailed practical example will be discussed in Paper III, but the essence is to use a RIME of the form:
+The \emph{differential gains} approach is closely related to peeling. It may be thought of as a generalized, simultaneous form of peeling. A detailed practical example will be discussed in Paper III \citep{RRIME3}, but the essence is to use a RIME of the form:
 
 \begin{equation}\label{eq:de}
 \coh{V}{pq} = \jones{G}{p} \left( \sum_s \Delta\jones{E}{sp} \coh{X}{spq} \Delta\jonesT{E}{sq} \right)  \jonesT{G}{q},
@@ -543,11 +543,11 @@ A number of approaches have shown that this is feasible. For the ionosphere, the
 
 Given an explicit RIME, it should be possible to fit parameterized models directly to the observed visibilities. The \emph{minimum ionospheric model} (MIM) approach proposed by Noordam is similar to FBC and SPAM, in that it purports to fit a smooth model for ionospheric phase, but is different in that it uses visibilities (but also other sources of data, such as GPS measurements). This requires a software system where explicit RIMEs may be implemented, and so cannot be adapted to 2GC packages, but it has been demonstrated in the LOFAR BBS system, using a simple linear-slope MIM. The pointing selfcal method \citep{SB:pointing} already mentioned above is an application of the same approach to pointing errors.
 
-All these methods have the common feature of relying on \emph{beacon sources}, that is, having enough sources in the field to constrain the solutions. The availability of a sufficient number of beacons is a crucial question for the calibratability of future instruments. I will return to this in the conclusion to Paper III, after the results presented therein have been considered.
+All these methods have the common feature of relying on \emph{beacon sources}, that is, having enough sources in the field to constrain the solutions. The availability of a sufficient number of beacons is a crucial question for the calibratability of future instruments. I will return to this in the conclusion to Paper III \citep{RRIME3}, after the results presented therein have been considered.
 
 Note that, just as in the DFT-vs.-FFT debate discussed in Sect.~\ref{sec:subtraction-uv-plane}, there is a related dichotomy between the parameterized model approach, and methods based on direction-dependent solutions (peeling, differential gains). The latter methods {\em require} the use of DFTs at the predict stage, since the FFT approach (AW-projection) cannot be applied without a model of $\jones{E}{p}(\vec l)$ for the entire field. Parameterized models, on the other hand, may be applied both via DFT and FFT. 
 
-Once again, I suggest that the two approaches should be treated as complementary. Looking ahead, the results of Paper III will show that brighter off-axis sources exhibit all sorts of complicated structure in their $\Delta\jones{E}{p}$ solutions, even in the relatively uncomplicated (i.e. low-DDE) case of WSRT 21cm observations. It is hard to see how this can be captured by a parameterized DDE model to a precision sufficient for error-free subtraction of such sources. This suggests a similar tradeoff in accuracy vs. computing cost as that described in Sect.~\ref{sec:subtraction-uv-plane}, leading to the following hybrid approach for dealing with DDEs:
+Once again, I suggest that the two approaches should be treated as complementary. Looking ahead, the results of Paper III \citep{RRIME3} will show that brighter off-axis sources exhibit all sorts of complicated structure in their $\Delta\jones{E}{p}$ solutions, even in the relatively uncomplicated (i.e. low-DDE) case of WSRT 21cm observations. It is hard to see how this can be captured by a parameterized DDE model to a precision sufficient for error-free subtraction of such sources. This suggests a similar trade-off in accuracy vs. computing cost as that described in Sect.~\ref{sec:subtraction-uv-plane}, leading to the following hybrid approach for dealing with DDEs:
 
 \begin{enumerate}
 \item The unknown DDEs are calibrated for via parameterized model(s), which [hopefully] accounts for the bulk of the effect.
@@ -563,7 +563,7 @@ Note that the sets of sources involved at steps 2, 3 and 4 are conceptually simi
 
 It may be interesting to compare the different approaches to a particular class of DDE, for instance pointing error. Pointing errors introduce an $E$-Jones as given by Eq.~(\ref{eq:mispointing}). To date, three relevant approaches have been proposed: pointing selfcal \citep{SB:pointing}, peeling (Sect.~\ref{sec:peeling}) and differential gains (Sect.~\ref{sec:dEs}). Of these, peeling is by far the best tested, since it is available with all 2GC software packages. Differential gains are available in MeqTrees; pointing selfcal is implemented in an experimental version of CASA (Bhatnagar priv. comm.), but is not publically available at time of writing. This makes a quantitative comparison impossible, but the algorithms may be compared in principle.
 
-The peeling approach and differential gains are very similar in that they attempt to solve for the same \emph{phenomenological} effect: a direction-dependent complex gain term. In essense, peeling approximates a full-sky RIME as:
+The peeling approach and differential gains are very similar in that they attempt to solve for the same \emph{phenomenological} effect: a direction-dependent complex gain term. In essence, peeling approximates a full-sky RIME as:
 
 \[
 \coh{V}{pq} = \jones{G}{1p}(\coh{X}{1pq} + \jones{G}{2p}(\coh{X}{2pq} + \jones{G}{2p}(...)\jonesT{G}{3q})\jonesT{G}{2q})\jonesT{G}{1q},
@@ -575,9 +575,9 @@ Peeling is subject to selfcal contamination at each stage of the process, due to
 
 Both approaches solve for per-antenna, per-direction gains, while overlooking the fact that physically, these are due to a single per-antenna pointing offset (and thus ignoring Eq.~\ref{eq:mispointing}). Pointing selfcal tries to solve for the true offset itself. In effect, it uses a RIME of the form of Eq.~(\ref{eq:dde-convolution}), where the convolutional terms $\jones{U}{p}={\cal F}\jones{E}{p}$ are the aperture illumination patterns, i.e. the Fourier transforms of the primary beams $\jones{E}{p}$, and $\coh{X}{}$ are the full-sky model coherencies. At the heart of the algorithm is a clever minimization scheme, which essentially decomposes $\jones{U}{p}$ into first- and second-order terms of the pointing offsets $\delta l_p,\delta m_p$. This assumes that the primary beam has a functional form, and that it is (at least to zeroth order) Gaussian. 
 
-The advantage of pointing selfcal is that a single per-antenna pointing offset is obtained, and that the entire model sky (including extended emission!), rather than discrete components, is used to constrain the solution. Peeling and differential gains solve for the total effective gain in each direction, and are less well-constrained by definition. On the other hand, the latter two approaches will happily absorb all unknown DDEs into the direction-dependent solution, while it is yet unclear to what extent pointing selfcal is robust in the presense of other DDEs. The fact that the entire sky is used to constrain the solution also seems to be a double-edged sword. In particular, it is not clear how pointing selfcal is affected by having a bright source near a null or a sidelobe, where the primary beam is particularly poorly approximated by the functional form. 
+The advantage of pointing selfcal is that a single per-antenna pointing offset is obtained, and that the entire model sky (including extended emission!), rather than discrete components, is used to constrain the solution. Peeling and differential gains solve for the total effective gain in each direction, and are less well-constrained by definition. On the other hand, the latter two approaches will happily absorb all unknown DDEs into the direction-dependent solution, while it is yet unclear to what extent pointing selfcal is robust in the presence of other DDEs. The fact that the entire sky is used to constrain the solution also seems to be a double-edged sword. In particular, it is not clear how pointing selfcal is affected by having a bright source near a null or a sidelobe, where the primary beam is particularly poorly approximated by the functional form. 
 
-In terms of performance, pointing selfcal should in principle be the fastest method of the three, since it solves for the least number of unknowns, and also allows for the entire sky to be predicted via an FFT. Differential gains are slower, due to the use of DFTs for source prediction, but the true bottleneck is the far larger number of unknowns. Peeling, on the other hand, is I/O-bound due to the large number of data passes, which will usually make it the slowest of the lot. 
+In terms of performance, pointing selfcal should in principle be the fastest method of the three, since it solves for the least number of unknowns, and also allows for the entire sky to be predicted via an FFT. Differential gains are slower, which is partly due to the use of DFTs for source prediction, although the true bottleneck is the far larger number of unknowns. Peeling, on the other hand, is I/O-bound due to the large number of data passes, which will usually make it the slowest of the lot. 
 
 \section{Conclusions}
 \EDIT{
