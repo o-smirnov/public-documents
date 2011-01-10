@@ -29,7 +29,7 @@
 
 \begin{document}
 
-\title{Revisiting the radio interferometer measurement equation.\\III. Addressing direction-dependent effects in 21cm WSRT observations of 3C 147}
+\title{Revisiting the radio interferometer measurement equation.\\III. Addressing direction-dependent effects in 21 cm WSRT observations of 3C 147}
 
 \author{O.M.\ Smirnov}
 
@@ -37,7 +37,7 @@
   P.O. Box 2, 7990AA Dwingeloo, The Netherlands \\
   \email{smirnov@astron.nl}}
 
-\date{}
+\date{Received 5 Nov 2010 / Accepted 5 Jan 2011}
 
 \titlerunning{Revisiting the RIME. III. Addressing DDEs in WSRT observations of 3C 147.}
 \authorrunning{O.M.\ Smirnov}
@@ -69,12 +69,13 @@ interferometric - Galaxies: quasars: individual: 3C 147}
 
 \section*{Introduction}
 
-The field around the bright radio source 3C 147 is a favourite showcase for dynamic range (DR) demonstrations. 3C 147 itself is very bright (22Jy at 21cm), which ensures a high SNR for selfcal solutions, while the surrounding field boasts a spectacular collection of mostly point-like fainter sources. The absence of significant extended emission has allowed very accurate sky models to be constructed. It is then not surprising that 3C 147 was the first field to break the $10^6$ dynamic range barrier \citep{deBruyn:million,deBruyn:3c147}, on a single 12-hour synthesis. This spectacular result was achieved with regular selfcal implemented in the NEWSTAR package. A major contributing factor is the relatively low level of beam-related DDEs at the WSRT, as discussed in Paper II \citep[Sect.~2.1]{RRIME2}\footnote{By contrast, even the post-upgrade Expanded VLA (EVLA), with its more significant DDEs, has not yet (at time of writing) exceeded $10^6$.}. An image of the 3C 147 field at 1,600,000:1 dynamic range is shown in Fig.~\ref{fig:3c147}. The making of this image is the subject of Section~\ref{sec:calibration}.
+The field around the bright radio source 3C 147 is a favourite showcase for dynamic range (DR) demonstrations. 3C 147 itself is very bright (22 Jy at 21 cm), which ensures a high SNR for selfcal solutions, while the surrounding field boasts a spectacular collection of mostly point-like fainter sources. The absence of significant extended emission has allowed very accurate sky models to be constructed. It is then not surprising that 3C 147 was the first field to break the $10^6$ dynamic range barrier \citep{deBruyn:million,deBruyn:3c147}, on a single 12-hour synthesis. This spectacular result was achieved with regular selfcal implemented in the NEWSTAR package. A major contributing factor is the relatively low level of beam-related DDEs at the WSRT, as discussed in Paper II \citep[Sect.~2.1]{RRIME2}\footnote{By contrast, even the post-upgrade Expanded VLA (EVLA), with its more significant DDEs, has not yet (at time of writing) exceeded $10^6$.}. An image of the 3C 147 field at 1,600,000:1 dynamic range is shown in Fig.~\ref{fig:3c147}. The making of this image is the subject of Section~\ref{sec:calibration}.
 
 \begin{figure*}
 \sidecaption
 \centering
-\includegraphics[width=12cm]{3C147}
+%\includegraphics[width=12cm]{3C147}
+\includegraphics[width=12cm]{16435fg1}
 \caption{\label{fig:3c147} ``Showcase'' image of the field around the bright radio source 3C 147, produced after reduction with MeqTrees. The image is noise-limited, and has a dynamic range of 1.6 million. This DR was already achieved by de Bruyn using regular selfcal in NEWSTAR, but the resulting images contained artefacts around off-axis sources (left inset) due to DDEs. A MeqTrees reduction incorporating differential gains, as described in this paper, has completely eliminated the artefacts (right inset). This image also appears in \citet{meqtrees}.}
 \end{figure*}
 
@@ -174,10 +175,14 @@ Here, $\coh{X}{spq}$, $E_s$, $\jones{G}{p}$ and $\coh{M}{pq}$ have the same mean
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=.5\columnwidth]{B0_solution_60}%
-\includegraphics[width=.5\columnwidth]{B0_solution_30}\par
-\includegraphics[width=.5\columnwidth]{B0_solution_15}%
-\includegraphics[width=.5\columnwidth]{B0_spline}\par
+\includegraphics[width=.5\columnwidth]{16435fg2a}%
+\includegraphics[width=.5\columnwidth]{16435fg2b}\par
+\includegraphics[width=.5\columnwidth]{16435fg2c}%
+\includegraphics[width=.5\columnwidth]{16435fg2d}\par
+% \includegraphics[width=.5\columnwidth]{B0_solution_60}%
+% \includegraphics[width=.5\columnwidth]{B0_solution_30}\par
+% \includegraphics[width=.5\columnwidth]{B0_solution_15}%
+% \includegraphics[width=.5\columnwidth]{B0_spline}\par
 \end{centering}
 \caption{\label{fig:Bsol}Single-band residual images produced via bandpass selfcal with different solution intervals for $\jones{B}{p}$: 30 minutes (upper left), 15 minutes (upper right), 7.5 minutes (lower left), and with the 7.5 minute solution smoothed using splines (lower right). Even in the best-case image, the dominant source 3C 147 was not subtracted out perfectly, leaving behind DR-limiting artefacts.}
 \end{figure}
@@ -198,8 +203,10 @@ Per-channel selfcal is achieved by setting the solution interval of $\jones{G}{p
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=.5\columnwidth]{G_solution}%
-\includegraphics[width=.5\columnwidth]{IG_solution}\par
+\includegraphics[width=.5\columnwidth]{16435fg3a}%
+\includegraphics[width=.5\columnwidth]{16435fg3b}\par
+% \includegraphics[width=.5\columnwidth]{G_solution}%
+% \includegraphics[width=.5\columnwidth]{IG_solution}\par
 \end{centering}
 \caption{\label{fig:Gsol}Single-band residual images produced via per-channel selfcal. The left image is the result of solving for $\jones{G}{p}$. It is dominated by concentric rings centred on 3C 147 (designated as ``A150'' here). These are caused by closure errors, and go away once a solution for interferometer-based errors $\coh{M}{pq}$ is done (right image). The remaining artefacts are associated with off-axis sources B, C and D, and are due to DDEs. 
 }
@@ -216,8 +223,10 @@ The latter fact suggests an intrinsic time variability, but solving for $\coh{M}
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=.5\columnwidth]{IG_12h}%
-\includegraphics[width=.5\columnwidth]{IG_30m}\par
+\includegraphics[width=.5\columnwidth]{16435fg4a}%
+\includegraphics[width=.5\columnwidth]{16435fg4b}\par
+% \includegraphics[width=.5\columnwidth]{IG_12h}%
+% \includegraphics[width=.5\columnwidth]{IG_30m}\par
 \end{centering}
 \caption{\label{fig:source-suppression}Source suppression through interferometer-based error solutions. On the left is a deconvolved 8-band residual image of the centre of the field, with 12 hour solutions for $\coh{M}{pq}$. On the right is the same image with 30 minute solutions. The positions of (subtracted) model sources are indicated by crosses. Suppression of unmodelled sources is evident in the right image.
 }
@@ -274,8 +283,10 @@ The $\Delta\jones{E}{sp}$ term is meant to subsume {\bf all} DDEs associated wit
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=.5\columnwidth]{before_dE}%
-\includegraphics[width=.5\columnwidth]{after_dE}\par
+\includegraphics[width=.5\columnwidth]{16435fg5a}%
+\includegraphics[width=.5\columnwidth]{16435fg5b}\par
+% \includegraphics[width=.5\columnwidth]{before_dE}%
+% \includegraphics[width=.5\columnwidth]{after_dE}\par
 \end{centering}
 \caption{\label{fig:dEsol}Results if the flyswatter. On the left is a single-band residual image after  $\jones{G}{p}$ and $\coh{M}{pq}$ solutions only. On the right is the same image with differential gain solutions for sources B, C, and D.}
 \end{figure}
@@ -287,7 +298,8 @@ Once 8-band residual images were created, the increased sensitivity made it appa
 %plot-de-solutions.py --circle-ampl -o eps --portrait --borders 0.05,0.98,0.05,0.98 --title-fontsize 0 -r o2003.cache --circle-minsize=0 --circle-maxsize=0 --label-fontsize=16 --names-only --radius 70
 \begin{figure}
 \begin{minipage}[c]{.45\columnwidth}
-\includegraphics[width=\textwidth]{source_plot}
+\includegraphics[width=\textwidth]{16435fg6}
+%\includegraphics[width=\textwidth]{source_plot}
 \end{minipage}\hfill\begin{minipage}[c]{.5\columnwidth}
 \begin{tabular}{lr@{ }lr@{.}l}
 \hline
@@ -362,8 +374,10 @@ Since it quickly became apparent that the $\Delta\jones{E}{}$ solutions were exh
 \begin{figure*}
 \sidecaption
 \parbox[b]{12cm}{
-\includegraphics[width=12cm]{o2003_dE_mean} \\
-\includegraphics[width=12cm]{o2006_dE_mean}
+\includegraphics[width=12cm]{16435fg7a} \\
+\includegraphics[width=12cm]{16435fg7b}
+% \includegraphics[width=12cm]{o2003_dE_mean} \\
+% \includegraphics[width=12cm]{o2006_dE_mean}
 }
 \caption{\label{fig:dEampl}Differential gain-amplitudes ($||\Delta\jones{E}{}||$) as a function of time for the 2003 (top) and 2006 (bottom) observations. Rows correspond to sources, columns to antennas. The vertical plot scale is fixed within each row, but differs from row to row. Horizontal lines indicate the $||\Delta\jones{E}{}||=1$ level.}
 \end{figure*}
@@ -371,8 +385,10 @@ Since it quickly became apparent that the $\Delta\jones{E}{}$ solutions were exh
 \begin{figure*}
 \sidecaption
 \parbox[b]{12cm}{
-\includegraphics[width=12cm]{o2003_dEphase_mean}
-\includegraphics[width=12cm]{o2006_dEphase_mean}
+\includegraphics[width=12cm]{16435fg8a}
+\includegraphics[width=12cm]{16435fg8b}
+% \includegraphics[width=12cm]{o2003_dEphase_mean}
+% \includegraphics[width=12cm]{o2006_dEphase_mean}
 }
 \caption{\label{fig:dEphase}Differential gain-phases ($\arg\Delta\jones{E}{}$, in degrees) as a function of time for the 2003 (top) and 2006 (bottom) observations. Rows correspond to sources, columns to antennas. The vertical plot scale is fixed within each row, but differs from row to row. Horizontal lines indicate the $\arg\Delta\jones{E}{}=0$ level.}
 \end{figure*}
@@ -431,20 +447,34 @@ Quite a few plots in Fig.~\ref{fig:dEampl} do show (mostly) static offsets. It c
 \begin{figure}
 \centering
 \begin{tabular}{@{}c@{}c@{}c@{}c@{}c@{}}
-\includegraphics[width=\roguewidth]{o2003_dE_ant0} &
-\includegraphics[width=\roguewidth]{o2003_dE_ant1} &
-\includegraphics[width=\roguewidth]{o2003_dE_ant2} &
-\includegraphics[width=\roguewidth]{o2003_dE_ant3} &
-\includegraphics[width=\roguewidth]{o2003_dE_ant4} \\
-\includegraphics[width=\roguewidth]{o2003_dE_ant5} &
-\includegraphics[width=\roguewidth]{o2003_dE_ant6} &
-\includegraphics[width=\roguewidth]{o2003_dE_ant7} &
-\includegraphics[width=\roguewidth]{o2003_dE_ant8} &
-\includegraphics[width=\roguewidth]{o2003_dE_ant9} \\
-\includegraphics[width=\roguewidth]{o2003_dE_antA} &
-\includegraphics[width=\roguewidth]{o2003_dE_antB} &
-\includegraphics[width=\roguewidth]{o2003_dE_antC} &
-\includegraphics[width=\roguewidth]{o2003_dE_antD} 
+\includegraphics[width=\roguewidth]{16435fg9a} &
+\includegraphics[width=\roguewidth]{16435fg9b} &
+\includegraphics[width=\roguewidth]{16435fg9c} &
+\includegraphics[width=\roguewidth]{16435fg9d} &
+\includegraphics[width=\roguewidth]{16435fg9e} \\
+\includegraphics[width=\roguewidth]{16435fg9f} &
+\includegraphics[width=\roguewidth]{16435fg9g} &
+\includegraphics[width=\roguewidth]{16435fg9h} &
+\includegraphics[width=\roguewidth]{16435fg9i} &
+\includegraphics[width=\roguewidth]{16435fg9j} \\
+\includegraphics[width=\roguewidth]{16435fg9k} &
+\includegraphics[width=\roguewidth]{16435fg9l} &
+\includegraphics[width=\roguewidth]{16435fg9m} &
+\includegraphics[width=\roguewidth]{16435fg9n} 
+% \includegraphics[width=\roguewidth]{o2003_dE_ant0} &
+% \includegraphics[width=\roguewidth]{o2003_dE_ant1} &
+% \includegraphics[width=\roguewidth]{o2003_dE_ant2} &
+% \includegraphics[width=\roguewidth]{o2003_dE_ant3} &
+% \includegraphics[width=\roguewidth]{o2003_dE_ant4} \\
+% \includegraphics[width=\roguewidth]{o2003_dE_ant5} &
+% \includegraphics[width=\roguewidth]{o2003_dE_ant6} &
+% \includegraphics[width=\roguewidth]{o2003_dE_ant7} &
+% \includegraphics[width=\roguewidth]{o2003_dE_ant8} &
+% \includegraphics[width=\roguewidth]{o2003_dE_ant9} \\
+% \includegraphics[width=\roguewidth]{o2003_dE_antA} &
+% \includegraphics[width=\roguewidth]{o2003_dE_antB} &
+% \includegraphics[width=\roguewidth]{o2003_dE_antC} &
+% \includegraphics[width=\roguewidth]{o2003_dE_antD} 
 \end{tabular}
 \caption{\label{fig:rogues-2003}``Rogues gallery'' plot for the 2003 observation. This shows the 12-hour average $||\Delta\jones{E}{}||$ per source, as seen by each antenna. Blue circles correspond to values of $||\Delta\jones{E}{}||>1$, red circles to values of $||\Delta\jones{E}{}||<1$, and areas are proportional to $|\,||\Delta\jones{E}{}||-1\,|$. Line thickness indicates the statistical significance of $|\,||\Delta\jones{E}{}||-1\,|$; filled circles are for detections of over $3\sigma$. The large grid circle is at radius $30\arcmin$.}
 \end{figure}
@@ -453,20 +483,34 @@ Quite a few plots in Fig.~\ref{fig:dEampl} do show (mostly) static offsets. It c
 \centering
 %\sidecaption
 \begin{tabular}{@{}c@{}c@{}c@{}c@{}c@{}}
-\includegraphics[width=\roguewidth]{o2006_dE_ant0} &
-\includegraphics[width=\roguewidth]{o2006_dE_ant1} &
-\includegraphics[width=\roguewidth]{o2006_dE_ant2} &
-\includegraphics[width=\roguewidth]{o2006_dE_ant3} &
-\includegraphics[width=\roguewidth]{o2006_dE_ant4} \\
-\includegraphics[width=\roguewidth]{o2006_dE_ant5} &
-\includegraphics[width=\roguewidth]{o2006_dE_ant6} &
-\includegraphics[width=\roguewidth]{o2006_dE_ant7} &
-\includegraphics[width=\roguewidth]{o2006_dE_ant8} &
-\includegraphics[width=\roguewidth]{o2006_dE_ant9} \\
-\includegraphics[width=\roguewidth]{o2006_dE_antA} &
-\includegraphics[width=\roguewidth]{o2006_dE_antB} &
-\includegraphics[width=\roguewidth]{o2006_dE_antC} &
-\includegraphics[width=\roguewidth]{o2006_dE_antD} 
+\includegraphics[width=\roguewidth]{16435fg10a} &
+\includegraphics[width=\roguewidth]{16435fg10b} &
+\includegraphics[width=\roguewidth]{16435fg10c} &
+\includegraphics[width=\roguewidth]{16435fg10d} &
+\includegraphics[width=\roguewidth]{16435fg10e} \\
+\includegraphics[width=\roguewidth]{16435fg10f} &
+\includegraphics[width=\roguewidth]{16435fg10g} &
+\includegraphics[width=\roguewidth]{16435fg10h} &
+\includegraphics[width=\roguewidth]{16435fg10i} &
+\includegraphics[width=\roguewidth]{16435fg10j} \\
+\includegraphics[width=\roguewidth]{16435fg10k} &
+\includegraphics[width=\roguewidth]{16435fg10l} &
+\includegraphics[width=\roguewidth]{16435fg10m} &
+\includegraphics[width=\roguewidth]{16435fg10n} 
+% \includegraphics[width=\roguewidth]{o2006_dE_ant0} &
+% \includegraphics[width=\roguewidth]{o2006_dE_ant1} &
+% \includegraphics[width=\roguewidth]{o2006_dE_ant2} &
+% \includegraphics[width=\roguewidth]{o2006_dE_ant3} &
+% \includegraphics[width=\roguewidth]{o2006_dE_ant4} \\
+% \includegraphics[width=\roguewidth]{o2006_dE_ant5} &
+% \includegraphics[width=\roguewidth]{o2006_dE_ant6} &
+% \includegraphics[width=\roguewidth]{o2006_dE_ant7} &
+% \includegraphics[width=\roguewidth]{o2006_dE_ant8} &
+% \includegraphics[width=\roguewidth]{o2006_dE_ant9} \\
+% \includegraphics[width=\roguewidth]{o2006_dE_antA} &
+% \includegraphics[width=\roguewidth]{o2006_dE_antB} &
+% \includegraphics[width=\roguewidth]{o2006_dE_antC} &
+% \includegraphics[width=\roguewidth]{o2006_dE_antD} 
 \end{tabular}
 \caption{\label{fig:rogues-2006}``Rogues gallery'' plot for the 2006 observation, using the same scale as Fig.~\ref{fig:rogues-2003}}
 \end{figure}
@@ -485,15 +529,19 @@ Truly robust methods for disentangling source structure from DDEs have yet to be
 
 \begin{figure}
 \centering
-\includegraphics[width=\columnwidth]{o2003_dEphase_array_slopes}\\
-\includegraphics[width=\columnwidth]{o2006_dEphase_array_slopes}
+\includegraphics[width=\columnwidth]{16435fg11a}\\
+\includegraphics[width=\columnwidth]{16435fg11b}
+% \includegraphics[width=\columnwidth]{o2003_dEphase_array_slopes}\\
+% \includegraphics[width=\columnwidth]{o2006_dEphase_array_slopes}
 \caption{\label{fig:dEphase-slope}Phase slopes over the array as a function of time (in deg/km) in the direction of the seven sources for the 2003 (top) and 2006 observations (bottom). The green lines indicate phase slopes corresponding to the fitted position offsets (Fig.~\ref{fig:dEphase-dlm}), the red lines -- phase slopes corresponding to an overall field rotation of $45\arcsec$.}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=.5\columnwidth]{o2003_dE_lm_offsets}%
-\includegraphics[width=.5\columnwidth]{o2006_dE_lm_offsets}\\
+\includegraphics[width=.5\columnwidth]{16435fg12a}%
+\includegraphics[width=.5\columnwidth]{16435fg12b}\\
+% \includegraphics[width=.5\columnwidth]{o2003_dE_lm_offsets}%
+% \includegraphics[width=.5\columnwidth]{o2006_dE_lm_offsets}\\
 \caption{\label{fig:dEphase-dlm}Fitted position offsets corresponding to the phase slopes of Fig.~\ref{fig:dEphase-slope} (2003 observation on the left, 2006 on the right). The length of the arrows is exaggerated by a factor of 1200: the biggest offset is in fact just under $1\arcsec$.}
 \end{figure}
 
@@ -526,8 +574,10 @@ which can be explained by improved $\jones{G}{p}$ solutions due to the more accu
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=.5\columnwidth]{spw2_oldmodel}%
-\includegraphics[width=.5\columnwidth]{spw2_newmodel}\par
+\includegraphics[width=.5\columnwidth]{16435fg13a}%
+\includegraphics[width=.5\columnwidth]{16435fg13b}\par
+% \includegraphics[width=.5\columnwidth]{spw2_oldmodel}%
+% \includegraphics[width=.5\columnwidth]{spw2_newmodel}\par
 \end{centering}
 \caption{\label{fig:residuals-newmodel}Calibration with an improved sky model. This shows single-band residual images after $\jones{G}{p}$ and $\coh{M}{pq}$ solutions. The left image is from the original reduction, the right image uses a sky model improved via my $\Delta\jones{E}{}$ analysis. Crosses indicate the positions of sources for which the model was improved, plus 3C 147 itself (source A).}
 \end{figure}
@@ -539,8 +589,10 @@ Presumably, the remaining residual structures in Fig.~\ref{fig:residuals-newmode
 \begin{figure*}
 \sidecaption
 \parbox[b]{12cm}{
-\includegraphics[width=12cm]{o2003new_dEphase_mean}
-\includegraphics[width=12cm]{o2006new_dEphase_mean}
+\includegraphics[width=12cm]{16435fg14a}
+\includegraphics[width=12cm]{16435fg14b}
+% \includegraphics[width=12cm]{o2003new_dEphase_mean}
+% \includegraphics[width=12cm]{o2006new_dEphase_mean}
 }
 \caption{\label{fig:new-dEphase}Differential gain-phases ($\arg\Delta\jones{E}{}$, in degrees) as a function of time, using improved sky models for the 2003 (top) and 2006 (bottom) observations. Compare to Fig.~\ref{fig:dEphase}.}
 \end{figure*}
@@ -551,15 +603,19 @@ The phases, on the other hand, show a marked difference, since the formerly domi
 
 \begin{figure}
 \centering
-\includegraphics[width=\columnwidth]{o2003new_dEphase_array_slopes}\\
-\includegraphics[width=\columnwidth]{o2006new_dEphase_array_slopes}
+\includegraphics[width=\columnwidth]{16435fg15a}\\
+\includegraphics[width=\columnwidth]{16435fg15b}
+% \includegraphics[width=\columnwidth]{o2003new_dEphase_array_slopes}\\
+% \includegraphics[width=\columnwidth]{o2006new_dEphase_array_slopes}
 \caption{\label{fig:new-dEphase-slope}Phase slopes over the array as a function of time (in deg/km), using improved sky models for the 2003 (top) and 2006 observations (bottom). The green lines indicate phase slopes corresponding to the fitted position offsets (Fig.~\ref{fig:new-dEphase-dlm}). Compare to Fig.~\ref{fig:dEphase-slope}.}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=.5\columnwidth]{o2003new_dE_lm_offsets}%
-\includegraphics[width=.5\columnwidth]{o2006new_dE_lm_offsets}
+\includegraphics[width=.5\columnwidth]{16435fg16a}%
+\includegraphics[width=.5\columnwidth]{16435fg16b}
+% \includegraphics[width=.5\columnwidth]{o2003new_dE_lm_offsets}%
+% \includegraphics[width=.5\columnwidth]{o2006new_dE_lm_offsets}
 \caption{\label{fig:new-dEphase-dlm}Fitted position offsets corresponding to the phase slopes of Fig.~\ref{fig:new-dEphase-slope} (2003 observation on the left, 2006 on the right). The length of the arrows is exaggerated by a factor of 1200: the biggest offset is in fact just under $0.2\arcsec$. Compare to Fig.~\ref{fig:dEphase-dlm}.}
 \end{figure}
 
@@ -582,7 +638,8 @@ Since the noise term in both maps is the same, subtraction reveals very faint st
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=\columnwidth]{diff_newmodel_8band}%
+\includegraphics[width=\columnwidth]{16435fg17}%
+%\includegraphics[width=\columnwidth]{diff_newmodel_8band}%
 \end{centering}
 \caption{\label{fig:diff-newmodel}Calibration with an improved sky model. This shows the \emph{difference} between the 8-band residual maps (2003 observation) produced with the original and the improved sky models. Structures around 3C 147 itself and the off-axis sources are mostly due to ``selfcal contamination'' in the original model caused by incorrect off-axis source positions. These are well within the noise: the intensity range of this image is $\pm2 \mu\mathrm{Jy}$, while the 8-band maps have a thermal noise of $13.5 \mu\mathrm{Jy}$.}
 \end{figure}
@@ -597,7 +654,7 @@ The latter may also prove be necessary: I have demonstrated that even a perfect-
 
 The nature of the remaining DDEs (as seen in the differential gain solutions) has not yet been adequately explained. Some of the amplitude effects are consistent with pointing error. There phase behaviour is even more difficult to understand, but may be due to unmodelled source structure. Further work is required on the subject. 
 
-I have shown that differential gain-phase solutions can be used to detect position shifts to within small fractions of the synthesized beam size. Offsets of less than $0.05\arcsec$ (well under 0.01 of the synthesized beam size!) have been reliably detected. There is a very clear indication of a systematic rotational offset of $\sim45\arcsec$ in the sky model generated by NEWSTAR, when interpreted using MeqTrees. This is may be due to a coordinate conversion error somewhere in the visibility data processing tool chain, and needs to be investigated further.
+I have shown that differential gain-phase solutions can be used to detect position shifts to within small fractions of the synthesized beam size. Offsets of less than $0.05\arcsec$ (well under 0.01 of the PSF size!) have been reliably detected. There is a very clear indication of a systematic rotational offset of $\sim45\arcsec$ in the sky model generated by NEWSTAR, when interpreted using MeqTrees. This is may be due to a coordinate conversion error somewhere in the visibility data processing tool chain, and needs to be investigated further.
 
 Finally, I should consider some wider implications of my results. All currently mooted schemes of DDE calibration for LOFAR \citep{JEN:LOFAR3}, the MWA \citep{Mitchell:MWA-cal} and the ionosphere in general \citep{Intema:SPAM,Cotton:FBC} revolve around the use of ``beacon sources'' to probe the ionosphere and/or the primary beam. It is rather difficult to envisage a closed-loop scheme without beacons (how else would one sample a DDE?), so future telescopes such as the SKA will most likely need to use something very similar. Any such scheme predicates on there being a sufficient number of sufficiently bright in-beam beacons for any direction on the sky. This is not a problem at the LOFAR and MWA end of the spectrum, since the low-frequency sky is so much brighter, but it has been a bit of a worry for the higher frequencies, where FoVs are narrower and sources are fainter.
 
