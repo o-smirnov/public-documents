@@ -108,7 +108,7 @@ The constituent parts of this equation are as follows:
 \begin{description}
 \item[$\coh{X}{spq}$] is the coherency of source $s$. NEWSTAR sky models are composed of discrete point sources or extended Gaussian components. For a point source, $\coh{X}{spq} = K_p Q_{spq} \coh{B}{s} K^\herm_q$.
 
-\item[$\coh{B}{s}$] is the source brightness. This can be further parameterized in terms of Stokes $IQUV$, spectral index and rotation measure.
+\item[$\coh{B}{s}$] is the source brightness. This can be further parametrized in terms of Stokes $IQUV$, spectral index and rotation measure.
 
 \item[$Q_{spq}$] is a per-source correction factor to account for time and bandwidth smearing \citep[see Paper I,][Sect.~5.2]{RRIME1}.
 
@@ -160,7 +160,7 @@ a list of NEWSTAR-like components), and $\jones{J}{p}$ is composed of several di
 \jones{J}{p} = \jones{B}{p} \jones{G}{p} \jones{D}{p} \jones{E}{p} \jones{P}{p} \vec  T_p
 \end{equation}
 
-Each term has its own specific implementation (in case of known terms) and parameterization (in case of solvable terms). Finally, multiplicative interferometer-based errors ($\coh{M}{pq}$) may be optionally applied to either the outside of the equation \citep[as per Eq.~24 of Paper I,][]{RRIME1}, or to $\coh{X}{pq}$ itself (a-la NEWSTAR, see Eq.~\ref{eq:newstar-rime} above). 
+Each term has its own specific implementation (in case of known terms) and parametrization (in case of solvable terms). Finally, multiplicative interferometer-based errors ($\coh{M}{pq}$) may be optionally applied to either the outside of the equation \citep[as per Eq.~24 of Paper I,][]{RRIME1}, or to $\coh{X}{pq}$ itself (a-la NEWSTAR, see Eq.~\ref{eq:newstar-rime} above). 
 
 Conceptually, calibration in CASA is very similar to the procedure described in the previous section, but the use of an explicit RIME confers several advantages. The known terms of the Jones chain (Eq.~\ref{eq:casa}) can be taken into account properly, while the solvable terms can be solved for in different combinations. The caveats of using such a specific form of the RIME have already been discussed in Paper I \citep[Sect.~6.2]{RRIME1}.
 
@@ -168,7 +168,7 @@ Note that although CASA also relies on the essentially 2GC-rooted concepts of mo
 
 \subsection{\label{sec:phenomenological}Phenomenological RIMEs}
 
-My experiments with calibration in MeqTrees have favoured \emph{phenomenological} RIMEs \citep{meqtrees}. Rather than writing out long Jones chains such as that of Eq.~(\ref{eq:casa}), which attempt to follow the physics of the signal processing chain, the phenomenological approach consists of using a RIME with the minimum number of solvable terms needed to represent the cumulative effect of the chain. Each phenomenological term then ends up subsuming several different physical effects. The rationale for this approach is that, on the one hand, we only need to capture the overall effect for purposes of calibration, while on the other hand, the individual effects often cannot be distinguished at all, apart from their different behaviour in time and frequency -- which we try to capture with individual phenomenological terms.
+My experiments with calibration in MeqTrees have favoured \emph{phenomenological} RIMEs \citep{meqtrees}. Rather than writing out long Jones chains such as that of Eq.~(\ref{eq:casa}), which attempt to follow the physics of the signal propagation chain, the phenomenological approach consists of using a RIME with the minimum number of solvable terms needed to represent the cumulative effect of the chain. Each phenomenological term then ends up subsuming several different physical effects. The rationale for this approach is that, on the one hand, we only need to capture the overall effect for purposes of calibration, while on the other hand, the individual effects often cannot be distinguished at all, apart from their different behaviour in time and frequency -- which we try to capture with individual phenomenological terms.
 
 For example, a full-polarization bandpass-gain calibration of the WSRT can be done\footnote{In the absence of DDEs.} using the following phenomenological RIME:
 
@@ -272,7 +272,7 @@ sky-Jones terms $\jones{E}{p}$. We can rewrite this equation to emphasize the ti
 
 This equation captures the heart of the DDE problem: DDEs convolve the ``ideal'' visibilities, with (in the general case) a different kernel per every antenna and time sample. Instead of sampling one $uv$ plane ($\coh{X}{}$), we have a separate $uv$ plane per each $pq$ and time interval ($\coh{X}{pq}[t]$), and we're sampling each such plane at only one (or at most a handful) of points. Convolution is not uniquely reversible at the best of times; with such limited sampling it is even less tractable. This is the reason why \emph{in the presence of DDEs, corrected visibilities} (in the sense of Sect.~\ref{sec:implicit-me-newstar}) \emph{do not exist.} To be more precise, they may exist in the mathematical sense, but recovering them is an inverse (and ill-posed) problem.
 
-In this section I will first consider the two common sources of DDEs: the ionosphere and the primary beam, and
+In this section, I will first consider the two common sources of DDEs: the ionosphere and the primary beam, and
 then discuss some proposed methods of dealing with them.
 
 \subsection{$E$-Jones: beam-related DDEs\label{sec:EJones}}
@@ -355,7 +355,7 @@ The environmental factors responsible for mispointing can also cause deformation
 
 \subsection{Ionosphere \& troposphere}
 
-The ionosphere becomes a particularly troublesome DDE at low frequencies, owing to the $\propto\nu^{-1}$ behaviour of ionospheric phase delay, and $\propto\nu^{-2}$ behaviour of Faraday rotation. For an more detailed look at the ionosphere and its effects on signal propagation, see \citet[Sect.~13.3]{tms} and \citet{Intema:SPAM}. Below I will briefly summarize ionospheric effects in terms of the RIME.
+The ionosphere becomes a particularly troublesome DDE at low frequencies, owing to the $\propto\nu^{-1}$ behaviour of ionospheric phase delay, and $\propto\nu^{-2}$ behaviour of Faraday rotation. For a more detailed look at the ionosphere and its effects on signal propagation, see \citet[Sect.~13.3]{tms} and \citet{Intema:SPAM}. Below I will briefly summarize ionospheric effects in terms of the RIME.
 
 \subsubsection{Ionospheric phase}
 
@@ -455,7 +455,7 @@ While W-projection has been in use for a while and is well-tested, the limitatio
 
 Given a known sky model, the most straightforward way of dealing with a known DDE is to directly evaluate Eq.~(\ref{eq:me-allsky}) in the forward direction, and subtract it from the observed visibilities. This gives us the residuals $\coh{R}{pq} = \coh{D}{pq} - \coh{V}{pq}$, which can then be corrected for the DIEs. Once imaged, they will still be subject to DDEs on the same relative level. However, if a significant portion of the flux is accounted for by the sky model, then the \emph{absolute} level of DDE-related artefacts will be much lower, perhaps even below thermal noise (if the sky model is sufficiently deep -- and a sufficiently deep model is a requirement for calibration anyway). The sky model itself can be added (``restored'') directly into the residual images with no error. This method was used for the reduction of Paper III \citep{RRIME3}, and produced the ``showcase'' image of Fig.~1 therein.
 
-For a sky model composed of discrete source components, this is also called the \emph{DFT approach}, since evaluating Eq.~(\ref{eq:me-allsky}) on a per-source basis is equivalent to doing a brute-strength Discrete Fourier Transform. There has been considerable debate in the literature and at meetings about the relative merits of the DFT approach vs. FFT-based methods such as AW-projection. DFTs have the advantage of maximum precision (at least to the extent that the DDE is known), but are very expensive computationally, since they scales linearly with the number of sources being modelled. AW-projection is approximate (see above), but its computational cost scales much better, as it only depends on resolution.
+For a sky model composed of discrete source components, this is also called the \emph{DFT approach}, since evaluating Eq.~(\ref{eq:me-allsky}) on a per-source basis is equivalent to doing a brute-strength Discrete Fourier Transform. There has been considerable debate in the literature and at meetings about the relative merits of the DFT approach vs. FFT-based methods such as AW-projection. DFTs have the advantage of maximum precision (at least to the extent that the DDE is known), but are very expensive computationally, since they scale linearly with the number of sources being modelled. AW-projection is approximate (see above), but its computational cost scales much better, as it only depends on resolution.
 
 It should be made clear that the two approaches are complementary rather than mutually exclusive, and can be favourably combined (provided compatible implementations are available, which is a matter of some urgency), by using DFTs for the brighter sources in the field, and AW-projection for the fainter ones. By choosing a flux threshold, one can then achieve a clear trade-off between accuracy (and, ultimately, dynamic range) and computational cost. 
 
@@ -535,7 +535,7 @@ Note that solving for $\Delta\jones{E}{}$ on a single off-axis source is equival
 
 Differential gains share a common weakness with peeling: that of proliferation of degrees of freedom (DoF's). This is partially mitigated by using larger solution intervals, but it is obvious that we cannot simultaneously solve for $\Delta\jones{E}{ps}$ towards \emph{all} sources in a typical field, since that would be gross over-fitting. (Not to mention the CPU cost of solving for that many parameters simultaneously, which would probably become prohibitive first.) 
 
-\subsubsection{Parameterized models and beacon sources}
+\subsubsection{Parametrized models and beacon sources}
 
 The DoF issue can be addressed if the DDE in question can be represented by a parametrized model for $\jones{E}{p}$. We can then solve for the parameters of that model (presumably, few in number), and then correct for the resulting $\jones{E}{p}$ estimate using one of the methods of Sect.~\ref{sec:dde-correction}. 
 
