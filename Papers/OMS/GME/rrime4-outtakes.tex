@@ -1,0 +1,108 @@
+At first glance, Einstein summation seems trivial to implement in software, since it boils down to nothing more complicated than a set of nested loops. What is more interesting is to compare its computational costs (in terms of floating point operations, here called \emph{ops} for brevity) to those of the $2\times2$ and $4\times4$ RIME formalisms, in cases where they
+are equivalent, since mathematically equivalent formulations can often have significantly different costs. For example, in Paper~I \citep[Sect.~6.1]{RRIME1}, I already noted that a straightforward implementation of a $2\times2$ RIME is cheaper than the same equation in $4\times4$ form, although the specific op counts given therein are in error\footnote{Specifically, Paper~I claims 128 ops per Jones term in the $4\times4$ formalism: 112 to multiply two $4\times4$ matrices, and another 16 for the outer product. However, a $4\times4$ RIME may be evaluated in a more economical order, namely as a series of multiplications of a 4-vector by a $4\times4$ matrix. This costs 28 ops per each matrix-vector product, which, together with the outer product, gives a total of only 44 ops per Jones term.}.
+
+\subsection{Partitioning an Einstein sum}
+
+Let's assume a $2\times2$ RIME of the form of Eq.~(\ref{eq:rime-onion}), with two sets of Jones terms, which we'll designate as $\jones{D}{}$ and $\jones{E}{}$. We then have the following fully-equivalent formulations in $2\times2$ and $4\times4$ form:
+
+\begin{eqnarray}
+\label{eq:example-2x2}
+  \coh{V}{pq} &=& \jones{D}{p}\jones{E}{p} \coh{B}{} \jonesT{E}{q} \jonesT{D}{q}, \\
+\label{eq:example-4x4}
+  \vec v_{pq} &=& (\jones{D}{p}\otimes\jonesT{D}{q})(\jones{E}{p}\otimes\jonesT{E}{q})
+              \mathbf{S}{} \vec I.
+\end{eqnarray}
+
+while in tensor notation the same equation can be formulated as
+
+\begin{equation}
+  [\tens{V_{pq}}]^i_j = 
+  [\tens{D_p}]^{i}_{\alpha_2} 
+  [\tens{E_p}]^{\alpha_2}_{\alpha_1} 
+  \tens{B}^{\alpha_1}_{\beta_1}
+  [\bar\tens{E_q}]^{\beta_1}_{\beta_2}  
+  [\bar\tens{D_q}]^{\beta_2}_{j}.
+\label{eq:tensor-onion}
+\end{equation}
+
+Let's consider a brute-force implementation of such an Einstein sum for $n$ sets of Jones terms ($n=2$ above), and count the ops. The equation needs to to be evaluated for each $i,j=1,2$ (thus 4 times), with implicit summation over $\alpha_1,\beta_1,\alpha_2,\beta_2=1,2$ (thus $2n$ levels of nested loops, for $2^{2n}$ iterations in total). Each iteration incurs $2n$ multiplications and one addition. In total, this works out to $2^{2n+2}(2^n+1)$ ops. For $n=2$, this is already 192 ops. In comparison, the $2\times2$ matrix form incurs only 48 ops, while the $4\times4$ form incurs 88 (assuming the coherency vector given by $\mathbf{S}\vec I$ is precomputed). For larger $n$, brute-force Einstein summation is obviously grossly inefficient. 
+
+It is easy to see the source of this inefficiency. In the innermost loop (say, over $j$), only the rightmost term $[\bar\tens{D_q}]^{\beta_2}_j$ is changing, so it is wasteful to multiply the other four terms by each other each time. We could save some of these multiplications by reusing results. Let's split up the computation as
+
+\[
+  \underbrace{\left(
+    [\tens{D_p}]^{i}_{\alpha_2} 
+    [\tens{E_p}]^{\alpha_2}_{\alpha_1} 
+    \tens{B}^{\alpha_1}_{\beta_1}
+    [\bar\tens{E_q}]^{\beta_1}_{\beta_2}\right)
+  }_{\equiv\tens{A}^i_{\beta_2}}
+  [\bar\tens{D_q}]^{\beta_2}_{j},
+\]
+
+and compute $\tens{A}^i_{\beta_2}$ first, followed by $\tens{A}^i_{\beta_2}[\bar\tens{D_q}]_{j}^{\beta_2}.$
+But then we could apply the same split to $\tens{A}^i_{\beta_2}$ itself, and so on down, ultimately yielding the following sequence of operations:
+
+\[
+  \left(
+  \left(
+  \left(
+    [\tens{D_p}]^{i}_{\alpha_3} 
+    [\tens{E_p}]^{\alpha_3}_{\alpha_2}
+  \right)
+  \tens{B}^{\alpha_1}_{\beta_1}
+  \right)
+  [\bar\tens{E_q}]^{\beta_2}_{\beta_3}
+  \right)
+  [\bar\tens{D_q}]^{\beta_3}_{j}
+\]
+
+But this is just a sequence of $2\times2$ matrix products, i.e. exactly the same computations that occur in the $2\times2$ formulation, which we know to cost ``only'' 48 ops! And on the other hand, as already intimated by Eq.~(\ref{eq:me0-tensor-Jpq}), the $4\times4$ formalism (at 88 ops) is equivalent to a different partitioning of the same expression:
+
+\[
+  \left( 
+    [\tens{D_p}]^i_{\alpha_3} [\bar\tens{D_q}]_{j}^{\beta_3} 
+  \right) 
+  \left(
+    \left( 
+      [\tens{E_p}]^{\alpha_3}_{\alpha_2} [\bar\tens{E_q}]_{\beta_3}^{\beta_2} 
+    \right) 
+      \tens{B}^{\alpha_1}_{\beta_1} 
+  \right).
+ \]
+
+The crucial insight here is that different partitionings of the computation in Eq.~(\ref{eq:tensor-onion}) -- an there are many alternatives to the two given here -- incur different numbers of ops.  My conjecture is that the partitioning corresponding to a series of $2\times2$ matrix products is optimal, ops-wise. I cannot offer formal proof of this, but in any case it is of academic interest only, since significant computational savings actually lie elsewhere: namely in dependence optimization.
+
+\subsection{Dependence optimization}
+
+In real life, an equation like (\ref{eq:example-2x2}--\ref{eq:tensor-onion}) needs to be evaluated millions to billions of times, for all antenna pairs, baselines, time and frequency bins. However, not all the terms in the equation have the same time and frequency dependence. Some may be constant, some may be functions of time only or frequency only, some may change a lot slower than others -- in other words, some may have \emph{limited dependence}. For example, if $\coh{B}{}$ and $\jones{E}{p}$ have a limited dependence, say on frequency only, then the inner part of the ``onion'' of Eq.~(\ref{eq:example-2x2}) (or right side of Eq.~(\ref{eq:example-4x4})) can be evaluated in a loop over frequency channels, but not over timeslots. The resulting savings in ops can be enormous.
+
+A system like MeqTrees \citep{meqtrees} can take serious advantage of this. An equation like (\ref{eq:example-2x2}) is represented by a \emph{tree}, which typically corresponds to the following order of operations:
+
+\[
+  \coh{V}{pq} =  \jones{D}{p}(\jones{E}{p} \coh{B}{} \jonesT{E}{q} ) \jonesT{D}{q}, \\
+\]
+with an outermost loop being over the layers of the ``onion'', and inner loops over times and frequencies. When the operands have limited dependence (as e.g. for the $\jones{E}{p} \coh{B}{} \jonesT{E}{q}$ product), it automatically skips unnecessary inner loops. Thus the amount of loops is minimal on the ``inside'' of the equation, and grows as we move ``out'' through the layers and add terms with more dependence. I call this \emph{dependence optimization}. It is therefore desirable to place the terms with the smallest dependence on the inside of the equation -- if the terms with limited dependence happen to be $\jones{D}{p}$ and $\coh{B}{}$, this scheme doesn't save any ops at all. Unfortunately, one cannot simply change the order of the matrices willy-nilly, since they don't generally commute.  When dealing with specific kinds of matrices that \emph{do\/} commute, we \emph{can} do some optimization by shuffling them around, but the degree to which this is possible is almost always limited.
+
+Recall, however, that the terms in an Einstein sum commute freely (as long as they take their indices with them!) In the scenario where $\coh{B}{}$ and $\coh{D}{}$ are the terms with limited dependence, we could rearrange Eq.~(\ref{eq:tensor-onion}), and partition the computations e.g. as follows:
+
+\[
+\tens{V}_{q}^{p} = [\tens{E_p}]^{\alpha_2}_{\alpha_1}
+\left(
+  [\bar\tens{E_q}]^{\beta_1}_{\beta_2}  
+\left(
+    [\tens{D_p}]^{i}_{\alpha_2} 
+\left(
+    [\bar\tens{D_q}]^{\beta_2}_{j}
+    \tens{B}^{\alpha_1}_{\beta_1}
+\right)\right)\right).
+\]
+
+First we compute the innermost product, $[\bar\tens{D_q}]^{\beta_2}_{j}\tens{B}^{\alpha_1}_{\beta_1}$, which yields a (2-2)-type tensor. The next product, $[\tens{D_p}]^{i}_{\alpha_2}[\bar\tens{D_q}]^{\beta_2}_{j}\tens{B}^{\alpha_1}_{\beta_1}$, is a (3,3)-type tensor. Then, $[\bar\tens{F_q}]$ and $[\tens{F_p}]$, bring in two summation indices each, thus reducing the type of the result back to (2,2) and then to (1,1). 
+
+
+
+ 
+
+
+ 
+
