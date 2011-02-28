@@ -1,4 +1,5 @@
-\documentclass{aa}
+%\documentclass[referee]{aa}
+\documentclass[]{aa}
 
 \usepackage{graphicx}
 \usepackage{txfonts}
@@ -55,14 +56,14 @@
 to describe observational scenarios that lie outside these limitations.
 }
 %methods
-{Some assumptions underlying the matrix RIME are explicated and analysed in detail. To this purpose, an array correlation matrix (ACM) formalism is explored. This can be used to describe mutual coupling, but not together with image-plane effects, due to the limits of matrix multiplication. A more general formalism based on tensors and the Einstein notation is proposed and explored both theoretically, and with a view to practical implementations.
+{Some assumptions underlying the matrix RIME are explicated and analysed in detail. To this purpose, an array correlation matrix (ACM) formalism is explored. This proves of limited use; it is shown that matrix algebra is simply not a sufficiently flexible tool for the job. To overcome these limitations, a more general formalism based on tensors and the Einstein notation is proposed and explored both theoretically, and with a view to practical implementations.
 }%
 %results
-{The new formalism elegantly yields tensor RIMEs describing beamforming, mutual coupling, and wide-field polarimetry. It is shown that under the explicated assumptions, tensor equations reduce to the $2\times2$ RIME. From a practical point of view, some methods for implementing tensor equations in an optimal way are proposed and analysed.
+{The tensor formalism elegantly yields generalized RIMEs describing beamforming, mutual coupling, and wide-field polarimetry in one equation. It is shown that under the explicated assumptions, tensor equations reduce to the $2\times2$ RIME. From a practical point of view, some methods for implementing tensor equations in an optimal way are proposed and analysed.
 }%
 %optional conclusions
-{The tensor RIME is a powerful tool for describing observational scenarios not amenable to the matrix RIME. Even in cases where the latter 
-remains applicable, the tensor formalism is a valuable tool for understanding the limits of such applicability.
+{The tensor RIME is a powerful means of describing observational scenarios not amenable to the matrix RIME. Even in cases where the latter 
+remains applicable, the tensor formalism can be a valuable tool for understanding the limits of such applicability.
 }
 
 \keywords{Methods: numerical - Methods: analytical - Methods: data analysis - Techniques:
@@ -149,7 +150,7 @@ $\jones{J}{p}$ into terms associated only with station $p$, since cross-talk ``m
 associated with the other stations! (See Sect.~\ref{sec:matrix-image-plane} for a more thorough discussion of this point.)
 
 To be absolutely clear on this point, in a linear system, the basic RIME of Eq.~(\ref{eq:rime-ps}) always holds. As long as the system is
-linear, there always exists some $\jones{J}{p}$ matrix that ties the voltage $\vec v_p$ to the source EMF vector $\vec e$. However, we may only decompose $\jones{J}{p}$ into per-station terms, as in Eq. (\ref{eq:rime-onion}), if we assume that each station forms a closed system, with no cross-talk or coupling to the other stations. With the emergence of AA and PAF designs for new instruments, we can no longer assume this\footnote{In fact, even existing instruments may have this problem, if cross-talk occurs in, or on the way to, the correlator, or between closely packed core stations. It remains to be seen
+linear, there always exists some $\jones{J}{p}$ matrix that ties the voltage $\vec v_p$ to the source EMF vector $\vec e$. However, we may only decompose $\jones{J}{p}$ into per-station Jones chains, as in Eq. (\ref{eq:rime-onion}), if we assume that each station forms a closed system, with no cross-talk or coupling to the other stations. With the emergence of AA and PAF designs for new instruments, we can no longer assume this\footnote{In fact, even existing instruments may have this problem, if cross-talk occurs in, or on the way to, the correlator, or between closely packed core stations. It remains to be seen
 whether this effect can be detected in existing observations.}.% 
 
 The closed system assumption has not been made explicit in the literature. This is perhaps due to the fact that the RIME is nominally formulated for a single interferometer $pq$. Consider, however, that for an interferometer array composed of $N$ stations, the ``full'' RIME is actually a set of $N(N-1)/2$ equations. By treating the equations independently, we're implicitly assuming that each equation corresponds to a closed system. The higher-order 
@@ -174,8 +175,7 @@ In principle, we can shoehorn the case of non-colocated receptors into the RIME 
 \section{The array correlation matrix formalism}
 \label{sec:matrix}
 
-I will first explore the limitations of the closed-system assumption a little bit further. Let's consider an AA, PAF, or conventional closely-packed interferometer array where mutual coupling affects more than two receptors at a time. In other words, the array cannot be partitioned into pairs of receptors, with each pair forming a closed system. The traditional RIME of Eq.~(\ref{eq:rime-onion}) is then no longer valid. On the other
-hand, as long as the voltage response of each receptor is linear, some kind of matrix formalism may still be derived.
+I will first explore the limitations of the closed-system assumption a little bit further. Consider an AA, PAF, or conventional closely-packed interferometer array where mutual coupling affects more than two receptors at a time. Such an array cannot be partitioned into pairs of receptors, with each pair forming a closed system. The normal $2\times2$ RIME of Eq.~(\ref{eq:rime-onion}) is then no longer valid. An alternative is to describe the response of such an array in terms of a single array correlation matrix (ACM, also called the signal voltage covariance matrix), as has been done by \citet{wijnholds-thesis} for AAs, and \citet{warnick-paf-polarimetry} for PAFs. Since the ACM provides a valuable conceptual link between the $2\times2$ RIME and the tensor formalism described later in this paper, I will consider it in some detail in this section.
 
 Let's assume an arbitrary set of $n$ receptors (e.g. dipoles) in arbitrary orientation, and a single point source of radiation. 
 If we represent the voltage response of the full array by the column vector $\vec{v}=(v_{1}\ldots v_{n})^T$, then we can express it (assuming linearity as usual) as the product of a $n\times2$ matrix with the source EMF vector $\vec e$:
@@ -189,7 +189,7 @@ j_{xn} & j_{yn}\end{array}\right)
 \end{array}\right)
 \]
 
-If all pairwise combinations of receptors are correlated, we end up with an $n\times n$ array correlation matrix\footnote{I will use boldface roman capitals, such as $\mathbf{V}$, for matrices other than $2\times2$. As per the conventions of Paper~I \citep[][Sect.~1.4]{RRIME1}, $2\times2$ Jones matrices are indicated by boldface italic capitals ($\jones{J}{}$). Brightness, coherency and visibility matrices (as well as tensors, introduced later) are indicated by sans-serif capitals, e.g. $\coh{B}{}$.} (ACM) $\mathbf{V}$:
+If all pairwise combinations of receptors are correlated, we end up with an $n\times n$ ACM\footnote{I will use boldface roman capitals, such as $\mathbf{V}$, for matrices other than $2\times2$. As per the conventions of Paper~I \citep[][Sect.~1.4]{RRIME1}, $2\times2$ Jones matrices are indicated by boldface italic capitals ($\jones{J}{}$). Brightness, coherency and visibility matrices (as well as tensors, introduced later) are indicated by sans-serif capitals, e.g. $\coh{B}{}$.} $\mathbf{V}$:
 
 \begin{equation}\label{eq:array-response-j}
 \mathbf{V} =\langle \vec v \vec v^\herm \rangle =\left(\begin{array}{cc}
@@ -203,7 +203,7 @@ j^*_{y1} & \cdots & j^*_{yn}\end{array}\right)= \mathbf{J} \coh{B}{} \mathbf{J}^
 where $\coh{B}{}$ is the $2\times2$ source brightness matrix, and $\mathbf{J}$ is an $n\times2$ Jones-like matrix for the entire array. Note that for $n=2$, this equation becomes the autocorrelation matrix given by the RIME of Eq.~(\ref{eq:rime-ps}) with $p=q$.
 
 To derive the $\mathbf{J}$ matrix for a given observation, we need to decompose it into a product of ``physical'' terms that we can
-analyse individually. For starters, let's consider only three effects: primary beam (PB) gain, geometric phase, and cross-talk. The 
+analyse individually. As an example, let's consider only three effects: primary beam (PB) gain, geometric phase, and cross-talk. The 
 $\mathbf{J}$ matrix can then be decomposed as follows:
 
 \begin{equation}\label{eq:array-response}
@@ -307,11 +307,11 @@ is replaced by $\mathbf{B}^{(3)}$, and the dimensions of the $\mathbf{E}$ matrix
 \section{A tensor formalism for the RIME}
 \label{sec:tensor}
 
-The ACM formalism of the previous section turns out to be only marginally useful. It does aid in understanding the effect of mutual coupling and the closed system assumption a little bit better, but it is much too clumsy in describing image-plane effects, principally because the rules of matrix multiplication are too rigid to represent this particular form of linear transform. What we need is a more flexible scheme for describing arbitrary multi-linear transforms, one that can go beyond vectors and matrices. Fortunately, mathematicians have already developed just such an apparatus in the form of \emph{tensor analysis}. In this section, I will apply this to derive a generalized multi-dimensional RIME.
+The ACM formalism of the previous section turns out to be only marginally useful for the purposes of this paper. It does aid in understanding the effect of mutual coupling and the closed system assumption a little bit better, but it is much too clumsy in describing image-plane effects, principally because the rules of matrix multiplication are too rigid to represent this particular kind of linear transform. What we need is a more flexible scheme for describing arbitrary multi-linear transforms, one that can go beyond vectors and matrices. Fortunately, mathematicians have already developed just such an apparatus in the form of \emph{tensor algebra}. In this section, I will apply this to derive a generalized multi-dimensional RIME.
 
 \subsection{Tensors and the Einstein notation: a primer}
 
-Tensor analysis is a sprawling theory, and one not particularly familiar to radio astronomers at large. Appendix~\ref{sec:tensor-theory} provides a brief but formal description of the concepts required for the formulations of this paper. This is intended for the in-depth reader (and to provide rigorous mathematical underpinnings for what follows). For an executive overview, only three basic concepts are sufficient:
+Tensors are a large and sprawling subject, and one not particularly familiar to radio astronomers at large. Appendix~\ref{sec:tensor-theory} provides a brief but formal description of the concepts required for the formulations of this paper. This is intended for the in-depth reader (and to provide rigorous mathematical underpinnings for what follows). For an executive overview, only three basic concepts are sufficient:
   
 \noindent{\bf Tensors} are a generalization of vectors and matrices. An \emph{$(n,m)$-type} tensor is given by an $(n+m)$-dimensional array of numbers, and written using $n$ upper and $m$ lower indices: e.g. $\tens{T}_{j_{1}j_{2}...j_{m}}^{i_{1}i_{2}...i_{n}}$. Superscripts are indices just like subscripts, and not exponentiation\footnote{This is the way they will be used in this paper from this point on, with the exception of small integer powers (e.g. $l^2$), where exponentiation is obviously implied.}! For example, a vector is typically a (1,0)-type tensor, denoted as $x^i$. A matrix is a (1,1)-type tensor, denoted as $\tens{A}^i_j$.
 
@@ -404,7 +404,7 @@ Note that the brightness tensor $\tens{B}$ is self-conjugate (or Hermitian), in 
 
 In this section, I will put tensor notation to work to incorporate image-plane effects and mutual coupling and beamforming into a generalized RIME hinted at in  Sect.~\ref{sec:matrix}. This shows how the formalism may be used to derive a few  different forms of the RIME for various instrumental scenarios. Note that the resulting equations are somewhat speculative, and not necessarily applicable to any particular real-life instrument. The point of the exercise is to demonstrate the flexibility of the formalism in deriving RIMEs that go beyond the capability of the Jones formalism. 
 
-First, let's set up some indexing conventions. I'll use $i,j,k,...$ for free indices that run from 1 to $N=2$ (or 3, see below), i.e. for those that refer to EMF components, or voltages on paired receptors, and $\alpha,\beta,\gamma,...$ for summation indices in the same range. I shall refer to such indices as \emph{2-indices}. For free indices that refer to stations or disparate receptors (and run from 1 to $N$), I'll use $p,q,r,s,...$, and for the corresponding summation indices, $\sigma,\tau,\upsilon,\phi,...$ I shall refer to these as \emph{station indices}.
+First, let's set up some indexing conventions. I'll use $i,j,k,...$ for free indices that run from 1 to $N=2$ (or 3, see below), i.e. for those that refer to EMF components, or voltages on paired receptors, and $\alpha,\beta,\gamma,...$ for summation indices in the same range. I shall refer to such indices as \emph{2-indices} (or 3-indices). For free indices that refer to stations or disparate receptors (and run from 1 to $N$), I'll use $p,q,r,s,...$, and for the corresponding summation indices, $\sigma,\tau,\upsilon,\phi,...$ I shall refer to these as \emph{station indices}.
 
 Consider again the $N$ arbitrary receptors of Sect.~\ref{sec:matrix} observing a single source. The source EMF is given by the tensor $e^i.$ 
 All effects between the source and the receptor, up to and not including the voltage gain, can be described by a (2,1)-type tensor, $\tens{Z}_{j}^{pi}.$ This implies that they are different for each receptor $p$. The PB response of the  receptor can be described by a (1,1)-type tensor, $\tens{E}_i^p$.
@@ -780,6 +780,13 @@ For example, we can rewrite Eq.~(\ref{eq:gme-fullsky-int}) as
 
 (where $\tens{N}_{,lm}=1/n$), and manipulate it according to all the formal rules of Einstein notation.
 
+\subsection{Coordinate transforms, or whither tensors?}
+
+Einstein summation by itself is a powerful notational convenience for expressing linear combinations of multidimensional arrays, one that can be gainfully employed without regard to the finer details of tensors. The formulations of this paper may in fact be read in just such a manner, especially as they do not seem to make explicit use of that many tensor-specific constructs. It is then a fair question whether we need to invoke the deeper concepts of tensor algebra at all.
+
+There is one tensor property, however, that is crucial within the context of the RIME, and that is behaviour under coordinate transforms. In the formulations above, I did not specify a coordinate system. As in the case of the matrix RIME, the equations hold under change of coordinate frame, but their components must be transformed following certain rules. The general rules for tensors are given in Sect.~\ref{sec:tensors} (Eq.~(\ref{eq:tensor-coord-xform})); for the mixed-dimension tensors employed in this paper, coordinate transforms only affect the core $\mathbb{C}^2$ (or $\mathbb{C}^3$) vector space, and do not apply to station indices (the latter are said to be \emph{invariant}, see Sect.~\ref{sec:tensors-mixed-dim}).
+
+As long as we know that something is a tensor of a certain type, we have a clear rule for coordinate transformations given by Eq.~(\ref{eq:tensor-coord-xform}). However, Einstein notation can be employed to form up arbitrary expressions, which are not necessarily proper tensors unless the rigorous rules of tensor algebra are followed (see Appendix~\ref{sec:tensor-theory}). This argues against a merely mechanical use of Einstein summation, and makes it worthwhile to maintain the mathematical rigour that enables us to clearly follow whether something is a tensor or not.
 
 \section{Implementation aspects}
 
@@ -906,12 +913,11 @@ This was already demonstrated in the MeqTrees system \citep{meqtrees}, which tak
 \]
 with an outermost loop being over the layers of the ``onion'', and inner loops over times and frequencies. When the operands have limited dependence (as e.g. for the $\jones{E}{p} \coh{B}{} \jonesT{E}{q}$ product), the MeqTrees computational engine automatically skips unnecessary inner loops. Thus the amount of loops is minimized on the ``inside'' of the equation, and grows as we move ``out'' through the layers and add terms with more dependence. I call this \emph{dependence optimization}. 
 
-This suggests that among all the possible partitionings similar to Eq.~(\ref{eq:tensor-partition-2x2}), the one that computes the sub-products with the least dependence first is more optimal.
+Among the alternative partitionings of Eq.~(\ref{eq:tensor-partition-2x2}), the one that computes the sub-products with the least dependence first can benefit from dependence optimization the most.
 
 \subsection{Commutation optimization}
 
-Dependence optimization suggests that, in a $2\times2$ matrix RIME, the terms with the least dependence should be placed on the inside of the equation -- if the terms with limited dependence happen to be $\jones{D}{p}$ (on the outside) and not $\jones{E}{p}$ (on the inside), dependence optimization can't reduce any inner loops.
-Unfortunately, one cannot simply change the order of the matrices willy-nilly, since they don't generally commute. However, when dealing with specific kinds of matrices that \emph{do\/} commute, we \emph{can} do some optimization by shuffling them around. Real-life RIMEs tend to be full of matrices with limited commutation properties, such as scalar, diagonal and rotation matrices \cite[see Paper~I,][Sect.~1.6]{RRIME1}.
+In a $2\times2$ matrix RIME, dependence optimization works best if the terms with the least dependence are placed on the inside of the equation -- if limited dependence happens to apply to $\jones{D}{p}$ (on the outside) and not $\jones{E}{p}$ (on the inside), dependence optimization can't reduce any inner loops at all. Unfortunately, one cannot simply change the order of the matrices willy-nilly, since they don't generally commute. However, when dealing with specific kinds of matrices that \emph{do\/} commute, we \emph{can} do some optimization by shuffling them around. Real-life RIMEs tend to be full of matrices with limited commutation properties, such as scalar, diagonal and rotation matrices \cite[see Paper~I,][Sect.~1.6]{RRIME1}.
 
 In tensor notation, $\tens{A}^i_\alpha \tens{B}^\alpha_j$ commute if the summation indices can be swapped around: $\tens{A}^i_\alpha \tens{B}^\alpha_j=\tens{A}^\alpha_j \tens{B}^i_\alpha.$  Some of the commutation rules of $2\times2$ matrices discussed in Paper~I (\emph{ibid.}) do map to tensor form easily. For example, a diagonal matrix is a tensor with the property $\tens{A}^i_j=0$ for $i\ne j$. If $\tens{A}$ and $\tens{B}$ are both diagonal, then $\tens{A}^i_\alpha \tens{B}^\alpha_j$ is only non-zero for $i=j$, and commutation is obvious. Other commutation rules are more opaque: rotation matrices are known to commute among themselves, but this does not follow from tensor notation at all.
 Therefore, opportunities for commutation optimization of a tensor expression may not be detectable until we recast it into matrix form. 
@@ -924,7 +930,7 @@ It is also possible that alternative partitionings may prove to be more or less 
 
 \section{Conclusions}
 
-The $2\times2$ matrix RIME, having proven itself as a very capable tool for describing classical radio interferometry, is showing its limitations when confronted with PAFs, AAs, and wide-field polarimetry. This is due to a number of implicit assumptions underlying the formalism (transverse plane waves, dual colocated receptors, closed systems) that have been explicated in this paper. The RIME may be rewritten in an array correlation matrix form that makes these assumptions clearer, but struggles to combine image-plane effects and mutual coupling in the same equation.
+The $2\times2$ matrix RIME, having proven itself as a very capable tool for describing classical radio interferometry, is showing its limitations when confronted with PAFs, AAs, and wide-field polarimetry. This is due to a number of implicit assumptions underlying the formalism (transverse plane waves, dual colocated receptors, closed systems) that have been explicated in this paper. The RIME may be rewritten in an array correlation matrix form that makes these assumptions clearer, but this struggles to combine image-plane effects and mutual coupling in the same equation.
 
 A more general formalism based on tensors and Einstein notation is proposed. This reduces to the $2\times2$ (and $4\times4$) forms of the RIME under the explicated assumptions. The tensor formalism can be used to step outside the bounds of these assumptions, and can accommodate e.g.
 beamforming, mutual coupling, and the three-component Wolf formalism into one straightforward equation. 
@@ -936,10 +942,10 @@ I do not propose to completely supplant the $2\times2$ RIME. Where applicable (t
 
 \appendix
 
-\section{Elements of tensor analysis}
+\section{Elements of tensor algebra}
 \label{sec:tensor-theory}
 
-This appendix gives a brief description of some elements of tensor analysis relevant to the present paper. As a preliminary remark, one should keep in mind that there are, broadly, two complementary ways of thinking about linear algebra and tensor analysis. The \emph{coordinate} approach defines vectors, matrices, tensors, etc., in terms of their coordinate components in a particular coordinate system, and postulates somewhat mechanistic rules for transforming these components under change of coordinate frames. The \emph{intrinsic} (or abstract) approach defines these objects as abstract entities (namely, various kinds of linear functions) that exist independently of coordinate systems, and derives rules for coordinate manipulation as a result. For example, in the coordinate approach, a matrix is defined as an $n\times m$ array of numbers. In the intrinsic approach, it is a linear function mapping rank-$m$ vectors to rank-$n$ vectors.
+This appendix gives a brief description of some elements of tensor algebra relevant to the present paper. As a preliminary remark, one should keep in mind that there are, broadly, two complementary ways of thinking about linear and tensor algebra. The \emph{coordinate} approach defines vectors, matrices, tensors, etc., in terms of their coordinate components in a particular coordinate system, and postulates somewhat mechanistic rules for transforming these components under change of coordinate frames. The \emph{intrinsic} (or abstract) approach defines these objects as abstract entities (namely, various kinds of linear functions) that exist independently of coordinate systems, and derives rules for coordinate manipulation as a result. For example, in the coordinate approach, a matrix is defined as an $n\times m$ array of numbers. In the intrinsic approach, it is a linear function mapping rank-$m$ vectors to rank-$n$ vectors.
 
 Historically, the coordinate approach was developed first, and favours applications of the theory (which is why it is prevalent in e.g. physics and engineering). The intrinsic approach is favoured by theoretical mathematicians, since it has proven to be a more powerful way of extending the theory. When applying the theory to a new field (e.g. to the RIME), the mechanistic rules may be a necessity (especially when it comes to software implementations), but it is critically important to maintain conceptual links to the intrinsic approach, since that is the only way to verify that the application remains mathematically sound. This appendix therefore tries to explain things in terms of both approaches.
 
@@ -1199,7 +1205,7 @@ This section contains some in-depth mathematical details (that have been glossed
 \subsubsection{Coherency as an outer product}
 \label{sec:coh-outer-prod}
 
-The outer product operation is crucial to the RIME, since it is used to characterize the coherency of two EMF or voltage vectors.  In tensor analysis, the outer product can be defined (Sect.~\ref{sec:outer-prod}) in a completely abstract and coordinate-free way. By contrast, the definition usually employed in physics literature, and the RIME literature in particular, consists of a formal, mechanical manipulation of vectors (in the list-of-numbers sense). In particular, to derive the $4\times4$ formalism, \citet{ME1} \citep[see also Paper I,][Sect.~6.1]{RRIME1} used the Kronecker product form:
+The outer product operation is crucial to the RIME, since it is used to characterize the coherency of two EMF or voltage vectors.  In tensor terms, the outer product can be defined (Sect.~\ref{sec:outer-prod}) in a completely abstract and coordinate-free way. By contrast, the definition usually employed in physics literature, and the RIME literature in particular, consists of a formal, mechanical manipulation of vectors (in the list-of-numbers sense). In particular, to derive the $4\times4$ formalism, \citet{ME1} \citep[see also Paper I,][Sect.~6.1]{RRIME1} used the Kronecker product form:
 
 \[
 \left( \begin{array}{c}x_1\\x_2\end{array} \right)\otimes
