@@ -1,0 +1,190 @@
+\documentclass{aa}
+
+\usepackage{graphicx}
+\usepackage{txfonts}
+\usepackage{natbib}
+
+\bibpunct{(}{)}{;}{a}{}{,} % to follow the A&A style
+
+% shortcut to typeset a 2x2 matrix... there are a lot of these
+\newcommand{\matrixtt}[4]{\left( \begin{array}{cc}#1&#2\\#3&#4\\\end{array} \right)}
+
+% typographical conventions
+% symbol used to indicate the Hermitian transpose
+\newcommand{\herm}{H}
+%% other common usage is: \newcommand{\herm}{\dagger}
+% this typesets a Jones matrix
+\newcommand{\jones}[2]{\vec {#1}_{#2}}
+% this typesets an inverse Jones matrix
+\newcommand{\jonesinv}[2]{\vec {#1}^{-1}_{#2}}
+% this typesets a conjugate-transpose Jones matrix
+\newcommand{\jonesT}[2]{\vec {#1}^{\herm}_{#2}}
+% this typesets an inverse conjugate-transpose Jones matrix
+\newcommand{\jonesTinv}[2]{\vec {#1}^{{\herm}-1}_{#2}}
+% this typesets a coherency matrix
+\newcommand{\coh}[2]{\mathsf{{#1}}_{{#2}}}
+
+\newcommand{\EDIT}[1]{#1}
+
+
+\begin{document}
+
+\title{BeamSims: simulating the impact of primary beams on radio interferometric performance. I. MeerKAT L-band continuum imaging and dynamic range}
+
+\author{O.M. Smirnov\inst{\ref{inst:astron}} \and B.\ Frank\inst{\ref{inst:uct-astro}} \and I.\ Theron\inst{\ref{inst:emss}} \and I.\ Heywood\inst{\ref{inst:oap}} \and R.J.\ Baxter\inst{\ref{inst:uct-cs}}}
+
+\institute{Netherlands Institute for Radio Astronomy (ASTRON),
+  P.O. Box 2, 7990AA Dwingeloo, The Netherlands\\
+  \email{smirnov@astron.nl}\label{inst:astron} \and
+  UCT\label{inst:uct-astro} \and 
+  EMSS\label{inst:emss} \and 
+  Oxford Astrophysics\label{inst:oap} \and
+  UCT\label{inst:uct-cs}  
+}
+
+\date{}
+
+\titlerunning{BeamSims I. MeerKAT L-band continuum imaging and dynamic range}
+
+\authorrunning{Smirnov et al.}
+
+\abstract%
+%optional context
+{Primary beam patterns (or beamshapes for short) are emerging as a vital consideration both in the calibration of the new generation of radio interferometers, and in the design of future instruments such as the SKA. On the one hand this is due to a straightforward increase in sensitivity, which reveals instrumental effects that could be ignored on older and cruder instruments. On the other hand, some of the new designs introduce additional sources of beamshape instability. The resulting impact on telescope performance is far from obvious, especially since calibration techniques addressing these effects are still in their relative infancy. This issue needs to be studied urgently, both to improve the calibration of the new crop of SKA pathfinder instruments coming online now and in the near future, and to inform SKA design decisions.}
+%aims
+{This paper aims to introduce a simulations framework and methodology for quantifying the impact of beamshapes on radio interferometer performance and calibratability. We then apply the methodology to a comparative study of several possible MeerKAT dish designs.}
+%methods
+{Advances in software and computing power have made it possible both to derive detailed beamshapes from electromagnetic simulations, and to apply these in all-sky interferometric simulations. We use ...(Isak fill in)... to derive beamshapes, and then feed these into a MeqTrees-based simulations framework called BeamSims. Central to this is a new beam interpolation module, which can calculate beam gains based on gridded beamshapes specified via external files, while
+applying effects such as sky rotation and pointing error. The simulated visibilities are then fed to a number of MeqTrees calibration scripts. The statistics of the resulting images are then used to derive telescope performance figures.}
+%results
+{Results: Isak sleeps well. Write the rest later.}
+%optional conclusions
+{Conclusions: write later.}
+
+\keywords{Methods: numerical - Methods: analytical - Techniques: interferometric}
+
+\maketitle
+
+\section{Introduction}
+
+The primary beam (PB) pattern, or beamshape, of a radio interferometer station\footnote{By which in general we mean a single correlated element, i.e. a single antenna such as a steerable dish, or a single compound beam of an aperture array or a phased array feed.} determines the underlying spatial response pattern: the interferometer per se samples the sky brightness distribution multiplied by the square of the primary beam. ``Good'' beamshapes effectively restrict the field of view (FoV) of the interferometer to the region of scientific interest, and minimize the response of the instrument to astrophysical or man-made (interfering) sources from outside the FoV. An ideal interferometer would have a perfectly stable beamshape that is identical across all stations and spatially limited (i.e. with null gain outside the FoV). Real-life beamshapes deviate from this ideal in a few important ways:
+
+\begin{itemize}
+\item They are not stable in time, in ways that are both predictable (e.g. parallactic rotation in a two-axis alt-az mount) and fundamentally unpredictable (environmental effects in the receiver electronics, mechanical deformations, pointing errors).
+\item They differ from station to station, for similar reasons.
+\item They are not quite spatially limited. The fundamental reason for this is that a beamshape is a Fourier transform of the aperture illumination function (AIF), and thus a spatially limited beamshape would require an infinite aperture. Finite-sized apertures result in non-zero primary beam \emph{sidelobes} that can be minimized, but never entirely eliminated, via careful antenna and optics design.
+\end{itemize}
+
+Beamshapes play a crucial role in the performance of radio interferometers. In particular, the sensitivity floor (i.e. the faintest detectable source) of a given radio interferometric map is subject to the following four limits:
+
+{\bf 1. Thermal noise} is the simplest fundamental limit. In principle it can be made arbitrary low by increasing observation time, but only slowly, since it decreases as the square root of the latter.
+
+{\bf 2. Classical confusion} is the the flux threshold below which the sky becomes too crowded for individual sources to be reliably resolved individually. It is determined by the spatial resolution of the interferometer, i.e. by its longest baselines.
+
+{\bf 3. Calibration ``noise''} is a catch-all name for artefacts produced by the calibration process (even ones that are not particularly noise-like). These are usually caused by direction-dependent effects (DDEs), and specifically DDEs associated with beamshapes\footnote{At lower frequencies, ionospheric DDEs are increasingly dominant. We shall not consider them here.}.
+
+{\bf 4. Sidelobe confusion}, or sidelobe ``noise'' is caused by the fact that both the PSF of a radio interferometer and the primary beams of its constituent stations never quite go to zero, even at large distances from 
+the phase center and/or the pointing center. As a result, each pixel of the map in principle contains a noise-like contribution from {\bf all} sources in the sky.
+
+The first two limits can be straightforwardly derived from a given telescope's design and engineering specifications. The other two limits are far less trivial to establish, and are particularly influenced by beamshapes. While the mechanisms of this influence are fairly well-understood from first principles, formal quantitative estimates of their effect on interferometric images are hard to derive analytically, and can often be counter-intuitive. This makes it rather difficult to translate traditional engineering figures of merit (FoMs), such as sidelobe level, pointing accuracy, polarization purity, etc. into interferometric FoMs that are relevant to the target science. Even conventional interferometric FoMs themselves can be misleading. In particular, imaging dynamic range (DR), often estimated as the ratio between the brightest source in the map and the faintest detectable feature, can be artificially inflated when a single very bright source is present, and says nothing about wide-field  performance, which is often limited by DDEs. To add to the uncertainty, algorithms for dealing with DDEs, such as AW-projection \citep{Aproj} and differential gains \citep{RRIME3} are only starting to emerge, and their limitations are still poorly understood. The problem is rather urgent in the context of the SKA design process, where several competing dish designs need to have their interferometric performance characterized.
+
+On the other hand, recent advances in software and computing power have made it possible to run brute force interferometric simulations on previously unprecedented scales. This makes it possible to construct a rather complete simulation of a given instrument and a target sky, play with different aspects of the design, and thus derive performance limits in an almost ``experimental'' manner. The present work presents one such simulation methodology. While the methodology is completely general, we will develop it for one specific use case, and will focus on the issues of sidelobe confusion and calibration noise in four possible MeerKAT dish configurations:
+
+\begin{itemize}
+  \item Offset Gregorian (OG) on a two-axis alt-az mount;
+  \item OG on a three-axis or equatorial mount;
+  \item Prime focus (PF) feed with four support legs, on a two-axis alt-az mount;
+  \item PF on a three-axis or equatorial mount.
+\end{itemize}
+
+We shall also consider some variations on the optics (shaped dishes, different illumination patterns, randomized far sidelobes), and evaluate the same dishes in hypothetical interferometers that employ the station layouts of existing observatories (WSRT, EVLA, LOFAR), which provides some insight into how the effects under study scale with the number of stations.
+
+The scope of this study is deliberately restricted to continuum imaging performance in the L-band. Our simulations pipeline uses full spectral information, together with the Jones formalism of the radio interferometer measurement equation (RIME),thus dealing with frequency and polarization as a matter of course. We therefore plan to conduct similar studies of polarimetric and spectroscopic performance, and document them in one or more follow-up papers.
+
+\section{Simulations overview}
+
+% In very broad terms, our methodology comes down to generating a set of simulated science skies and instrumental error patterns. These are used to generate simulated ``corrupted'' visibilities using the mathematical framework of the radio interferometry measurement equation \citep[RIME; see][]{ME1,RRIME1}. The corrupted visibilities are then fed through a standard calibration pipeline, and the resulting images compared to the known science skies that we started with. From the comparison we derive the various FoMs.
+
+\subsection{Model skies}
+
+We have used two sources for our simulated skies: NVSS and the SKADS Simulated Skies (S$^3$). The NRAO VLA Sky Survey \citep[NVSS:][]{NVSS} provides a 1.4 GHz source catalog covering the entire sky north of $-40\degr$ declination, and is complete from about 2.5 mJy up. We used the online SAO CATS interface \citep{SAO-CATS} to extract subsets of the NVSS. Our simulated instrument is meant to observe the Southern sky, for which no equivalent survey exists. However, for the purposes of our simulations we only need a statistically realistic sky rather than the actual true sky. We therefore adopted a strategy where extracts from the NVSS were shifted (via spherical coordinate transforms) south to provide model skies down to the 2.5 mJy level. As the nominal resolution of the NVSS is much lower than that of MeerKAT, so there was little point in using the NVSS source extent information. We therefore treated all NVSS sources as point sources.
+
+For deeper models, we extracted samplings from the S$^3$-SEX simulation \citep{S3-SEX}. This provides statistically realistic source distributions all the way down to nJy flux levels -- well below what is required for our purposes.
+
+\subsection{Simulated PB patterns}
+
+Isak, this is your section. Need to give an overview of the EM simulations, etc. Also need to explain what the three different OG variants are.
+
+\subsection{Interferometric simulations}
+
+The model skies are 
+
+These are used to generate simulated ``corrupted'' visibilities using the mathematical framework of the radio interferometry measurement equation \citep[RIME; see][]{ME1,RRIME1}. The corrupted visibilities are then fed through a standard calibration pipeline, and the resulting images compared to the known science skies that we started with. From the comparison we derive the various FoMs.
+
+
+
+\subsection{Calibration}
+
+Fundamental difficulty: calibration, etc.
+
+\section{Sidelobe confusion}
+
+MeerKAT's classical confusion limit in L-band has been estimated at .1$\mu\mbox{Jy}$ (cite). This is the fundamental sensitivity limit set by the resolution of the telescope, i.e. the threshold below which faint sources get so crowded with respect to the synthesized beam that deconvolution is no longer posible. Thermal noise can be driven down to the confusion limit after about 100 days of integration, and two of the large survey projects (cite) expect to obtain such deep pointings. 
+
+Reaching the confusion limit will require a substantial effort in calibration and deconvolution of the brighter sources. Here we consider whether
+
+
+
+
+\section{DDEs and Calibration Errors}
+
+Non-identical and unstable beamshapes have long been known to cause subtle calibration artefacts, while distant sources coming in via PB sidelobes result in additional unwanted signal across the FoV. 
+
+Traditional self-calibration and imaging techniques, which we'll refer to as {\em second-generation calibration} (2GC) following \citet{meqtrees}, implicitly assume that an interferometer observes some {\em apparent sky}, by which we refer to the intrinsic sky brightness distribution modulated by the antenna power beam as a function of direction. If the apparent sky is identical at every station, and time-invariable over the course of the observation, then an interferometer can be thought of as measuring the Fourier transform of that apparent sky (modulo a pair of per-station direction-independent complex gains, which are addressed by selfcal). Deviations from these assumption produce {\em direction-dependent effects} (DDEs), which cannot be dealt with using 2GC alone, and can thus limit imaging, spectroscopic and polarimetric performance \citep[see][for an overview]{RRIME2}. 
+
+Traditional steerable dish arrays suffer from three types of beam-related DDEs:
+
+\begin{itemize}
+  \item In alt-az mounts, the sky rotates with respect to the dish (or, equivalently, the beam pattern rotates over the sky), producing time-variable gain variations towards off-axis sources. The more expensive equatorial (WSRT) or three-axis mounts (ASKAP) avoid this problem, but such solutions become prohibitively expensive for larger instruments. Sky rotation is a major limiting factor in wide-field VLA/EVLA imaging.
+
+  \item \emph{Pointing errors} produce per-station, sometimes time-variable pointing offsets, which effectively shift the beam pattern on the sky. At WSRT, pointing errors are thought to be the dominant DDE at all except the lowest frequencies.
+
+  \item Deformations of the dish geometry due to gravity, wind load and thermal effects, which translate into deformed beam patterns. This has been observed at the ATA \citep{Harp:ATA:deformations}. 
+\end{itemize}
+
+DDE error mechanisms may be well-understood, but formal quantitative estimates of their effect on the resulting images are difficult to derive and can often be counter-intuitive. This makes it rather difficult to translate traditional engineering figures of merit (FoMs), such as sidelobe level, pointing accuracy, polarization purity, into interferometric FoMs relevant to the target science. Even conventional interferometric FoMs themselves can be misleading. In particular, imaging dynamic range (DR), often estimated as the ratio between the brightest source in the map and the faintest detectable feature, can be artificially inflated when a single very bright source is present, and says nothing about wide-field  performance, which is often limited by DDEs. To add to the uncertainty, algorithms for dealing with DDEs, such as AW-projection \citep{SB:imageplane} and differential gains \citep{RRIME3} are only starting to emerge, and their limitations are still poorly understood. The problem is rather urgent in the context of the SKA design process, where several competing dish designs need to have their interferometric performance characterized.
+
+Recent theoretical work by \citep{Wijnhnolds:imaging} and \citep{Carozzi:ixr} suggest better ``calibratability'' FoMs and more rigorous ways of deriving them. The object of the present work is to develop an alternative ``brute-force simulations'' methodology, which the available software tools are finally mature enough to support. The advantage of this approach is that even very subtle and complicated error mechanisms may be incorporated in the simulations in a reasonably straightforward manner, and translated into post-calibration ``science images'' that can then be directly evaluated against the scientific requirements. This has the not inconsiderable side benefit of providing future users of a telescope with simulated data to test their pipelines on.
+
+In this work we focus on the MeerKAT design, which is a conventional single-pixel feed (SPF) steerable-dish interferometer, with rather unconventional (for an interferometer array) offset Gregorian (OG) optics on an alt-az mount. In terms of beam patterns, OGs trade off symmetry for smoother (and lower) sidelobes -- how this translates into scientific performance is not obvious, and is the subject of the present study. 
+
+The other object of this paper is to establish and develop a rigorous methodology that can be applied to other instruments and other regimes. Examining every aspect of interferometric performance in sufficient depth is well beyond the scope of one paper. We have therefore decided to limit ourselves to the specific case of L-band continuum imaging. Extending this to other regimes (spectral line work, rotation measure synthesis), other frequencies and other instruments will be the subject of future papers, although we will  make a brief foray into the 14 GHz regime here.
+
+\section{Performance metrics}
+
+This is a rather important part of the paper, since we don't really have a clear set of performance metrics at present. The obvious and best-understood one is dynamic range, but even there the problem is that we're also trying to estimate the performance of future algorithms! But besides this, there's spectral line issues and polarimetric fidelity.
+
+\section{MeerKAT}
+
+We will simulate all four possible combinations of prime focus vs. offset Gregorian feed, and rotating vs. stationary sky. 
+
+For pointing errors: use a naive random sinusoid and/or Tony's ``physical'' pointing model. We can compare the results of the two and see if the elaborate model provides any significant difference.
+
+For thermal/gravitational deformation: the KAT folks have some data (but also Athol?) Ludwig will investigate. We may get away with a simple warping of the interpolated l/m coordinate to simulate this effect.
+
+\section{Other issues}
+
+A-projection should be able to correct for some effects, but as long as an implementation is not available, we cannot really test this. However, the paper should make clear that our methodology is fully compatible: as soon as A-projection works, it can be plugged into the framework. In the meantime, we can probably work around this with some clever differential simulations: i.e. infer what the result of A-projection is going to be.
+
+Different science cases will require different simulated skies, and different metrics. Tony/Ian/Brad can take the lead on this.
+
+Some self-evaluation of the simulations framework is required. For exmaple, how accurate is the beam interpolation (especially in frequency?). Ludwig will get a few finely-sampled MeerKAT beams at one narrow frequency band, and we can compare the results with these against the results with a coarser-sampled beam.
+
+\section{Conclusions}
+
+\bibliographystyle{aa}
+
+\bibliography{beamsims}
+
+
+\end{document}

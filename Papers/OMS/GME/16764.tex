@@ -28,6 +28,7 @@
 
 \newcommand{\DD}[1]{\,\mathrm{d}{#1}}
 
+%\newcommand{\EDIT}[1]{{\bf #1}}
 \newcommand{\EDIT}[1]{#1}
 
 
@@ -42,14 +43,14 @@
   P.O. Box 2, 7990AA Dwingeloo, The Netherlands \\
   \email{smirnov@astron.nl}}
 
-\date{}
+\date{Received 22 Feb 2011 / Accepted 1 Jun 2011}
 
 \titlerunning{Revisiting the RIME. IV. A generalized tensor formalism}
 \authorrunning{O.M.\ Smirnov}
 
 \abstract%
 %optional context
-{The radio interferometer measurement equation (RIME), especially in its $2\times2$ form, has provided a much-needed mathematical basis for describing classical radio interferometry, as shown in the previous three papers of this series. However, recent practical and theoretical developments, such as phased array feeds (PAFs), aperture arrays (AAs) and wide-field polarimetry, are exposing limitations of the formalism.
+{The radio interferometer measurement equation (RIME), especially in its $2\times2$ form, has provided a \EDIT{comprehensive matrix-based formalism for describing classical radio interferometry and polarimetry}, as shown in the previous three papers of this series. However, recent practical and theoretical developments, such as phased array feeds (PAFs), aperture arrays (AAs) and wide-field polarimetry, are exposing limitations of the formalism.
 }
 %aims
 {This paper aims to develop a more general formalism that can be used to both clearly define the limitations of the matrix RIME, and
@@ -73,7 +74,7 @@ interferometric - Techniques: polarimetric}
 
 \section*{Introduction}
 
-Since its formulation by \citet{ME1}, the radio interferometer measurement equation (RIME) has been enthusiastically accepted by the calibration and imaging algorithm development as the mathematical formalism of choice when describing new methods and techniques for processing radio interferometric data. In its $2\times2$ matrix version (also known as the \emph{Jones formalism\/}, or JF) developed by \citet{ME4}, it has achieved wonderful simplicity and economy of form. 
+Since its formulation by \citet{ME1}, the radio interferometer measurement equation (RIME) has been \EDIT{adopted} by the calibration and imaging algorithm development as the mathematical formalism of choice when describing new methods and techniques for processing radio interferometric data. In its $2\times2$ matrix version (also known as the \emph{Jones formalism\/}, or JF) developed by \citet{ME4}, it has achieved \EDIT{remarkable} simplicity and economy of form. 
 
 Recent developments, however, have begun to expose some limitations of the matrix RIME. In particular, phased array feeds (PAFs) and aperture arrays (AAs), while perfectly amenable to a JF on the systems level (in the sense that the response of a pair of
 PAF or AA compound beams can be described by a $2\times2$ Jones matrix), do not seem to fit the same formalism on the element level. In general, since a Jones matrix essentially maps two complex electromagnetic field (EMF) amplitudes onto two feed voltages, it cannot directly describe a system incorporating more than two receptors per station \citep[as in, e.g., the ``tripole'' design of][]{tripole-patent}. And on the flip side of the coin, \citet{Carozzi:ME3D} have shown that two complex EMF amplitudes are insufficient -- even when dealing with only two receptors -- to properly describe wide-field polarimetry, and  that a three-dimensional \emph{Wolf formalism} (WF) is required. Other ``awkward'' effects that don't seem to fit into the JF include mutual coupling of receptors. 
@@ -126,51 +127,47 @@ Substituting the exponent for the $K_pK_q^\herm$ term then gives us the Fourier 
 where all matrix terms\footnote{Note that the $\jones{E}{p}$ term in this equation also incorporates the $w$-term, $W_p=\Exp{-2\pi iw_{pq}n}/\sqrt{n}$,
 which allows us to treat the integration as a two-dimensional FT.} under the integration sign are functions of direction $l,m$.
 
-The first fundamental assumption of the RIME is linearity. (Fortunately, real-life propagation effects are linear either by nature or design.) The second assumption is that the signal is measured in a narrow enough frequency band to be essentially monochromatic, and at short enough timescales that $\jones{J}{p}$ is essentially constant; departures from these assumptions cause \emph{smearing} or \emph{decoherence}, which has already been reviewed in Paper~I \citep[][Sect.~5.2]{RRIME1}. These assumptions are obvious and well-understood. It is more interesting to consider \emph{why\/} the RIME can describe instrumental response by a $2\times2$ Jones matrix. Any such a matrix corresponds to a linear transform of two complex number into two complex numbers, so why two and not some other number? This actually rests on two further assumptions.
+The first fundamental assumption of the RIME is linearity\EDIT{\footnote{Real-life propagation effects are linear either by nature or design, with the exception of a few troublesome regimes, e.g. when using correlators with a low number of bits.}} The second assumption is that the signal is measured in a narrow enough frequency band to be essentially monochromatic, and at short enough timescales that $\jones{J}{p}$ is essentially constant; departures from these assumptions cause \emph{smearing} or \emph{decoherence}, which has already been reviewed in Paper~I \citep[][Sect.~5.2]{RRIME1}. These assumptions are obvious and well-understood. It is more interesting to consider \emph{why\/} the RIME can describe instrumental response by a $2\times2$ Jones matrix. Any such matrix corresponds to a linear transform of two complex number into two complex numbers, so why two and not some other number? This actually rests on some further assumptions.
 
-\subsection{Transversality and dual receptors}
+\subsection{Dual receptors}
 
-{\bf Transversality.} In general, an EMF is described by a complex 3-vector $\vec\varepsilon$. However, in radio astronomy, sources of radiation are sufficiently far away for the EMF arriving at each station to be considered a transverse plane wave. This can be fully described by only two complex numbers, $\vec e=(e_x,e_y)^T$, corresponding to the first two components of $\vec\varepsilon$ in a coordinate system where the third axis is along the direction of propagation.
-
-{\bf Dual receptors.} At the antenna feed, the EMF is converted into two complex voltages $\vec v=(v_a,v_b)^T$. Given a transverse plane wave, two linearly independent complex measurements are necessary and sufficient to fully sample the polarization state of the signal. 
+\EDIT{In general, an EMF is described by a complex 3-vector $\vec\varepsilon$. However, an EMF propagating as a transverse plane wave can be fully described by only two complex numbers, $\vec e=(e_x,e_y)^T$, corresponding to the first two components of $\vec\varepsilon$ in a coordinate system where the third axis is along the direction of propagation. At the antenna feed, the EMF is converted into two complex voltages $\vec v=(v_a,v_b)^T$. Given a transverse plane wave, two linearly independent complex measurements are necessary and sufficient to fully sample the polarization state of the signal. 
 
 In other words, a $2\times2$ RIME works because we build dual-receptor telescopes; we do the latter because two receptors are what's needed to fully measure the polarization state of a transverse plane wave. PAFs and AAs have more than two receptors, but once these have been electronically combined by a beamformer into a pair of compound beams, any such pair of beams can be considered as a virtual receptor pair for the purposes of the RIME.
 
-\citet{Carozzi:ME3D} have pointed out that in the wide-field case, the EMF arriving from off-axis sources is no longer parallel to the plane of the receptors, so we can no longer measure the polarization state with the same fidelity as for the on-axis case. In the extreme case of a source lying in the plane of the receptors, the loss of polarization information is irrecoverable. Consequently, proper wide-field polarimetry requires three receptors. With only two receptors, the loss-of-fidelity effect can be described by a Jones matrix of its own (which the authors designate as $\jones{T}{}^{(xy)}$), but a fully three-dimensional formalism is required to derive $\jones{T}{}^{(xy)}$ itself.
+\citet{Carozzi:ME3D} have pointed out that in the wide-field case, the EMF arriving from off-axis sources is no longer parallel to the plane of the receptors, so we can no longer measure the polarization state with the same fidelity as for the on-axis case. In the extreme case of a source lying in the plane of the receptors, the loss of polarization information is irrecoverable. Consequently, proper wide-field polarimetry requires three receptors. With only two receptors, the loss-of-fidelity effect can be described by a Jones matrix of its own (which the authors designate as $\jones{T}{}^{(xy)}$), but a fully three-dimensional formalism is required to derive $\jones{T}{}^{(xy)}$ itself.}
 
 \subsection{The closed system assumption}
 \label{sec:closed-sys-assumption}
 
-When going from the basic RIME of Eq.~(\ref{eq:rime-ps}) to Eq.~(\ref{eq:rime-onion}), we decompose the total Jones matrix into a chain of propagation effects \citep[see Paper I,][]{RRIME1}. The subtle, yet vital, assumption being made here is that  \emph{each station forms a closed system}. That is, we're assuming that the receptor voltage vector measured at each station, $\vec{v}_{p}$, is only dependent on the EMF vector ``seen'' at that station, $\vec e_{p}$. Since propagation from the source $\vec e$ to $\vec e_{p}$ can be described by a product of Jones matrices associated with station $p$ (or to be more precise, with the station's line of sight to the source), it then follows that the whole transformation from $\vec e$ to $\vec v_p$ can be represented by a per-station Jones chain.
+When going from the basic RIME of Eq.~(\ref{eq:rime-ps}) to Eq.~(\ref{eq:rime-onion}), we decompose the total Jones matrix into a chain of propagation effects associated with the signal path from source to station $p$. This is the traditional way of applying the RIME pioneered in the original paper \citep{ME1}, and continued in subsequent literature describing applications of the RIME \citep{JEN:note185,Rau:DDEs,CASA:UserRef,RRIME1}.
+
+Consider an application of Eq.~(\ref{eq:rime-onion}) to real life. Depending on the application, individual components of the Jones chains $\jones{J}{p,i}$ may be derived from {\em a priori} physical considerations and models (e.g. models of the ionosphere), and/or solved for in a closed-loop manner, such as during self-calibration. Crucially, Eq.~(\ref{eq:rime-onion}) postulates that the signal measured by interferometer $pq$ is fully described by the source brightness $\coh{B}{}$ and the set of matrices $\jones{J}{p,i}$ and $\jones{J}{q,j}$, and does not depend on any effect in the signal propagation path to any third antenna $r$. If, however, antenna $r$ is somehow electromagnetically coupled to $p$ and/or $q$, the measured voltages $\vec v_p$ and $\vec v_q$ will contain a contribution received via the signal path to $r$, and thus will have a non-trivial dependence on, e.g., $\jones{J}{r,1}$ that cannot be described by the $2\times2$ formalism alone.
+
+To be absolutely clear, the basic RIME of Eq.~(\ref{eq:rime-ps}) still holds as long as any such coupling is linear. In other words, there is always a single effective $\jones{J}{p}$ that ties the voltage $\vec v_p$ to the source EMF vector $\vec e$. In some applications, e.g. traditional selfcal, where we solve for this $\jones{J}{p}$ in a closed-loop manner, the distinction on whether $\jones{J}{p}$ depends on propagation path $p$ only, or whether other effects are mixed in, is entirely irrelevant. However, when constructing more complicated RIMEs (as is being done currently for simulation of new instruments, or for new calibration techniques), an implicit assumption is made that we may decompose $\jones{J}{p}$ into per-station Jones chains, as in Eq.~(\ref{eq:rime-onion}). This is tantamount to assuming that each station \emph{forms a closed system}.
 
 Consider the effect of electrical cross-talk, or mutual coupling in a densely-packed array. If cross-talk or coupling is restricted to
-the two receptors within a station, we call the station a \emph{closed system}. For a closed system, the Jones chain approach is perfectly valid. If, however, cross-talk occurs \emph{between receptors associated with different stations}, the receptor voltages $\vec{v}_{p}$ will
-not only depend on $\vec e_{p}$, but also on $\vec e_{q}$, $\vec e_{r}$, etc. This means that we can no longer decompose
-$\jones{J}{p}$ into terms associated only with station $p$, since cross-talk ``mixes in'' propagation effects
-associated with the other stations! (See Sect.~\ref{sec:matrix-image-plane} for a more thorough discussion of this point.)
+the two receptors within a station, such a station forms a closed system. For a closed system, the Jones chain approach is perfectly valid. If, however, cross-talk occurs \emph{between receptors associated with different stations}, the receptor voltages $\vec{v}_{p}$ will
+not only depend on $\jones{J}{p,i}$, but also on $\jones{J}{q,j}$, $\jones{J}{r,k}$, etc. (See Sect.~\ref{sec:matrix-image-plane} for a more thorough discussion of this point.) With the emergence of AA and PAF designs for new instruments, we can no longer safely assume that two receptors form a closed system; in fact, even traditional interferometers can suffer from troublesome cross-talk in certain situations \citep{ATCA-xtalk}.
 
-To be absolutely clear on this point, in a linear system, the basic RIME of Eq.~(\ref{eq:rime-ps}) always holds. As long as the system is
-linear, there always exists some $\jones{J}{p}$ matrix that ties the voltage $\vec v_p$ to the source EMF vector $\vec e$. However, we may only decompose $\jones{J}{p}$ into per-station Jones chains, as in Eq. (\ref{eq:rime-onion}), if we assume that each station forms a closed system, with no cross-talk or coupling to the other stations. With the emergence of AA and PAF designs for new instruments, we can no longer assume this\footnote{In fact, even existing instruments may have this problem, if cross-talk occurs in, or on the way to, the correlator, or between closely packed core stations. It remains to be seen
-whether this effect can be detected in existing observations.}.% 
-
-The closed system assumption has not been made explicit in the literature. This is perhaps due to the fact that the RIME is nominally formulated for a single interferometer $pq$. Consider, however, that for an interferometer array composed of $N$ stations, the ``full'' RIME is actually a set of $N(N-1)/2$ equations. By treating the equations independently, we're implicitly assuming that each equation corresponds to a closed system. The higher-order 
-formalisms derived below will make this issue clear.
+Some formulations of the RIME can incorporate coupling within each pair of stations $p$ and $q$ via an additional $4\times4$ matrix \citep[see e.g.][]{JEN:note185} used to describe multiplicative interferometer-based effects. By definition, this approach cannot incorporate coupling with a third station $r$; any such coupling requires additional formulations that are extrinsic to the $2\times2$ RIME, such as the ACM formalism of Sect.~\ref{sec:matrix}, or the tensor formalism that is the main subject of this paper.
+ 
+The closed system assumption has not been made explicit in the literature. This is perhaps due to the fact that the RIME is nominally formulated for a single interferometer $pq$. Consider, however, that for an interferometer array composed of $N$ stations, the ``full'' RIME is actually a set of $N(N-1)/2$ equations. By treating the equations independently, we're implicitly assuming that each equation corresponds to a closed system. The higher-order formalisms derived below will make this issue clear.
 
 \subsection{The colocation assumption}
 
-A final seldom explicated assumption is that each pair of receptors is \emph{colocated}. This is important for two reasons. Firstly, it allows us to consider the geometric phase delay of both receptors to be the same, which makes the $K_p$ matrix scalar, and allows us to commute it around the Jones chain. $K_p$ and $K_q^\herm$ can then be commuted together to form the FT kernel, which is essential for deriving the full-sky variants of the RIME such as Eq.~(\ref{eq:rime-fullsky}). And secondly, although the basic RIME of Eq.~(\ref{eq:rime-ps}) may be formulated for any four arbitrarily-located receptors, when we proceed to decompose $\jones{J}{p}$ into per-station terms, we implicitly assume a single propagation path per each pair of receptors (same atmosphere, etc.), which implies colocation. In practice the second consideration may be negligible, but not so the first.
+A final seldom explicated assumption is that each pair of receptors is \emph{colocated}. \EDIT{While not required for the general RIME formulation of Eq.~(\ref{eq:rime-ps}) per se, colocation becomes important (and is quietly assumed) in specific applications for two reasons.} Firstly, it allows us to consider the geometric phase delay of both receptors to be the same, which makes the $K_p$ matrix scalar, and allows us to commute it around the Jones chain. $K_p$ and $K_q^\herm$ can then be commuted together to form the FT kernel, which is essential for deriving the full-sky variants of the RIME such as Eq.~(\ref{eq:rime-fullsky}). And secondly, although the basic RIME of Eq.~(\ref{eq:rime-ps}) may be formulated for any four arbitrarily-located receptors, when we proceed to decompose $\jones{J}{p}$ into per-station terms, we implicitly assume a single propagation path per each pair of receptors (same atmosphere, etc.), which implies colocation. In practice the second consideration may be negligible, but not so the first.
 
-Classical single-feed dish designs have colocated receptors as a matter of course, but a PAF system such as APERTIF \citep{Apertif} or ASKAP \citep{ASKAP} typically has horizontally and vertically oriented dipoles at slightly different positions. The effective phase centres of the beamformed signals may be different yet again. The $\jones{K}{p}$ matrix then becomes diagonal but not scalar, and can no longer be commuted around the RIME. 
+Classical single-feed dish designs have colocated receptors as a matter of course, but a PAF system such as APERTIF \citep{Apertif} or ASKAP \citep{ASKAP} typically has horizontally and vertically oriented dipoles at slightly different positions. The effective phase centres of the beamformed signals may be different yet again. The $\jones{K}{p}$ matrix then becomes diagonal but not scalar, and can no longer be commuted around the RIME. In principle, we can shoehorn the case of non-colocated receptors into the RIME formulations by picking a reference point (e.g., the  mid-point between the two receptors), and decomposing $\jones{K}{p}$ into a product of a scalar phase delay corresponding to the reference point, and a non-scalar differential delay term: $\jones{K}{p}=K_p^{(0)}\jones{K}{p}^{(\delta)}.$ The scalar term $K_p^{(0)}$ can then be commuted around the RIME to yield the FT kernel of Eq.~(\ref{eq:rime-fullsky}), while $\jones{K}{p}^{(\delta)}$ becomes a DIE that can be absorbed into the overall phase calibration (or cause instrumental $V$ or $U$ polarization if it isn't). The exact form of $\jones{K}{p}^{(\delta)}$ and $K_p^{(0)}$ can be derived from geometric considerations (or analysis of instrument optics), but such a derivation is extrinsic to the RIME per se. This situation is similar to that of the $\jones{T}{}^{(xy)}$ term derived by \citet{Carozzi:ME3D}, and is another reason behind the multidimensional formalism proposed later on in this paper.
 
 Note that conventional FT-based imaging algorithms also assume colocated receptors when converting visibilities to Stokes parameters. For example, the conventional formulae for $I$ and $U$,
 
 \[
-I=\frac{1}{2}(v_{xx}+v_{yy}),\;\;U=\frac{1}{2}(v_{xy}+v_{yx}),
+I=\frac{1}{2}(V_{xx}+V_{yy}),\;\;U=\frac{1}{2}(V_{xy}+V_{yx}),
 \] 
 
 implicitly assume that the constituent visibilities are measured on the same baseline. Some leeway is acceptable here: since the measured visibilities are additionally convolved by the aperture illumination function (AIF), the formulae above still apply, as long as the degree of non-colocation is negligible compared to the effective station size. Note also that some of the novel approaches of expectation-maximization imaging \citep{leshem-em,levanda-leshem-em} formulate the imaging problem in such a way that the colocation requirement can probably be done away with altogether.
 
-In principle, we can shoehorn the case of non-colocated receptors into the RIME formulations by picking a reference point (e.g., the  mid-point between the two receptors), and decomposing $\jones{K}{p}$ into a product of a scalar phase delay corresponding to the reference point, and a non-scalar differential delay term: $\jones{K}{p}=K_p^{(0)}\jones{K}{p}^{(\delta)}.$ The scalar term $K_p^{(0)}$ can then be commuted around the RIME to yield the FT kernel of Eq.~(\ref{eq:rime-fullsky}), while $\jones{K}{p}^{(\delta)}$ becomes a DIE that can be absorbed into the overall phase calibration (or cause instrumental $V$ or $U$ polarization if it isn't). The exact form of $\jones{K}{p}^{(\delta)}$ and $K_p^{(0)}$ can be derived from geometric considerations (or analysis of instrument optics), but such a derivation is extrinsic to the RIME per se. This situation is similar to that of the $\jones{T}{}^{(xy)}$ term derived by \citet{Carozzi:ME3D}, and is another reason behind the multidimensional formalism proposed later on in this paper.
 
 \section{The array correlation matrix formalism}
 \label{sec:matrix}
@@ -311,11 +308,15 @@ The ACM formalism of the previous section turns out to be only marginally useful
 
 \subsection{Tensors and the Einstein notation: a primer}
 
-Tensors are a large and sprawling subject, and one not particularly familiar to radio astronomers at large. Appendix~\ref{sec:tensor-theory} provides a brief but formal description of the concepts required for the formulations of this paper. This is intended for the in-depth reader (and to provide rigorous mathematical underpinnings for what follows). For an executive overview, only three basic concepts are sufficient:
+Tensors are a large and sprawling subject, and one not particularly familiar to radio astronomers at large. Appendix~\ref{sec:tensor-theory} provides a brief but formal description of the concepts required for the formulations of this paper. This is intended for the in-depth reader (and to provide rigorous mathematical underpinnings for what follows). For an executive overview, only a few basic concepts are sufficient:
   
 \noindent{\bf Tensors} are a generalization of vectors and matrices. An \emph{$(n,m)$-type} tensor is given by an $(n+m)$-dimensional array of numbers, and written using $n$ upper and $m$ lower indices: e.g. $\tens{T}_{j_{1}j_{2}...j_{m}}^{i_{1}i_{2}...i_{n}}$. Superscripts are indices just like subscripts, and not exponentiation\footnote{This is the way they will be used in this paper from this point on, with the exception of small integer powers (e.g. $l^2$), where exponentiation is obviously implied.}! For example, a vector is typically a (1,0)-type tensor, denoted as $x^i$. A matrix is a (1,1)-type tensor, denoted as $\tens{A}^i_j$.
 
-\noindent{\bf Einstein notation} (or Einstein summation) is a convention whereby repeated upper and lower indices in a product of tensors are implicitly summed over. For example,
+\EDIT{\noindent{\bf Upper and lower} tensor indices are quite distinct, in that they determine how the components of a tensor behave under coordinate transforms. Upper indices are called {\em contravariant}, since components with an upper index (such as the components of a vector $x_i$) transform reciprocally to the coordinate frames. As a simple example, consider a ``new'' coordinate frame whose basis vectors are scaled up by a factor of $a$ with respect to those of the ``old'' frame. In the ``new'' frame, the same vector is then described by coordinate components that are scaled by a factor of $a^{-1}$ w.r.t. the ``old'' components. By contrast, for a {\em linear form} $f_j$ (that is, a linear function mapping vectors to scalars), the ``new'' components are scaled by a factor of $a$. Lower indices are thus said to be {\em covariant}. 
+
+In physical terms, upper indices tend to refer to vectors, and lower indices to linear functions on vectors. An $n\times n$ matrix can be thought of as a ``vector'' of $n$ linear functions on vectors, and thus has one upper and one lower index in tensor notation, and transforms both co- and contravariantly. This is manifest in the familiar $\mathbf{T}^{-1}\mathbf{AT}$ (or $\mathbf{T}\mathbf{A}\mathbf{T}^{-1}$, depending which way the coordinate transform matrix $\mathbf{T}$ is defined) formula for matrix coordinate transforms. For higher-ranked tensors, the general rules for coordinate transforms are covered in Sect.~\ref{sec:coordinatre-xforms}.}
+ 
+\noindent{\bf Einstein notation} (or Einstein summation) is a convention whereby repeated upper and lower indices in a product of tensors are implicitly summed over. For example, 
 
 \[
   y^i = \tens{A}^i_j x^j = \sum_{j=1}^{N} \tens{A}^i_j x^j
@@ -569,9 +570,8 @@ to the mechanism, which is considerably more complex, and outside the scope of t
 
 The underlying assumption here is that each receptor's actual voltage can be derived from the nominal voltages alone. To see why this may
 be simplistic, consider a hypothetical array of of $n$ identical dipoles in the same orientation, parallel to the
-$x$ axis. The dipoles are then only sensitive to the $x$ component of the EMF, which, in terms of the PB tensor $\tens{E}$, means that
-$\tens{E}_{2}^{p}\equiv0$ for all $p$. Consequently, the actual voltages $v^{p}$ given by this model can only depend on the $x$ component of the EMF.
-If mutual coupling causes any dipole to be sensitive to the $y$ component, we can't represent this in a cross-talk-only model.
+$x$ axis. Nominally, the dipoles are then only sensitive to the $x$ component of the EMF, which, in terms of the PB tensor $\tens{E}$, means that
+$\tens{E}_{2}^{p}\equiv0$ for all $p$. Consequently, the actual voltages $v^{p}$ given by this model will only depend on the $x$ component of the EMF. \EDIT{If mutual coupling causes any dipole to be sensitive to the $y$ component of the EMF seen at another dipole, this results in a contamination of the measured signal that cannot be described by this voltage-only cross-talk model.}
 
 A more general approach is to describe the voltage response of each receptor as a function of the EMF at all the receptor locations, rather than the
 nominal receptor voltages. This requires a (1,2)-type tensor:
@@ -755,30 +755,30 @@ meaning of each element of $\tens{X}_{\tau}^{\sigma}$ is, obviously, the apparen
 The cross-talk term $\tens{Q}$ {}``scrambles up'' the apparent coherencies among all receptors. Note that this similar to 
 the coherency matrix $\tens{X}$ (or $\coh{X}{pq}$) used in the classical formulation of the matrix RIME \citep[Sect.~1.7]{ME1,RRIME1}.
 
-\subsubsection{Integration as an Einstein summation}
-
-A particularly elegant extension of Einstein summation convention involves integration.
-Consider that an integral is basically a generalization of a sum. If we have some function $f(x)$, we can write it as a ``tensor''
-$f_{,x}$, where $x$ is a ``continuous'' rather than a discrete index (which is indicated by putting it after a comma). 
-The infinitesimal $\mathrm{d}x$ can be written as the ``tensor'' $\mathrm{d}^x$ (since, in fact, it transforms contravariantly). 
-Integration can then be expressed in Einstein notation as:
-
-\[
-  \int\limits_x f(x) \DD{x} = f_{,x} \mathrm{d}^x.
-\]
-
-So far this is purely a notational convenience, but do observe that it follows the rules of traditional Einstein summation. As long
-as we keep track of which indices are discrete tensor indices, and which are ``continuous'', we can freely mix the two notations.
-For example, we can rewrite Eq.~(\ref{eq:gme-fullsky-int}) as
-
-\[
-\tens{V}_{q}^{p}=\tens{Q}_{\sigma}^{p}
-\tens{E}_{\beta,lm}^{\sigma}\tens{K}^{\sigma}_{,lm}\tens{Z}_{\alpha,lm}^{\sigma\beta}\tens{B}_{\delta,lm}^{\alpha}
-\bar\tens{Z}_{\tau\gamma,lm}^{\delta}\bar\tens{K}_{\tau,lm}\bar\tens{E}_{\tau,lm}^{\gamma} \tens{N}_{,lm} \mathrm{d}^l \mathrm{d}^m
-\bar\tens{Q}_{q}^{\tau},
-\]
-
-(where $\tens{N}_{,lm}=1/n$), and manipulate it according to all the formal rules of Einstein notation.
+% \subsubsection{Integration as an Einstein summation}
+% 
+% A particularly elegant extension of Einstein summation convention involves integration.
+% Consider that an integral is basically a generalization of a sum. If we have some function $f(x)$, we can write it as a ``tensor''
+% $f_{,x}$, where $x$ is a ``continuous'' rather than a discrete index (which is indicated by putting it after a comma). 
+% The infinitesimal $\mathrm{d}x$ can be written as the ``tensor'' $\mathrm{d}^x$ (since, in fact, it transforms contravariantly). 
+% Integration can then be expressed in Einstein notation as:
+% 
+% \[
+%   \int\limits_x f(x) \DD{x} = f_{,x} \mathrm{d}^x.
+% \]
+% 
+% So far this is purely a notational convenience, but do observe that it follows the rules of traditional Einstein summation. As long
+% as we keep track of which indices are discrete tensor indices, and which are ``continuous'', we can freely mix the two notations.
+% For example, we can rewrite Eq.~(\ref{eq:gme-fullsky-int}) as
+% 
+% \[
+% \tens{V}_{q}^{p}=\tens{Q}_{\sigma}^{p}
+% \tens{E}_{\beta,lm}^{\sigma}\tens{K}^{\sigma}_{,lm}\tens{Z}_{\alpha,lm}^{\sigma\beta}\tens{B}_{\delta,lm}^{\alpha}
+% \bar\tens{Z}_{\tau\gamma,lm}^{\delta}\bar\tens{K}_{\tau,lm}\bar\tens{E}_{\tau,lm}^{\gamma} \tens{N}_{,lm} \mathrm{d}^l \mathrm{d}^m
+% \bar\tens{Q}_{q}^{\tau},
+% \]
+% 
+% (where $\tens{N}_{,lm}=1/n$), and manipulate it according to all the formal rules of Einstein notation.
 
 \subsection{Coordinate transforms, or whither tensors?}
 
@@ -930,26 +930,44 @@ It is also possible that alternative partitionings may prove to be more or less 
 
 \section{Conclusions}
 
-The $2\times2$ matrix RIME, having proven itself as a very capable tool for describing classical radio interferometry, is showing its limitations when confronted with PAFs, AAs, and wide-field polarimetry. This is due to a number of implicit assumptions underlying the formalism (transverse plane waves, dual colocated receptors, closed systems) that have been explicated in this paper. The RIME may be rewritten in an array correlation matrix form that makes these assumptions clearer, but this struggles to combine image-plane effects and mutual coupling in the same equation.
+The $2\times2$ matrix RIME, having proven itself as a very capable tool for describing classical radio interferometry, is showing its limitations when confronted with PAFs, AAs, and wide-field polarimetry. This is due to a number of implicit assumptions underlying the formalism (plane-polarized, dual, colocated receptors, closed systems) that have been explicated in this paper. The RIME may be rewritten in an array correlation matrix form that makes these assumptions clearer, but this struggles to combine image-plane effects and mutual coupling in the same equation.
 
-A more general formalism based on tensors and Einstein notation is proposed. This reduces to the $2\times2$ (and $4\times4$) forms of the RIME under the explicated assumptions. The tensor formalism can be used to step outside the bounds of these assumptions, and can accommodate e.g.
-beamforming, mutual coupling, and the three-component Wolf formalism into one straightforward equation. 
+A more general formalism based on tensors and Einstein notation is proposed. This reduces to the $2\times2$ (and $4\times4$) forms of the RIME under the explicated assumptions. The tensor formalism can be used to step outside the bounds of these assumptions, and can accommodate regimes not readily described in $2\times2$ matrix form. Some examples of the latter are:
+
+\begin{description}
+
+\item[{\bf Coupling}] between closely-packed stations cannot be described in the basic $2\times2$ form (where a Jones chain corresponding to each signal path is used) without additional extrinsic complexity, such as combining the $2\times2$ equations into some kind of larger equation. The tensor formalism describes this regime with a single equation.
+
+\item[{\bf Beamforming}] can only be accommodated in the $2\times2$ form by using separate equations to derive the effective Jones matrix of a beamformer. The tensor formalism combines beamforming and correlation into the same equation.
+
+\item[{\bf The Wolf formalism}] proposed by \citet{Carozzi:ME3D} uses $3\times3$ matrices to describe polarimetry in the wide-field regime. Again, this can only be mapped to the $2\times2$ form by using external equations to derive special Jones matrices. A tensor formalism naturally incorporates the 3-component description, and can be used to combine it with the regimes above.
+
+\end{description}
 
 In practice, tensor equations may be implemented via alternative formulations that are mathematically equivalent, but have significantly different 
 computing costs (the $2\times2$ vs. $4\times4$ RIMEs being but one example). Computing costs may be optimized by a repartitioning of the calculations, and some formal methods for analysing this have been proposed in this paper.
 
-I do not propose to completely supplant the $2\times2$ RIME. Where applicable (that is, for the majority of current radio interferometric observations), the latter ought to remain the formalism of choice, both for its conceptual simplicity, and its computational efficiency. In these cases, the tensor formalism provides both a rigorous theoretical tool for analysing the limits of the Jones formalism's applicability, and a practical tool for deriving certain specialized Jones matrices.
+I do not propose to completely supplant the $2\times2$ RIME. Where applicable (that is, for the majority of current radio interferometric observations), the latter ought to remain the formalism of choice, both for its conceptual simplicity, and its computational efficiency. Even in these cases, the tensor formalism can be of value as both a rigorous theoretical tool for analysing the limits of the Jones formalism's applicability, and a practical tool for deriving certain specialized Jones matrices. 
+
+\begin{acknowledgements}
+
+This effort/activity is supported by the European Community Framework Programme 7, Advanced Radio Astronomy in Europe, grant agreement no.: 227290.
+
+\end{acknowledgements}
 
 \appendix
 
 \section{Elements of tensor algebra}
 \label{sec:tensor-theory}
 
-This appendix gives a brief description of some elements of tensor algebra relevant to the present paper. As a preliminary remark, one should keep in mind that there are, broadly, two complementary ways of thinking about linear and tensor algebra. The \emph{coordinate} approach defines vectors, matrices, tensors, etc., in terms of their coordinate components in a particular coordinate system, and postulates somewhat mechanistic rules for transforming these components under change of coordinate frames. The \emph{intrinsic} (or abstract) approach defines these objects as abstract entities (namely, various kinds of linear functions) that exist independently of coordinate systems, and derives rules for coordinate manipulation as a result. For example, in the coordinate approach, a matrix is defined as an $n\times m$ array of numbers. In the intrinsic approach, it is a linear function mapping rank-$m$ vectors to rank-$n$ vectors.
+This appendix gives a primer on elements of tensor theory relevant to the present paper. Most of this is just a summary of existing mathematical theory; the only new results are presented in Sect.~\ref{sec:mapping-rime-tensors}, where I formally map the RIME into tensor algebra. More details on tensor theory can be found in any number of textbooks, for example \citet{synge-schild-tensor} and \citet{simmonds-tensor-analysis}. 
+
+As a preliminary remark, one should keep in mind that there are, broadly, two complementary ways of thinking about linear and tensor algebra. The \emph{coordinate} approach defines vectors, matrices, tensors, etc., in terms of their coordinate components in a particular coordinate system, and postulates somewhat mechanistic rules for transforming these components under change of coordinate frames. The \emph{intrinsic} (or abstract) approach defines these objects as abstract entities (namely, various kinds of linear functions) that exist independently of coordinate systems, and derives rules for coordinate manipulation as a result. For example, in the coordinate approach, a matrix is defined as an $n\times m$ array of numbers. In the intrinsic approach, it is a linear function mapping rank-$m$ vectors to rank-$n$ vectors.
 
 Historically, the coordinate approach was developed first, and favours applications of the theory (which is why it is prevalent in e.g. physics and engineering). The intrinsic approach is favoured by theoretical mathematicians, since it has proven to be a more powerful way of extending the theory. When applying the theory to a new field (e.g. to the RIME), the mechanistic rules may be a necessity (especially when it comes to software implementations), but it is critically important to maintain conceptual links to the intrinsic approach, since that is the only way to verify that the application remains mathematically sound. This appendix therefore tries to explain things in terms of both approaches.
 
 \subsection{Einstein notation}
+\label{sec:einstein-notation}
 
 Einstein notation uses upper and lower indices to denote components of multidimensional entities. For example, $x^i$ refers to the $i$-th component  of the vector $\vec x$ (rather than to $x$ to the power of $i$!), and $y_i$ refers to the $i$-th component of the \emph{covector} (see below) $\vec y$. Under the closely-related \emph{abstract index notation}, $x^i$ may be used to refer to $\vec x$ itself, with the index $i$ only serving to indicate that $\vec x$ is a one-dimensional object. Whether $x^i$ refers to the whole vector or to its $i$-th component is usually obvious from context (i.e. from whether a specific value for $i$ has been implied or not).
 
@@ -987,6 +1005,7 @@ A \emph{covector} (or a {\em dual vector\/}) $\vec f$ represents a {\em linear f
 and the operation $f(\vec x)$ is then just the matrix product of a row vector and a column vector, $\vec f\vec x$. Note that this definition is completely symmetric: we could as well have postulated a covector space, and defined the vector as a linear function mapping covectors onto scalars.
 
 \subsubsection{Coordinate transforms}
+\label{sec:coordinatre-xforms}
 
 In the coordinate approach, both vectors and covectors are represented by $N$ scalars: the crucial difference is in how these numbers change under coordinate transforms. Consider two sets of basis vectors, $E=\{\vec e_i\}$ and $E'=\{\vec e'_i\}$. Each vector of the basis $E'$ can be represented by a linear combination of the basis $E$, as $\vec e'_j = a^i_j \vec e_i$. The components $a^i_j$ form the {\em transformation matrix} $\mathbf{A}$, which is an $N\times N$, invertible matrix. The change of basis can also be written as a matrix-vector product, by laying out the symbols for the basis vectors in a column, and formally following the rules of matrix multiplication:
 
@@ -1136,6 +1155,7 @@ In the case of a natural metric $g_{ij} = \delta_{ij}$ (and only in this case), 
 For conciseness, this paper uses the notation $\bar x_i$ to denote tensor conjugation, i.e. $\bar x_i$ is the conjugate covector of the vector $x^i$.
 
 \subsection{Tensor operations and the Einstein notation}
+\label{sec:tensor-ops}
 
 Einstein notation allows for some wonderfully compact representations of linear operations on tensors, which result in other tensors. Some of these were already illustrated above:
 
@@ -1199,6 +1219,7 @@ Summation indices can be ``collapsed'' by isolating intermediate products that c
 For example, in the sum $\tens{A}_{\alpha}^{i}\tens{B}_{\beta}^{\alpha}\tens{C}_{j}^{\beta}$, the index $\beta$ can be collapsed by defining the intermediate product $\tens{E}_{j}^{\alpha}=\tens{B}_{\beta}^{\alpha}\tens{C}_{j}^{\beta}$. The sum then becomes simply a matrix product, $\tens{A}_{\alpha}^{i}\tens{E}_{j}^{\alpha}.$ It is important that the isolated sub-product contain \emph{all} occurrences of the index. For example, it would be formally incorrect to isolate the sub-product $\tens{F}_{j}^{\alpha}=\tens{B}_{\beta}^{\alpha}\tens{C}_{j}^{\beta}$, since the sum then become $\tens{A}_{\alpha}^{i}\tens{F}_{j}^{\alpha}\tens{D}^{\beta}$. The ``loose'' $\beta$ index on $\tens{D}$ then changes the type of the result.
 
 \subsection{Mapping the RIME onto tensors}
+\label{sec:mapping-rime-tensors}
 
 This section contains some in-depth mathematical details (that have been glossed over in the main paper) pertaining to how the concepts of the RIME map onto formal definitions of tensor theory.
 
@@ -1311,9 +1332,8 @@ Furthermore, it is easy to see that a 2-restricted tensor remains 2-restricted u
 
 To summarize, we have formally established that MDTs with a core vector space of $\mathbb{C}^M$ and a second\footnote{Additional dimensionalities may be ``mixed in'' in the same way.} dimensionality of $N$ can be isomorphically mapped onto the set of $M$-restricted tensors over $\mathbb{C}^{M+N}$. Under coordinate transforms of the core vector space, such tensors behave co- and contravariantly with respect to the $M$-indices, and invariantly with respect to the $N$-indices. We are therefore entitled to treat MDTs as proper tensors for the purposes of this paper.
 
-
 \bibliographystyle{aa}
 
-\bibliography{rrime4}
+\bibliography{16764}
 
 \end{document}
