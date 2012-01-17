@@ -29,7 +29,7 @@
 
 \begin{document}
 
-\title{BeamSims: simulating the impact of primary beams on radio interferometric performance. I. MeerKAT L-band continuum imaging and dynamic range}
+\title{BeamSims: exploring the impact of primary beams\\on radio interferometric imaging and calibration.\\I. MeerKAT L-band continuum imaging and dynamic range}
 
 \author{O.M. Smirnov\inst{\ref{inst:astron}} \and B.\ Frank\inst{\ref{inst:uct-astro}} \and I.\ Theron\inst{\ref{inst:emss}} \and I.\ Heywood\inst{\ref{inst:oap}} \and R.J.\ Baxter\inst{\ref{inst:uct-cs}}}
 
@@ -86,30 +86,36 @@ Beamshapes play a crucial role in the performance of radio interferometers. In p
 {\bf 4. Sidelobe confusion}, or sidelobe ``noise'' is caused by the fact that both the PSF of a radio interferometer and the primary beams of its constituent stations never quite go to zero, even at large distances from 
 the phase center and/or the pointing center. As a result, each pixel of the map in principle contains a noise-like contribution from {\bf all} sources in the sky.
 
-The first two limits can be straightforwardly derived from a given telescope's design and engineering specifications. The other two limits are far less trivial to establish, and are particularly influenced by beamshapes. While the mechanisms of this influence are fairly well-understood from first principles, formal quantitative estimates of their effect on interferometric images are hard to derive analytically, and can often be counter-intuitive. This makes it rather difficult to translate traditional engineering figures of merit (FoMs), such as sidelobe level, pointing accuracy, polarization purity, etc. into interferometric FoMs that are relevant to the target science. Even conventional interferometric FoMs themselves can be misleading. In particular, imaging dynamic range (DR), often estimated as the ratio between the brightest source in the map and the faintest detectable feature, can be artificially inflated when a single very bright source is present, and says nothing about wide-field  performance, which is often limited by DDEs. To add to the uncertainty, algorithms for dealing with DDEs, such as AW-projection \citep{Aproj} and differential gains \citep{RRIME3} are only starting to emerge, and their limitations are still poorly understood. The problem is rather urgent in the context of the SKA design process, where several competing dish designs need to have their interferometric performance characterized.
+The first two limits can be straightforwardly derived from a given telescope's design and engineering specifications. The other two limits are far less trivial to establish, and are particularly influenced by beamshapes. While the mechanisms of this influence are fairly well-understood from first principles, formal quantitative estimates of their effect on interferometric images are hard to derive analytically, and can often be counter-intuitive. This makes it rather difficult to translate traditional engineering figures of merit (FoMs), such as sidelobe level, pointing accuracy, polarization purity, etc. into interferometric FoMs that are relevant to the target science. Even conventional interferometric FoMs themselves can be misleading. In particular, imaging dynamic range (DR), often estimated as the ratio between the brightest source in the map and the faintest detectable feature, can be artificially inflated when a single very bright source is present, and says nothing about wide-field  performance, which is often limited by DDEs. To add to the uncertainty, algorithms for dealing with DDEs, such as AW-projection \citep{SB:imageplane} and differential gains \citep{RRIME3} are only starting to emerge, and their limitations are still poorly understood. The problem is rather urgent in the context of the SKA design process, where several competing dish designs need to have their interferometric performance characterized.
 
 On the other hand, recent advances in software and computing power have made it possible to run brute force interferometric simulations on previously unprecedented scales. This makes it possible to construct a rather complete simulation of a given instrument and a target sky, play with different aspects of the design, and thus derive performance limits in an almost ``experimental'' manner. The present work presents one such simulation methodology. While the methodology is completely general, we will develop it for one specific use case, and will focus on the issues of sidelobe confusion and calibration noise in four possible MeerKAT dish configurations:
 
 \begin{itemize}
-  \item Offset Gregorian (OG) on a two-axis alt-az mount;
+  \item Offset Gregorian (OG) optics on a two-axis alt-az mount;
   \item OG on a three-axis or equatorial mount;
-  \item Prime focus (PF) feed with four support legs, on a two-axis alt-az mount;
+  \item Prime focus (PF) feed with four support struts, on a two-axis alt-az mount;
   \item PF on a three-axis or equatorial mount.
 \end{itemize}
 
 We shall also consider some variations on the optics (shaped dishes, different illumination patterns, randomized far sidelobes), and evaluate the same dishes in hypothetical interferometers that employ the station layouts of existing observatories (WSRT, EVLA, LOFAR), which provides some insight into how the effects under study scale with the number of stations.
 
-The scope of this study is deliberately restricted to continuum imaging performance in the L-band. Our simulations pipeline uses full spectral information, together with the Jones formalism of the radio interferometer measurement equation (RIME),thus dealing with frequency and polarization as a matter of course. We therefore plan to conduct similar studies of polarimetric and spectroscopic performance, and document them in one or more follow-up papers.
+The scope of this study is deliberately restricted to continuum imaging performance in the L-band. Our simulations pipeline uses full spectral information, together with the Jones formalism of the radio interferometer measurement equation (RIME), thus dealing with frequency and polarization as a matter of course. We therefore plan to conduct similar studies of polarimetric and spectroscopic performance, and document them in one or more follow-up papers.
 
 \section{Simulations overview}
+
+In broad terms, BeamSims is a ``brute force'' interferometer simulation. Our three primary inputs are a local sky model (LSM) corresponding to the science sky (this is essentially just a large source catalog), a set of primary beam patterns derived from EM simulations (see below), and an ``empty'' Measurement Set (MS) describing the observation (i.e. station layout, phase centre, timeslots, frequency channels, etc.) These are fed into a set of MeqTrees \citep{meqtrees} scripts that simulate ``corrupted'' visibilities using the mathematical framework of the radio interferometry measurement equation \citep[RIME; see][]{ME1,RRIME1}, and write them into the MS. 
+
+The corrupted visibilities are then fed through a standard calibration pipeline (also MeqTrees-based), and imaged using the {\tt lwimager} tool (or CASA). The resulting images are then analysed and their statistics used to derive the results presented here.
 
 % In very broad terms, our methodology comes down to generating a set of simulated science skies and instrumental error patterns. These are used to generate simulated ``corrupted'' visibilities using the mathematical framework of the radio interferometry measurement equation \citep[RIME; see][]{ME1,RRIME1}. The corrupted visibilities are then fed through a standard calibration pipeline, and the resulting images compared to the known science skies that we started with. From the comparison we derive the various FoMs.
 
 \subsection{Model skies}
 
-We have used two sources for our simulated skies: NVSS and the SKADS Simulated Skies (S$^3$). The NRAO VLA Sky Survey \citep[NVSS:][]{NVSS} provides a 1.4 GHz source catalog covering the entire sky north of $-40\degr$ declination, and is complete from about 2.5 mJy up. We used the online SAO CATS interface \citep{SAO-CATS} to extract subsets of the NVSS. Our simulated instrument is meant to observe the Southern sky, for which no equivalent survey exists. However, for the purposes of our simulations we only need a statistically realistic sky rather than the actual true sky. We therefore adopted a strategy where extracts from the NVSS were shifted (via spherical coordinate transforms) south to provide model skies down to the 2.5 mJy level. As the nominal resolution of the NVSS is much lower than that of MeerKAT, so there was little point in using the NVSS source extent information. We therefore treated all NVSS sources as point sources.
+We use two sources for our model skies: the NRAO VLA Sky Survey \citep[NVSS:][]{NVSS} and the SKADS Simulated Skies extragalactic source database \citep[S$^3$-SEX:][]{S3-SEX}. 
 
-For deeper models, we extracted samplings from the S$^3$-SEX simulation \citep{S3-SEX}. This provides statistically realistic source distributions all the way down to nJy flux levels -- well below what is required for our purposes.
+The NVSS provides a 1.4 GHz source catalog covering the entire sky north of $-40\degr$ declination, complete from about 2.5 mJy up. We use the online SAO CATS interface \citep{SAO-CATS} to extract subsets of the NVSS. Our simulated instrument is meant to observe the Southern sky, for which no comparable survey exists. However, for the purposes of our study we only require a statistically realistic sky and not necessarily the true sky. We therefore adopt a strategy whereby extracts from the NVSS are shifted (via spherical coordinate transforms) south to provide model skies down to the 2.5 mJy level. As the nominal resolution of the NVSS is much lower than that of MeerKAT, there is little point in using the NVSS source extent information. We therefore treat all NVSS sources as point sources. 
+
+For deeper models, we use samplings from the S$^3$-SEX simulation. This provides a statistically realistic distribution of extragalactic radio continuum sources in a $20\degr\times20\degr$ area, all the way down to nJy flux levels -- well below what is required for our purposes.
 
 \subsection{Simulated PB patterns}
 
@@ -117,10 +123,70 @@ Isak, this is your section. Need to give an overview of the EM simulations, etc.
 
 \subsection{Interferometric simulations}
 
-The model skies are 
+The conventional approach to simulation in MeqTrees is to build a measurement equation using the RIME formalism, and evaluate this equation for every time and frequency bin of the desired MS. For an LSM consisting of a source catalog, a typical RIME used in the present study would look as follows:
 
-These are used to generate simulated ``corrupted'' visibilities using the mathematical framework of the radio interferometry measurement equation \citep[RIME; see][]{ME1,RRIME1}. The corrupted visibilities are then fed through a standard calibration pipeline, and the resulting images compared to the known science skies that we started with. From the comparison we derive the various FoMs.
+  \begin{equation}\label{eq:rime0}
+  \coh{V}{pq} = \jones{G}{p} \left ( \sum_{s} S_{spq} {\jones{E}{sp} K_{sp} \coh{B}{s} K^\herm_{sq} \jonesT{E}{sq}} \right ) \jonesT{G}{q}
+  \end{equation}
 
+Here, $\coh{B}{s}$ is the brightness matrix of source $s$, $K_{sp}$ is the (scalar) phase term associated with station $p$  and direction $s$, $\jones{E}{sp}$ is the E-Jones, or primary beam gain term for station $p$ and direction $s$, $S_{spq}$ is a scalar smearing factor accounting for time and bandwidth averaging \citep[implemented as per Eq. (23) of ][]{RRIME1}, $\jones{G}{p}$ is the direction-independent gain term associated with station $p$, and $\jonesT{A}{}$ is the Hermitian (or conjugate) transpose of $\jones{A}{}$.
+
+\subsubsection{Implementing a tensor RIME}
+
+Recent developments in MeqTrees have been driven by the tensor RIME formalism suggested by \citet{RRIME4}. In particular, the inner sum over $s$ in Eq.~(\ref{eq:rime0}) can rewritten as an Einstein sum:
+
+\begin{equation}
+\label{eq:trime}
+\tens{X}^{pi}_{qj} = 
+  \tens{S}_{q}^{ps}\tens{E}_{s\alpha}^{pi}\tens{K}_{s}^{p}
+  \tens{B}^\alpha_{\beta s}
+  \bar\tens{K}_{q}^{s}
+  \bar\tens{E}_{qj}^{s\beta}
+\end{equation}
+
+Mathematically, this is a straightforward equivalent of the sum in Eq.~(\ref{eq:rime0}), expressed in terms of a {\em brightness tensor} $\tens{B}^\alpha_{\beta s}$ of rank $N_s\times2\times2$, and a \emph{Jones tensor} of rank $N_p\times N_s\times2\times2$, where $N_p$ is the number of stations, and $N_s$ is the number of sources.
+
+This form of the RIME has guided implementation of a new {\em tensor mode} framework in MeqTrees, which has led to a drastic reduction in {\em housekeeping overhead}. In MeqTrees, the housekeeping overhead of any given tree is the resource cost (in terms of CPU and RAM) associated with constructing and processing the basic computational units called {\em nodes}\footnote{That is, over and above the cost of the computations per se.}. Older versions of MeqTrees used $2\times2$ matrices as the basic computational unit, with a separate subtree per each station pair $pq$. Given a matrix RIME such as Eq.~(\ref{eq:rime0}), the housekeeping overhead of this approach scales as $O(N_p^2 N_s)$. Consequently, script compilation time and RAM usage became the main bottleneck for large $N_p$ (e.g. $N_p\gtrsim 30$) given anything but a handful of $N_s$.
+
+The current implementation of tensor mode goes half-way to Eq.~(\ref{eq:trime}), in that the basic computational unit becomes the brightness tensor $\tens{B}$, and a \emph{per-station} Jones tensor $\tens{E}_p$, both of rank $N_s\times2\times2$. This has required the addition of only a single node class to MeqTrees, called {\tt PSVTensor} (point source visibility tensor\footnote{Recent versions of PSVTensor are making the name somewhat inaccurate, since they also include support for extended Gaussian components. The class will probably be renamed to {\tt DSVTensor} in the near future, where D stands for ``discrete''.}), which implements Eq.~(\ref{eq:trime}) for a single $pq$ pair, given a brightness tensor, and any number of Jones tensors. Housekeeping costs then scale as the much more manageable $O(N_p^2+N_s)$. Note that the new tensor mode framework remains backwards-compatible with all the older MeqTrees Jones matrix modules, via the simple expedient of building up Jones tensors from $N_s$ separately generated Jones matrices. In this ``backwards compatibility'' regime the overhead scaling law is somewhat worse --  $O(N_p^2+N_p N_s)$ -- but this still better than the pure matrix regime. 
+
+\subsubsection{Using GPUs for accelerated computation}
+
+A second boon of using a tensor as the basic computational unit is that it groups computations together into larger chunks, rather than spreading them through different nodes of the tree. This approach proves far more amenable to a GPU implementation. One result of this was the development of a {\tt CUDAPSVTensor} node class, which is essentially a CUDA-accelerated version of {\tt PSVTensor}. Since the two node classes are identical in terms of interface, MeqTrees is able to select at script complication time whether to use one or the other.
+
+NB: need to update this with some performance figures once Richard's CUDA nodes work.
+
+\subsubsection{Practical performance limitations}
+
+In practical terms, tensor mode has allowed us to run simulations of a full MeerKAT layout ($N_p=64$) 
+with $N_s=10^3\sim10^4$ discrete model sources, with full $\tens{E}$-Jones treatment. To give some specific examples: the worst case scenario is a full per-station pointing error alt-az mount simulation (see below). This is completely dominated by evaluation of the $\tens{E}$-Jones tensor, which then assumes a different value for each source, station and time/frequency bin. Such a simulation (for $\sim5000$ sources, 480 timeslots, 8 frequency channels) takes on the order of 10 hours on a modern 8-core machine without a GPU. For simulations without pointing errors, only a single $\tens{E}$-Jones needs to be computed for all stations, and the same simulation runs to completion within an hour.
+
+NB: need to update this with some more accurate performance figures once Richard's CUDA nodes work.
+
+\subsubsection{Partitioning the model sky}
+
+Assuming $10^3\sim10^4$ discrete sources as a reasonable upper limit on a ``fast'' simulation, how deep a sky (in terms of limiting flux) can we accurately simulate? This of course depends on FoV area. For example, given a limited $5\degr\times5\degr$ FoV, which at 1.4 GHz encompasses the main lobe and the first sidelobe of a MeerKAT primary beam, a full NVSS sampling (down to the limiting flux of 2.5 mJy) returns on the order of 1000 sources. On the other hand, for a full-sky FoV -- or more precisely a hemisphere (see simulations of Sect.~\ref{sec:fsn}) -- we get about 4000 sources at a cutoff flux of 0.5 Jy. 
+
+Note that our performance bottleneck only applies to discrete models, for which we do the full $\tens{E}$-Jones treatment of Eq.~(\ref{eq:rime0}) or Eq.~(\ref{eq:trime}). If we dispense with $\tens{E}$-Jones (and all other direction-dependent Jones terms), then we can simulate a virtually unlimited number of fainter sources \emph{en masse}, by putting them into a sky image, applying an \emph{average} power beam to the image, and using an FFT to transform the image into predicted visibilities. There are at least three software tools that support\footnote{By which we mean capable, publicly available, and able to deal with Measurement Sets. The latter requirement rules out AIPS and other highly capable packages.}  this: the UVBrick component of MeqTrees \citep{Abdalla:uvbrick}, the CASA simulator tool, and the {\tt lwimager}\footnote{The ``lightweight imager'' utility a standalone tool developed by Ger van Diepen. It wraps the CASA imaging libraries into a standard command-line interface, and is thus especially convenient for use in pipelines and scripts. The tool is part of the {\tt casarest} binary package, and can be directly installed from the MeqTrees software repository.} tool. The latter has so far proven to be the most suitable, offering both a convenient single-command-line invocation (unlike CASA), and a full $w$-projection \citep{Cornwell:wproj} implementation (unlike the UVBrick, for which $w$-projection it is still in development). 
+
+An image-based simulation derived in this way cannot be entirely accurate, since it omits the $\tens{E}$-Jones term (using at best a time- and station-average primary beam\footnote{The AW-projection algorithm \citep{SB:imageplane} does offer a way to incorporate virtually arbitrary DDEs into an FFT-based predict. Current implementations do not yet support arbitrary $\tens{E}$-Jones terms, and are therefore unsuitable for our purposes.}), and is also subject to pixellation errors. We therefore pick a flux threshold, and partition our sky models into two subsets:
+
+\begin{itemize}
+  \item A ``bright'' sky, which is simulated perfectly: that is, as discrete sources, using the full $\tens{E}$-Jones treatment of Eq.~(\ref{eq:rime0}) or Eq.~(\ref{eq:trime}).
+  \item A ``faint'' sky, which is simulated approximately: that is, as a single image attenuated by the average power beam $|\vec E|^2$. Presumably, this is faint enough for such an approximation to be sufficient.
+\end{itemize}
+
+The two subsets can then be simulated separately, and the resulting visibilities simply added together.
+
+For the simulations of Sect.~\ref{sec:dde} (limited FoV), it was quite convenient to place the bright--faint boundary between the NVSS and S$^3$ sources. That is, we used NVSS to provide a ``bright'' population of discrete sources from 3 mJy up, and S$^3$-SEX to provide a ``faint'' population from 3 mJy down. The latter was converted into a FITS image using the mapmaker script from the S$^3$-Tools package. 
+
+For the full-sky simulations of Sect.~\ref{sec:fsn}, we dispensed with the faint sky altogether.
+
+\subsubsection{Applying E-Jones}
+
+In the mathematical framework of the RIME, primary beam gain is commonly designated by the $\vec{E}$-Jones matrix. 
+The standard MeqTrees simulations framework includes a variety of Jones module implementations for incorporating different instrumental effects into the RIME. One of these ({\tt Cattery.Siamese.OMS.pybeams\_fits}) provides an implementation of 
+E-Jones that reads complex beam patterns specified as FITS images (in $lm$ coordinates, i.e. in projected rectangular coordinates)
 
 
 \subsection{Calibration}
@@ -128,15 +194,20 @@ These are used to generate simulated ``corrupted'' visibilities using the mathem
 Fundamental difficulty: calibration, etc.
 
 \section{Sidelobe confusion}
+\label{sec:fsn}
 
-MeerKAT's classical confusion limit in L-band has been estimated at .1$\mu\mbox{Jy}$ (cite). This is the fundamental sensitivity limit set by the resolution of the telescope, i.e. the threshold below which faint sources get so crowded with respect to the synthesized beam that deconvolution is no longer posible. Thermal noise can be driven down to the confusion limit after about 100 days of integration, and two of the large survey projects (cite) expect to obtain such deep pointings. 
+MeerKAT's classical confusion limit in L-band has been estimated at .1$\mu\mbox{Jy}$ (cite). This is the fundamental sensitivity limit set by the resolution of the telescope, i.e. the threshold below which faint sources get so crowded with respect to the PSF size that deconvolution is no longer possible. Thermal noise can be driven down to the confusion limit after about 100 days of integration, and two of the large survey projects (cite) expect to obtain such deep pointings. 
 
-Reaching the confusion limit will require a substantial effort in calibration and deconvolution of the brighter sources. Here we consider whether
+Reaching the classical confusion limit will require a substantial effort in calibration and deconvolution of the brighter sources. Here we consider whether
 
-
+\subsection{Source counts and completeness estimates}
+\label{sec:source-counts}
 
 
 \section{DDEs and Calibration Errors}
+\label{sec:dde}
+
+Old text from draft version follows:
 
 Non-identical and unstable beamshapes have long been known to cause subtle calibration artefacts, while distant sources coming in via PB sidelobes result in additional unwanted signal across the FoV. 
 
@@ -160,25 +231,25 @@ In this work we focus on the MeerKAT design, which is a conventional single-pixe
 
 The other object of this paper is to establish and develop a rigorous methodology that can be applied to other instruments and other regimes. Examining every aspect of interferometric performance in sufficient depth is well beyond the scope of one paper. We have therefore decided to limit ourselves to the specific case of L-band continuum imaging. Extending this to other regimes (spectral line work, rotation measure synthesis), other frequencies and other instruments will be the subject of future papers, although we will  make a brief foray into the 14 GHz regime here.
 
-\section{Performance metrics}
-
-This is a rather important part of the paper, since we don't really have a clear set of performance metrics at present. The obvious and best-understood one is dynamic range, but even there the problem is that we're also trying to estimate the performance of future algorithms! But besides this, there's spectral line issues and polarimetric fidelity.
-
-\section{MeerKAT}
-
-We will simulate all four possible combinations of prime focus vs. offset Gregorian feed, and rotating vs. stationary sky. 
-
-For pointing errors: use a naive random sinusoid and/or Tony's ``physical'' pointing model. We can compare the results of the two and see if the elaborate model provides any significant difference.
-
-For thermal/gravitational deformation: the KAT folks have some data (but also Athol?) Ludwig will investigate. We may get away with a simple warping of the interpolated l/m coordinate to simulate this effect.
-
-\section{Other issues}
-
-A-projection should be able to correct for some effects, but as long as an implementation is not available, we cannot really test this. However, the paper should make clear that our methodology is fully compatible: as soon as A-projection works, it can be plugged into the framework. In the meantime, we can probably work around this with some clever differential simulations: i.e. infer what the result of A-projection is going to be.
-
-Different science cases will require different simulated skies, and different metrics. Tony/Ian/Brad can take the lead on this.
-
-Some self-evaluation of the simulations framework is required. For exmaple, how accurate is the beam interpolation (especially in frequency?). Ludwig will get a few finely-sampled MeerKAT beams at one narrow frequency band, and we can compare the results with these against the results with a coarser-sampled beam.
+% \section{Performance metrics}
+% 
+% This is a rather important part of the paper, since we don't really have a clear set of performance metrics at present. The obvious and best-understood one is dynamic range, but even there the problem is that we're also trying to estimate the performance of future algorithms! But besides this, there's spectral line issues and polarimetric fidelity.
+% 
+% \section{MeerKAT}
+% 
+% We will simulate all four possible combinations of prime focus vs. offset Gregorian feed, and rotating vs. stationary sky. 
+% 
+% For pointing errors: use a naive random sinusoid and/or Tony's ``physical'' pointing model. We can compare the results of the two and see if the elaborate model provides any significant difference.
+% 
+% For thermal/gravitational deformation: the KAT folks have some data (but also Athol?) Ludwig will investigate. We may get away with a simple warping of the interpolated l/m coordinate to simulate this effect.
+% 
+% \section{Other issues}
+% 
+% A-projection should be able to correct for some effects, but as long as an implementation is not available, we cannot really test this. However, the paper should make clear that our methodology is fully compatible: as soon as A-projection works, it can be plugged into the framework. In the meantime, we can probably work around this with some clever differential simulations: i.e. infer what the result of A-projection is going to be.
+% 
+% Different science cases will require different simulated skies, and different metrics. Tony/Ian/Brad can take the lead on this.
+% 
+% Some self-evaluation of the simulations framework is required. For exmaple, how accurate is the beam interpolation (especially in frequency?). Ludwig will get a few finely-sampled MeerKAT beams at one narrow frequency band, and we can compare the results with these against the results with a coarser-sampled beam.
 
 \section{Conclusions}
 
