@@ -54,10 +54,10 @@ order=-1
 
 [item:beamsims.tex]
 archive=true
-column=451
+column=188
 encoding=UTF-8
 highlight=LaTeX
-line=88
+line=373
 mode=LaTeX
 open=true
 order=0
@@ -67,5 +67,5 @@ CursorColumn=1
 CursorLine=957
 
 [view-settings,view=0,item:beamsims.tex]
-CursorColumn=451
-CursorLine=88
+CursorColumn=188
+CursorLine=373
