@@ -30,16 +30,15 @@
 \begin{document}
 
 \title{BeamSims: exploring the impact of primary beams\\on radio interferometric imaging and calibration.\\I. MeerKAT L-band continuum imaging and dynamic range}
+%\ref{inst:ru}
+\author{O.M. Smirnov\inst{\ref{inst:ru},\ref{inst:ska-sa}} \and B.S.\ Frank\inst{\ref{inst:uct-astro},\ref{inst:ska-sa}} \and I.\ Theron\inst{\ref{inst:emss}} \and I.\ Heywood\inst{\ref{inst:oap}}}
 
-\author{O.M. Smirnov\inst{\ref{inst:astron},\ref{inst:ru}} \and B.\ Frank\inst{\ref{inst:uct-astro}} \and I.\ Theron\inst{\ref{inst:emss}} \and I.\ Heywood\inst{\ref{inst:oap}}}
-
-\institute{Netherlands Institute for Radio Astronomy (ASTRON),
-  PO Box 2, 7990AA Dwingeloo, The Netherlands
-  \label{inst:astron} \and
-  \label{inst:ru}Department of Physics and Electronics, Rhodes University, PO Box 94, Grahamstown, 6140, South Africa\\\email{smirnov@astron.nl}\and
-  UCT\label{inst:uct-astro} \and 
-  EMSS\label{inst:emss} \and 
-  Oxford Astrophysics\label{inst:oap} }
+\institute{\label{inst:ru}Department of Physics and Electronics, Rhodes University, PO Box 94, Grahamstown, 6140, South Africa\\\email{o.smirnov@ru.ac.za}\and
+\label{inst:uct-astro}Astrophysics, Cosmology and Gravity Centre (ACGC), \\
+Department of Astronomy, University of Cape Town, Private Bag X3, Rondebosch 7701, South Africa\\\email{bradley@ast.uct.ac.za}\and 
+\label{inst:ska-sa}SKA South Africa, 3rd Floor, The Park, Park Road, Pinelands, 7405, South Africa\and
+EMSS\label{inst:emss} \and 
+Oxford Astrophysics\label{inst:oap} }
 
 \date{}
 
@@ -56,9 +55,9 @@
 {Advances in software and computing power have made it possible both to derive detailed beamshapes from electromagnetic simulations, and to apply these in all-sky interferometric simulations. We use {{\bf (Isak please fill in)}} to derive beamshapes, and then feed these into a MeqTrees-based simulations framework called BeamSims. Central to this is a new beam interpolation module, which can calculate beam gains based on gridded beamshapes specified via external files, while
 applying effects such as sky rotation and pointing error. The simulated visibilities are then fed to a number of MeqTrees calibration scripts. The statistics of the resulting images are then used to derive telescope performance figures.}
 %results
-{Results: Isak sleeps well. Write the rest later.}
+{Isak sleeps well. Write the rest later.}
 %optional conclusions
-{Conclusions: write later.}
+{Write later.}
 
 \keywords{Methods: numerical - Methods: analytical - Techniques: interferometric}
 
@@ -124,7 +123,7 @@ Isak, this is your section. Need to give an overview of the EM simulations, etc.
 \begin{figure*}
   \includegraphics[width=\columnwidth]{beam-og-90}\hfill%
   \includegraphics[width=\columnwidth]{beam-pf-90}
-  \caption{\label{fig:pb90}Primary beam amplitude (log scale) out to 90$\degr$, offset Gregorian (left) vs. prime focus dish (right). Images are in sine projection and thus distort towards the corners. Grid circles are drawn for rough reference only, and are not accurate towards the edges.}
+  \caption{\label{fig:pb90}Primary beam amplitude (log scale) out to 90$\degr$, offset Gregorian (left) vs. prime focus dish (right). Images are in sine projection and are thus severely distorted towards the corners. Grid circles are drawn for rough reference only, and are not accurate towards the edges.}
 \end{figure*}
 \begin{figure*}
   \includegraphics[width=.33\textwidth]{beam-og-20}\hfill%
@@ -200,7 +199,7 @@ For the full-sky simulations of Sect.~\ref{sec:fsn}, we dispensed with the faint
 
 The RIME tells us how to apply an E-Jones to derive visibilities; determining the particular values that 
 E-Jones assumes for every source and station is another matter entirely. The Cattery software framework included with MeqTrees provides a number of standard E-Jones implementations, in particular the
-{\tt Cattery.Siamese.OMS.pybeams\_fits} module developed by one of the authors. This reads gridded complex beam patterns -- in other words, all four elements of the E-Jones matrix -- from FITS images. It then computes the position of each source in the local coordinate frame of the antenna (depending on whether sky rotation and/or pointing errors are included in the simulation, these positions may be time- and antenna-dependent), and interpolates the complex beam gains at that position from the gridded values. This module uses the MeqTrees pyNode extension, which allows nodes to be implemented in Python and embedded into computational trees alongside the native C++ node classes\footnote{The pyNode extension was originally intended for quick prototyping of new MeqTrees node classes (in ``slow'' Python), with the implicit understanding that the useful ones would be rewritten in ``fast'' C++ as needed. In practice, the emergence of the {\tt numpy} and {\tt scipy} libraries, which provide many useful -- and fast! -- array functions, has made it possible to write numerical code in Python that (in some cases) is almost as fast as compiled code. As a result, quite a few of our pyNode ``prototypes'' have turned into production code without any pressing need to be rewritten, the {\tt pybeams\_fits} module being a prime example.}. Interpolation is done via the {\tt map\_coordinates} function found in the {\tt scipy} library. 
+{\tt Cattery.Siamese.OMS.pybeams\_fits} module developed by one of the authors. This reads gridded complex beam patterns -- in other words, all four elements of the E-Jones matrix -- from FITS images. It then computes the position of each source in the local coordinate frame of the antenna (depending on whether sky rotation and/or pointing errors are included in the simulation, these positions may be time- and antenna-dependent), and interpolates the complex beam gains at that position from the gridded values. This module uses the MeqTrees pyNode extension, which allows nodes to be implemented in Python and embedded into computational trees alongside the native C++ node classes\footnote{The pyNode extension was originally intended for quick prototyping of new MeqTrees node classes (in ``slow'' Python), with the implicit understanding that the useful ones would be rewritten in ``fast'' C++ as needed. In practice, the emergence of the {\tt numpy} and {\tt scipy} libraries, which provide many useful -- and fast! -- array functions, has made it possible to write numerical code in Python that (in some cases) is almost as fast as compiled code. As a result, quite a few of our pyNode ``prototypes'', the {\tt pybeams\_fits} module being a prime example, have been quietly rebranded as production modules without any pressing need to be rewritten.}. Interpolation is done via the {\tt map\_coordinates} function found in the {\tt scipy} library. 
 
 This implementation is quite generic, in the sense that arbitrary beam patterns may be provided as FITS files. However, since our EM simulations (Sect.~\ref{sec:emsims}) produce patterns in a spherical coordinate system, an intermediate regridding step is needed to convert these to FITS patterns suitable for use with {\tt pybeams\_fits}, which employ rectangular $l,m$ coordinates. We have therefore decided to implement a new E-Jones module based on this code, one that directly reads beam patterns gridded in spherical coordinates ($\theta,\phi$), and computes source positions and interpolates beam gains directly in the $\theta,\phi$ frame. The resulting E-Jones module is called {\tt emss\_beams}.
 
@@ -264,7 +263,7 @@ Here, $S$ is source flux, $n(S)$ is the differential source count, $P(r)$ is the
 
 The aim of this part of the work is therefore to use simulations to derive quantitative estimates of FSCN levels for different MeerKAT dish designs -- taking into account sky rotation and other effects -- and to establish a methodology for similar studies of SKA designs.
 
-\subsection{Overview of techniques}
+\subsection{Simulation technique}
 
 The basic idea of a FSCN simulation is very simple. We take an all-sky model and make a hole in the middle: that is, exclude sources within a certain radius $r_0$ of the phase centre. Then, we run this model through an interferometric simulator with a variety of primary beam patterns, and use the resulting visibilities to make an image of the nominally empty sky in the middle. This image is non-zero due to FSCN, and the rms pixel value gives us the FSCN level corresponding to sources with $r>r_0$, i.e. the fundamental confusion noise floor that we can achieve by fully deconvolving an image of radius $r_0$.
 
@@ -276,14 +275,14 @@ Given the performance considerations of Sect.~\ref{sec:performance}, complete an
   \item To reduce data size, we typically simulate only a few frequency channels, and use relatively long (60~s) integrations. This is discussed further in Sect.~\ref{sec:smearing}.
 \end{itemize}
 
-\subsubsection{Randomizing PB sidelobes}
+\subsection{Randomizing PB sidelobes}
 \label{sec:randomizing}
 
 A recently developed approach to reducing the FSCN is randomization of PB sidelobes across stations. The LOFAR telescope, in which each station is an aperture array, achieves this via the simple expedient of using a different orientation for the layout of each station. This introduces an essentially random complex gain error for distant sources, thus averaging down their response. Another option for aperture arrays (or indeed PAFs) is to randomize sidelobes by manipulating beamformer weights.
 
 With dishes, PB sidelobes may be randomized in two ways, depending on basic design. A symmetric dish (i.e. the prime focus design) can employ the random rotation trick. This is probably mechanically prohibitive with an asymmetric design such as the offset Gregorian, but here sidelobes may be randomized by introducing small variations in the dish surfaces\footnote{Since the PB is essentially a Fourier transform of the aperture illumination function, far PB sidelobes correspond to small-scale variations in the AIF.}. To a certain extent, the latter happens anyway due to manufacturing tolerances, but may also be done deliberately. (Note also that this approach does not work well for the PF design, since it cannot randomize the dominant X-shaped sidelobes associated with the feed supports.) Note also that another source of randomization is sky rotation, since over a long synthesis, distant sources will rotate through many sidelobes. This should be particularly noticeable with the OG design, where far sidelobes have a checkerboard-like pattern.
 
-From first principles, we would expect randomization to suppress FSCN as $\sqrt{N}$, where $N$ is the number of stations. Rotational randomization is straightforward to incorporate into the simulations: it is just a matter of introducing a random rotation angle when converting source coordinates in the {\tt emss\_beams} module. This does make for noticeably slower simulations, since E-Jones values then need to be computed individually per station -- unlike the non-randomized case -- but not prohibitively so. Surface randomization is much more difficult to simulate properly, but, given how random the far sidelobes of an OG are along any concentric circular track, we may assume that rotational randomization produces a sufficiently close approximation (at least beyond $r_0\sim10\degr$). We discuss the results below (Sect.~\ref{sec:meerkat-costcurve} and \ref{sec:randomized-sidelobes}).
+From first principles, we would expect randomization to suppress FSCN as $\sqrt{N}$, where $N$ is the number of stations. Rotational randomization is straightforward to incorporate into the simulations: it is just a matter of introducing a random rotation angle when converting source coordinates in the {\tt emss\_beams} module. This does make for noticeably slower simulations, since E-Jones values then need to be computed individually per station -- unlike the non-randomized case -- but not prohibitively so. Surface randomization is much more difficult to simulate properly, but, given how random the far sidelobes of an OG are along any concentric circular track, we may assume that rotational randomization produces a sufficiently close approximation (at least beyond $r_0\sim10\degr$). We discuss the results below (Sects.~\ref{sec:meerkat-costcurve} and \ref{sec:other-arrays}).
 
 \subsection{Observational configuration}
 \label{sec:config}
@@ -314,7 +313,7 @@ We also noticed early on that even with the A-team excluded, our simulations wer
 
 \subsection{Source counts and extrapolation to fainter sources}
 \label{sec:source-counts}
-Having imposed a lower flux cut-off of 0.5 Jy for practical reasons, we end up missing an extremely significant contribution from the massive population of weaker sources. In terms of Eq.~(\ref{eq:fscn}), our simulations correspond to limits of $0.5$ to $S_\mathrm{max}=3$ on the second integral (rather than $0$ to $3$). From this it follows that the factor by which we underestimate the FSCN on out simulations is
+Having imposed a lower flux cut-off of 0.5 Jy for practical reasons, we end up missing an extremely significant contribution from the massive population of weaker sources. In terms of Eq.~(\ref{eq:fscn}), our simulations correspond to limits of $0.5$ to $S_\mathrm{max}=3$ on the second integral (rather than $0$ to $3$). From this it follows that the factor by which we underestimate the FSCN in our simulations is
 
 \begin{equation}
 \left [ \frac{\sigma_\mathrm{0}}{\sigma_\mathrm{0.5}}\right ]^2 = 
@@ -339,8 +338,7 @@ The resulting correction factor of $\sqrt{10}$ has been applied to all simulatio
   \includegraphics[width=\columnwidth]{costcurve-main}
 %  \includegraphics[width=\textwidth]{costcurve-main}
 \caption{\label{fig:cc-main}Cost curves: a comparison of FSCN levels as a function of imaging radius, for different MeerKAT dish configurations. The horizontal red line indicates MeerKAT's extreme sensitivity limit for a 5000~h pointing. The plot corresponds to the canonical observational configuration of Sect.~\ref{sec:config}, and a naturally weighted PSF.}
-%% in costs-news:
-%../plot-cc.py MeerKAT64_8h60s_20M8ch_*natural*txt -f 10 -t - --x0 1 -a "2.6/1e-7/-/red/-MeerKAT 5000h" -o costcurve-main
+% $ ../stats-3cbr/plot-cc.py ../stats-3cbr/costs-256pix/MeerKAT64_8h60s_20M8ch_*natural.* ../stats-3cbr/costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_{ogh,og_rr,ogs,pf_rr}* -f 10 -t - --x0 1 -a "2.6/1e-7/-/red/-MeerKAT 5000h"
 \end{figure}
 
 The main result for MeerKAT is presented in Fig.~\ref{fig:cc-main}. This contains a number of ``cost curves'' for the various MeerKAT dish options. Each cost curve shows, as a function of $r_0$, the total contribution to the FSCN from sources beyond a radius of $r_0$. It is a \emph{cost} curve because it shows the radius $r_0$ out to which we must image and deconvolve in order to suppress the FSCN to a given level -- and imaging radius directly drives computational cost. 
@@ -348,7 +346,7 @@ The main result for MeerKAT is presented in Fig.~\ref{fig:cc-main}. This contain
 A few interesting points arise from this plot:
 
 \begin{itemize}
-  \item This suggests that at MeerKAT's extreme sensitivity limit of $0.1 \mu\mathrm{Jy}$, we must image out to $\sim$10$\degr$ with the default OG dishes, $\sim$20$\degr$ with rotationally randomized PF dishes, and $\sim$30$\degr$ with non-randomized PF dishes (bt see the daveat on absolute performance figures below). This is a massive cost difference!
+  \item This suggests that at MeerKAT's extreme sensitivity limit of $0.1 \mu\mathrm{Jy}$, we must image out to $\sim$10$\degr$ with the default OG dishes, $\sim$20$\degr$ with rotationally randomized PF dishes, and $\sim$30$\degr$ with non-randomized PF dishes (but see the caveat on absolute performance figures below). This is a potentially a massive cost difference!
   \item The OG and PF curves cross over at $\sim$40$\degr$.
   \item Sky rotation makes virtually no difference to the PF design, but provides about a factor of 2 FSCN suppression (beyond $10\degr$) in the OG design.
   \item The shaped OG design starts paying off beyond a radius of $8\degr$, but causes considerably higher FSCN closer in. It is not obvious whether this is a good trade-off or bad, since higher close-in sidelobes can make calibration more difficult.
@@ -381,9 +379,9 @@ It is to be expected that uniform weighting would suppress the FSCN, though a wh
 
 Since the correlator produces a complex average over the integration interval, the resulting complex amplitude of each source is attenuated by some factor $C(r)$ \citep[see Eq.~(\ref{eq:fscn}) above, and also Fig.~2 of][]{SKA54-expa,SKA54}. Lonsdale et al. suggest the use of weighted averages within the correlator, as well as baseline-dependent time averaging, as an effective means of FSCN suppression.
 
-The attenuation factor for time averaging follows a sinc function, and strongly depends on baseline length and orientation (or more precisely, the East-West component of the baseline). With each baseline being affected to a different extent, overall FSCN attenuation is difficult to predict analytically, but easy to simulate with our framework, by simply rerunning the same simulation over multiple measurement sets employing different integration times. Since averaging increases with integration time $\Delta t$, intuition suggests that using larger $\Delta t$ should lower the FSCN. In this case intuition misleads -- the curves in Fig.~\ref{fig:cc-time-smearing} show very little difference between the results for $\Delta t=10$, 30 and 60~s bins!
+The attenuation factor for time averaging follows a sinc function, and strongly depends on baseline length and orientation (or more precisely, the East-West component of the baseline). With each baseline being affected to a different extent, overall FSCN attenuation is difficult to predict analytically, but easy to simulate with our framework, by simply rerunning the same simulation over multiple measurement sets employing different integration times. Since averaging increases with integration time $\Delta t$, intuition suggests that using larger $\Delta t$ should lower the FSCN. In this case intuition misleads -- the curves in Fig.~\ref{fig:cc-time-smearing} show very little difference between the results for $\Delta t=10$, 30 and 60~s!
 
-The result appears to directly contradict Lonsdale et al., but in fact the contradiction is easily explained -- these authors consider a snapshot observation, while we are simulating a full (8~hour, in this particular instance) synthesis. \citet{SKA49} shows that (naturally weighted) PSF sidelobes scale approximately as $1/\sqrt{N_s}$, where $N_s$ is the total number of $uv$-samples. However, with larger time bins, we collect fewer $uv$-samples during the same synthesis time. PSF sidelobes therefore scale with $\sqrt{\Delta t}$. Returning to Eq.~(\ref{eq:fscn}), the drop in $C(r)$ due to longer integrations is then offset by an increase in $P(r)$ due to fewer $uv$-samples. The exact relationship is quite difficult to work out analytically, since one term scales as a sinc function and the other as a square root, but  Fig.~\ref{fig:cc-time-smearing} clearly shows that over the range of feasible MeerKAT integration times, the two terms approximately balance each other out. This also suggests that the correlator FoV tailoring technique proposed by Lonsdale et al. will be of limited efficacy for a full synthesis observation.
+Such a result appears to directly contradict Lonsdale et al., but in fact the contradiction is easily explained -- those authors considered the case of a snapshot observation, while we are simulating a full (8~hour, in this particular instance) synthesis. \citet{SKA49} showed that (naturally weighted) PSF sidelobes scale approximately as $1/\sqrt{N_s}$, where $N_s$ is the total number of $uv$-samples. However, with larger time bins, we collect fewer $uv$-samples during the same synthesis time, thus increasing PSF sidelobe level as $\sqrt{\Delta t}$. Returning to Eq.~(\ref{eq:fscn}), the drop in $C(r)$ due to longer integrations is then offset by an increase in $P(r)$ due to fewer $uv$-samples. The exact relationship is quite difficult to work out analytically, since one term scales as a sinc function and the other as a square root, but  Fig.~\ref{fig:cc-time-smearing} clearly shows that over the range of feasible MeerKAT integration times, the two terms approximately balance each other out. This also suggests that the correlator FoV tailoring technique proposed by Lonsdale et al. will be of limited efficacy for a full synthesis observation.
 
 \subsection{Bandwidth averaging and multi-frequency synthesis}
 \label{sec:freq-avg}
@@ -397,7 +395,9 @@ Averaging $n$ channels together suppresses thermal noise by a simple factor of $
 All this suggests that bandwidth averaging offers a lot of scope for FSCN suppression, but no universal recipe, with different observational regimes benefiting from different trade-offs. The vertical axis of Fig.~\ref{fig:cc-main} can be moved around quite significantly, depending on bandwidth and spectral resolution requirements! In particular, for the two MeerKAT Key Science Projects that intend to reach the extreme sensitivity limit of $0.1\mu$Jy, LADUMA and MIGHTEE {\bf (cite?)}, a more detailed study of this issue should be made.
 
 \section{FSCN for other arrays}
-\label{sec:ifr-size}
+\label{sec:other-arrays}
+
+{\bf NB: this is the old section making comparisons with VLAKAT and WesterKAT. This should be replaced by the MeerKAT16/32/48 comparison, see below}.
 
 Before we can extrapolate any of the present insights to the SKA, we need to develop our understanding of how FSCN scales with array size and layout. Towards this end, we have performed the same simulations on three hypothetical smaller instruments: WesterKAT (14 dishes), VLAKAT (27 dishes) and LOFARKAT (40 dishes). Each of these represents an existing array layout (WSRT, EVLA and LOFAR) shifted to MeerKAT's geographical position, and equipped with MeerKAT dishes. (This was done to keep all other elements of the simulation except array configuration as identical as possible.) We used the same canonical observational configuration described in Sect.~\ref{sec:config}, except for WesterKAT, for which the synthesis time was increased to 12 hours to obtain full $uv$-coverage. 
 
@@ -405,55 +405,89 @@ Table ~\ref{tab:kats} summarizes the various scaling factors of these arrays rel
 
 For natural weighting, \citet{SKA49} suggests a scaling law for rms PSF sidelobes of $1/\sqrt{N_s}$, where $N_s$ is the number of $uv$-samples. The number in the last column of Tab.~\ref{tab:kats} gives this number for the other arrays relative to MeerKAT. Can we expect FSCN to scale in the same way? Figs.~\ref{fig:cc-westerkat}--\ref{fig:fscn-rr-suppression} suggest that the answer is a lot more complicated, at least in the smaller array regime. 
 
-{\bf OMS: I'm finding these figures a little bit mindblowing. (``If you think you understand interferometry, you do not understand interferometry.'')  There's lots of completely counterintuitive features here, and I think I can even explain some of them, but I'd like to have LOFARKAT results to fill in the gap first, and completing the MeerKAT-related sections is more urgent. Brad: you need to generate us a LOFARKAT measurement set.}
+% {\bf OMS: I'm finding these figures a little bit mindblowing. There's lots of completely counterintuitive features here, and I think I can even explain some of them (``if you think you understand interferometry, you do not understand interferometry''), but I'd like to have some LOFARKAT sim to fill in the gap first, and completing the MeerKAT-related sections is more urgent. Brad: you need to generate us a LOFARKAT measurement set.}
+% 
+% \begin{figure}
+%   \includegraphics[width=\columnwidth]{cc-westerkat}
+%   \caption{\label{fig:cc-westerkat}Cost curves for WesterKAT. The plot corresponds to the canonical observational configuration of Sect.~\ref{sec:config} with a 12~h synthesis, and a naturally weighted PSF.}
+% \end{figure}
+% \begin{figure}
+%   \includegraphics[width=\columnwidth]{cc-vlakat}
+%   \caption{\label{fig:cc-vlakat}Cost curves for VLAKAT. The plot corresponds to the canonical observational configuration of Sect.~\ref{sec:config}, and a naturally weighted PSF.}
+% \end{figure}
+% 
+% 
+% \begin{table}
+% \begin{center}
+%   \begin{tabular}[]{lcccccc}
+%   \hline
+%   \hline
+%  & & & & & &\\ [-1ex]
+%   & $N_a$ & $\frac{N_{a,\mathrm{MK}}}{N_a}$ & $\sqrt{\frac{N_{a,\mathrm{MK}}}{N_a}}$ & $N_b$ & $\frac{N_{b,\mathrm{MK}}}{N_b}$ & $\sqrt{\frac{N_{s,\mathrm{MK}}}{N_s}}$ \\
+%   \hline
+%   & & & & & &\\ [-1ex]
+% MeerKAT64 & 64 & 1 & 1 & 2016 & 1 & 1 \\
+% LOFARKAT & 40 & 1.6 & 1.3 & 780 & 2.6 & 1.6 \\
+% VLAKAT & 27 & 2.4 & 1.5 & 351 & 5.7 & 2.4 \\
+% WesterKAT & 14 & 4.6 & 2.1 & 91 & 22.2 & 3.8 \\
+%   \hline
+%   \end{tabular}
+% \end{center}
+% \caption{\label{tab:kats}Various scaling fractions for our simulated arrays. $N_a$ is the number of antennas, $N_b$ is the number of baselines, and $N_s$ is the number of $uv$-samples. The fractions are relative to the MeerKAT64 numbers.}
+% \end{table}
+% 
+% 
+% \begin{figure*}
+%   \includegraphics[width=\columnwidth]{cc-multiobs-frac-natural}
+%   \includegraphics[width=\columnwidth]{cc-multiobs-frac-uniform}
+% %  \includegraphics[width=\textwidth]{costcurve-main}
+% \caption{\label{fig:fscn-relative}FSCN levels of smaller arrays, normalized to MeerKAT64 levels. Horizontal lines correspond to median values.}
+% %  ./plot-cc.py WesterKAT_12h60s_20M8ch_og_natural_no_wproj.txt MeerKAT64_8h60s_20M8ch_og_natural_no_wproj.txt VLAKAT_8h60s_20M8ch_og_natural_no_wproj.txt MeerKAT64_8h60s_20M8ch_og_natural_no_wproj.txt WesterKAT_12h60s_20M8ch_pf_natural_no_wproj.txt MeerKAT64_8h60s_20M8ch_pf_natural_no_wproj.txt costs-256pix/VLAKAT_8h60s_20M8ch_pf.natural.cost.txt MeerKAT64_8h60s_20M8ch_pf_natural_no_wproj.txt -f 10 -s a -c n -o cc-multiobs-frac-natural -n --r1 80 -y "FSCN level relative to MeerKAT64" -p "upper left" --y0 0 -t "Natural weights" -M
+% %  ./plot-cc.py costs-256pix/WesterKAT_12h60s_20M8ch_og.uniform.cost.txt costs-256pix/MeerKAT64_8h60s_20M8ch_og.uniform.cost.txt costs-256pix/VLAKAT_8h60s_20M8ch_og.uniform.cost.txt costs-256pix/MeerKAT64_8h60s_20M8ch_og.uniform.cost.txt costs-256pix/WesterKAT_12h60s_20M8ch_pf.uniform.cost.txt costs-256pix/MeerKAT64_8h60s_20M8ch_pf.uniform.cost.txt costs-256pix/VLAKAT_8h60s_20M8ch_pf.uniform.cost.txt costs-256pix/MeerKAT64_8h60s_20M8ch_pf.uniform.cost.txt -f 10 -s a -c n -o cc-multiobs-frac-uniform -n --r1 80 -y "FSCN level relative to MeerKAT64" -p "upper left" --y0 0 -t "Uniform weights" -M
+% \end{figure*}
+% 
+% 
+% \begin{figure*}
+%   \includegraphics[width=\columnwidth]{rr-suppression-og}
+%   \includegraphics[width=\columnwidth]{rr-suppression-pf}
+% %  \includegraphics[width=\textwidth]{costcurve-main}
+% \caption{\label{fig:fscn-rr-suppression}FSCN suppression factor due to sidelobe randomization, for OG and PF designs.}
+% %./plot-cc.py costs-2048pix-no_wproj/WesterKAT_12h60s_20M8ch_pf.natural.txt costs-2048pix-no_wproj/WesterKAT_12h60s_20M8ch_pf_rr.natural.txt costs-2048pix-no_wproj/VLAKAT_8h60s_20M8ch_pf.natural.txt costs-2048pix-no_wproj/VLAKAT_8h60s_20M8ch_pf_rr.natural.txt costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_pf.natural.txt costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_pf_rr.natural.txt -n --r0 10 --x0 8 -y "FSCN suppression factor due to sidelobe randomization" --title "Prime focus" -p "upper left" -o "rr-suppression-pf"
+% %./plot-cc.py costs-2048pix-no_wproj/WesterKAT_12h60s_20M8ch_og.natural.txt costs-2048pix-no_wproj/WesterKAT_12h60s_20M8ch_og_rr.natural.txt costs-2048pix-no_wproj/VLAKAT_8h60s_20M8ch_og.natural.txt costs-2048pix-no_wproj/VLAKAT_8h60s_20M8ch_og_rr.natural.txt costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_og.natural.txt costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_og_rr.natural.txt -n --r0 10 --x0 8 -y "FSCN suppression factor due to sidelobe randomization" --title "Offset Gregorian" -p "upper left" -o "rr-suppression-og"
+% \end{figure*}
 
-\begin{figure}
-  \includegraphics[width=\columnwidth]{cc-westerkat}
-  \caption{\label{fig:cc-westerkat}Cost curves for WesterKAT. The plot corresponds to the canonical observational configuration of Sect.~\ref{sec:config} with a 12~h synthesis, and a naturally weighted PSF.}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\columnwidth]{cc-vlakat}
-  \caption{\label{fig:cc-vlakat}Cost curves for VLAKAT. The plot corresponds to the canonical observational configuration of Sect.~\ref{sec:config}, and a naturally weighted PSF.}
-\end{figure}
-
-
-\begin{table}
-\begin{center}
-  \begin{tabular}[]{lcccccc}
-  \hline
-  \hline
- & & & & & &\\ [-1ex]
-  & $N_a$ & $\frac{N_{a,\mathrm{MK}}}{N_a}$ & $\sqrt{\frac{N_{a,\mathrm{MK}}}{N_a}}$ & $N_b$ & $\frac{N_{b,\mathrm{MK}}}{N_b}$ & $\sqrt{\frac{N_{s,\mathrm{MK}}}{N_s}}$ \\
-  \hline
-  & & & & & &\\ [-1ex]
-MeerKAT64 & 64 & 1 & 1 & 2016 & 1 & 1 \\
-LOFARKAT & 40 & 1.6 & 1.3 & 780 & 2.6 & 1.6 \\
-VLAKAT & 27 & 2.4 & 1.5 & 351 & 5.7 & 2.4 \\
-WesterKAT & 14 & 4.6 & 2.1 & 91 & 22.2 & 3.8 \\
-  \hline
-  \end{tabular}
-\end{center}
-\caption{\label{tab:kats}Various scaling fractions for our simulated arrays. $N_a$ is the number of antennas, $N_b$ is the number of baselines, and $N_s$ is the number of $uv$-samples. The fractions are relative to the MeerKAT64 numbers.}
-\end{table}
-
+\section{FSCN scaling with array size}
+\label{sec:meerkatjes}
 
 \begin{figure*}
-  \includegraphics[width=\columnwidth]{cc-multiobs-frac-natural}
-  \includegraphics[width=\columnwidth]{cc-multiobs-frac-uniform}
-%  \includegraphics[width=\textwidth]{costcurve-main}
-\caption{\label{fig:fscn-relative}FSCN levels of of smaller arrays, normalized to MeerKAT64 levels. Horizontal lines correspond to median values.}
-%  ./plot-cc.py WesterKAT_12h60s_20M8ch_og_natural_no_wproj.txt MeerKAT64_8h60s_20M8ch_og_natural_no_wproj.txt VLAKAT_8h60s_20M8ch_og_natural_no_wproj.txt MeerKAT64_8h60s_20M8ch_og_natural_no_wproj.txt WesterKAT_12h60s_20M8ch_pf_natural_no_wproj.txt MeerKAT64_8h60s_20M8ch_pf_natural_no_wproj.txt costs-256pix/VLAKAT_8h60s_20M8ch_pf.natural.cost.txt MeerKAT64_8h60s_20M8ch_pf_natural_no_wproj.txt -f 10 -s a -c n -o cc-multiobs-frac-natural -n --r1 80 -y "FSCN level relative to MeerKAT64" -p "upper left" --y0 0 -t "Natural weights" -M
-%  ./plot-cc.py costs-256pix/WesterKAT_12h60s_20M8ch_og.uniform.cost.txt costs-256pix/MeerKAT64_8h60s_20M8ch_og.uniform.cost.txt costs-256pix/VLAKAT_8h60s_20M8ch_og.uniform.cost.txt costs-256pix/MeerKAT64_8h60s_20M8ch_og.uniform.cost.txt costs-256pix/WesterKAT_12h60s_20M8ch_pf.uniform.cost.txt costs-256pix/MeerKAT64_8h60s_20M8ch_pf.uniform.cost.txt costs-256pix/VLAKAT_8h60s_20M8ch_pf.uniform.cost.txt costs-256pix/MeerKAT64_8h60s_20M8ch_pf.uniform.cost.txt -f 10 -s a -c n -o cc-multiobs-frac-uniform -n --r1 80 -y "FSCN level relative to MeerKAT64" -p "upper left" --y0 0 -t "Uniform weights" -M
+  \includegraphics[width=.33\textwidth]{cc-meerkatjes-natural}\hfill%
+  \includegraphics[width=.33\textwidth]{cc-meerkatjes-uniform}\hfill%
+  \includegraphics[width=.33\textwidth]{cc-meerkatjes-robust}
+\caption{\label{fig:fscn-meerkatjes}FSCN levels for smaller MeerKATs, for OG and PF designs. Note how the naturally-weighted FSCN levels do not really scale down with array size.}
+%./plot-cc.py costs/MK{16,32,48,64}/*{pf,og}.natural* costs/VLAKAT/*{pf,og}.natural* -f 10 -t "Natural weighting" --x0 2 --x1 90 -o cc-meerkatjes-natural -s D -a 0/1e-7/:/black/ --y0 1e-8 --y1 1e-5
+%./plot-cc.py costs/MK{16,32,48,64}/*{pf,og}.briggs_r_2* costs/VLAKAT/*{pf,og}.briggs_r_2* -f 10 -t "Uniform weighting" --x0 2 --x1 90 -o cc-meerkatjes-uniform -s D -a 0/1e-7/:/black/ --y0 1e-9 --y1 1e-5
+%./plot-cc.py costs/MK{16,32,48,64}/*{pf,og}.briggs_r0* costs/VLAKAT/*{pf,og}.briggs_r0* -f 10 -t "Robust weighting (r=0)" --x0 2 --x1 90 -o cc-meerkatjes-robust -s D -a 0/1e-7/:/black/ --y0 1e-9 --y1 1e-5
+
 \end{figure*}
 
+\begin{figure*}
+  \includegraphics[width=.33\textwidth]{cc-meerkatjes-ratio-og-nat}\hfill%
+  \includegraphics[width=.33\textwidth]{cc-meerkatjes-ratio-og}\hfill%
+  \includegraphics[width=.33\textwidth]{cc-meerkatjes-ratio-pf}
+\caption{\label{fig:fscn-meerkatjes-relative}Relative FSCN levels for smaller MeerKATs, for OG and PF designs, normalized to the MeerKAT64 level. Note how surprisingly well VLAKAT does!}
+%1; weight=natural; dish=og; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt  costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt -n -f 10 -t "Offset Gregorian, natural weighting" --x0 2 --x1 90 -o cc-meerkatjes-ratio-${dish}-nat -y "FSCN level relative to MeerKAT64" -s D -a 0/1/-/black/ -c a -M
+%2; weight=briggs_r0; dish=og; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt  costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt -n -f 10 -t "Offset Gregorian, robust weighting" --x0 2 --x1 90 -o cc-meerkatjes-ratio-${dish} -y "FSCN level relative to MeerKAT64" -s D -a 0/1/-/black/ -c a -M --y0 0.8 --y1 6 
+%3; weight=briggs_r0; dish=pf; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt  costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt -n -f 10 -t "Prime focus, robust weighting" --x0 2 --x1 90 -o cc-meerkatjes-ratio-${dish} -y "FSCN level relative to MeerKAT64" -s D -a 0/1/-/black/ -c a -M --y0 0.8 --y1 6 
+\end{figure*}
 
 \begin{figure*}
-  \includegraphics[width=\columnwidth]{rr-suppression-og}
-  \includegraphics[width=\columnwidth]{rr-suppression-pf}
-%  \includegraphics[width=\textwidth]{costcurve-main}
-\caption{\label{fig:fscn-rr-suppression}FSCN suppression factor due to sidelobe randomization, for OG and PF designs.}
-%./plot-cc.py costs-2048pix-no_wproj/WesterKAT_12h60s_20M8ch_pf.natural.txt costs-2048pix-no_wproj/WesterKAT_12h60s_20M8ch_pf_rr.natural.txt costs-2048pix-no_wproj/VLAKAT_8h60s_20M8ch_pf.natural.txt costs-2048pix-no_wproj/VLAKAT_8h60s_20M8ch_pf_rr.natural.txt costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_pf.natural.txt costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_pf_rr.natural.txt -n --r0 10 --x0 8 -y "FSCN suppression factor due to sidelobe randomization" --title "Prime focus" -p "upper left" -o "rr-suppression-pf"
-%./plot-cc.py costs-2048pix-no_wproj/WesterKAT_12h60s_20M8ch_og.natural.txt costs-2048pix-no_wproj/WesterKAT_12h60s_20M8ch_og_rr.natural.txt costs-2048pix-no_wproj/VLAKAT_8h60s_20M8ch_og.natural.txt costs-2048pix-no_wproj/VLAKAT_8h60s_20M8ch_og_rr.natural.txt costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_og.natural.txt costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_og_rr.natural.txt -n --r0 10 --x0 8 -y "FSCN suppression factor due to sidelobe randomization" --title "Offset Gregorian" -p "upper left" -o "rr-suppression-og"
+  \includegraphics[width=.33\textwidth]{cc-meerkatjes-rrsupp-og-nat}\hfill%
+  \includegraphics[width=.33\textwidth]{cc-meerkatjes-rrsupp-og}\hfill%
+  \includegraphics[width=.33\textwidth]{cc-meerkatjes-rrsupp-pf}
+\caption{\label{fig:fscn-meerkatjes-rr-suppression}FSCN suppression factor due to sidelobe randomization, for OG and PF designs.}
+%3; weight=natural; dish=og; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}_rr.${weight}*txt -n -f 10 -t "Offset Gregorian, natural weighting" --x0 2 --x1 90 -o cc-meerkatjes-rrsupp-${dish}-nat -y "FSCN suppression factor due to sidelobe randomization" -s D -a 0/1/-/black/ -c a --y0 1 --y1 5
+%3; weight=briggs_r0; dish=og; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}_rr.${weight}*txt  -n -f 10 -t "Offset Gregorian, robust weighting" --x0 2 --x1 90 -o cc-meerkatjes-rrsupp-${dish} -y "FSCN suppression factor due to sidelobe randomization" -s D -a 0/1/-/black/ -c a --y0 1 --y1 5
+%3; weight=briggs_r0; dish=pf; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}_rr.${weight}*txt  -n -f 10 -t "Offset Gregorian, robust weighting" --x0 2 --x1 90 -o cc-meerkatjes-rrsupp-${dish} -y "FSCN suppression factor due to sidelobe randomization" -s D -a 0/1/-/black/ -c a --y0 1 --y1 5 &
 \end{figure*}
 
 \section{Declination 30$\degr$ ghosts}
@@ -519,9 +553,17 @@ WesterKAT & 14 & 4.6 & 2.1 & 91 & 22.2 & 3.8 \\
 
 \section{Conclusions}
 
-The impact of primary beam shapes on radio interferometric performance is difficult to estimate analytically, due to many interacting factors of a complex nature. The BeamSims framework is a powerful tool for answering such questions ``empirically'', and our methodology provides for a rigorous comparison of different dish and antenna designs.
+The impact of primary beam shapes on radio interferometric performance is difficult to estimate analytically, due to many interacting factors of a complex nature. The BeamSims framework is a powerful tool for answering such questions ``empirically'' via simulations, and our methodology provides for a rigorous comparison of different dish and antenna designs.
 
+We have applied this to a study of far sidelobe confusion noise (FSCN) with a variety of MeerKAT dish designs, and found significant differences in FSCN levels. Offset Gregorian (OG) dishes perform up to an order of magnitude better than the prime focus design, as far as FSCN is concerned (at least in the inner 40$\degr$, where the bulk of the noise contribution comes from), and typically require a much smaller area of the sky to be imaged \& deconvolved to reach a given FSCN floor. Shaped OG dishes result in higher FSCN from near-in sidelobes (within $8\degr$), but provide ``quieter'' far sidelobes. We also find that randomizing the far sidelobes between dishes results in a significant reduction in FSCN.
 
+We find that time averaging in the correlator does not provide any significant FSCN suppression over a full synthesis. Bandwidth averaging, on the other hand, is a powerful FSCN suppressor, but this must be traded off against spectral resolution and distortion in the images.
+
+A comparison of FSCN levels across other (existing) array configurations yields a number of surprises {\bf which I have yet to explain adequately, so never mind for now}.
+
+These results suggest that a joint optimization of primary beam and PSF shape can provide for significant FSCN suppression (in comparison with independent optimization of the two), and that this technique needs to be explored further in the context of SKA design.
+
+\acknowledgements{Dedicated to the memory of Prof. Steve Rawlings, who drove \& inspired a lot of the research that went into this work -- and will be missed for immeasurably more than that.}
 
 \bibliographystyle{aa}
 

@@ -34,10 +34,10 @@ ReadWrite=true
 
 [item:beamsims.bib]
 archive=true
-column=1
+column=14
 encoding=UTF-8
 highlight=BibTeX
-line=957
+line=1014
 mode=BibTeX
 open=true
 order=1
@@ -54,18 +54,18 @@ order=-1
 
 [item:beamsims.tex]
 archive=true
-column=188
+column=0
 encoding=UTF-8
 highlight=LaTeX
-line=373
+line=39
 mode=LaTeX
 open=true
 order=0
 
 [view-settings,view=0,item:beamsims.bib]
-CursorColumn=1
-CursorLine=957
+CursorColumn=14
+CursorLine=1014
 
 [view-settings,view=0,item:beamsims.tex]
-CursorColumn=188
-CursorLine=373
+CursorColumn=0
+CursorLine=39
