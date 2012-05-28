@@ -334,12 +334,13 @@ The resulting correction factor of $\sqrt{10}$ has been applied to all simulatio
 \subsection{MeerKAT results}
 \label{sec:meerkat-costcurve}
 
-\begin{figure}
-  \includegraphics[width=\columnwidth]{costcurve-main}
+\begin{figure*}
+  \includegraphics[width=\columnwidth]{costcurve-main}\hfill
+  \includegraphics[width=\columnwidth]{costcurve-main-robust}
 %  \includegraphics[width=\textwidth]{costcurve-main}
 \caption{\label{fig:cc-main}Cost curves: a comparison of FSCN levels as a function of imaging radius, for different MeerKAT dish configurations. The horizontal red line indicates MeerKAT's extreme sensitivity limit for a 5000~h pointing. The plot corresponds to the canonical observational configuration of Sect.~\ref{sec:config}, and a naturally weighted PSF.}
 % $ ../stats-3cbr/plot-cc.py ../stats-3cbr/costs-256pix/MeerKAT64_8h60s_20M8ch_*natural.* ../stats-3cbr/costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_{ogh,og_rr,ogs,pf_rr}* -f 10 -t - --x0 1 -a "2.6/1e-7/-/red/-MeerKAT 5000h"
-\end{figure}
+\end{figure*}
 
 The main result for MeerKAT is presented in Fig.~\ref{fig:cc-main}. This contains a number of ``cost curves'' for the various MeerKAT dish options. Each cost curve shows, as a function of $r_0$, the total contribution to the FSCN from sources beyond a radius of $r_0$. It is a \emph{cost} curve because it shows the radius $r_0$ out to which we must image and deconvolve in order to suppress the FSCN to a given level -- and imaging radius directly drives computational cost. 
 
