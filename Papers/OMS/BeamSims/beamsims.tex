@@ -37,7 +37,7 @@
 \label{inst:uct-astro}Astrophysics, Cosmology and Gravity Centre (ACGC), \\
 Department of Astronomy, University of Cape Town, Private Bag X3, Rondebosch 7701, South Africa\\\email{bradley@ast.uct.ac.za}\and 
 \label{inst:ska-sa}SKA South Africa, 3rd Floor, The Park, Park Road, Pinelands, 7405, South Africa\and
-EMSS\label{inst:emss} \and 
+EMSS Antennas, PO Box 1579, Stellenbosch, 7599, South Africa\label{inst:emss} \and 
 Oxford Astrophysics\label{inst:oap} }
 
 \date{}
@@ -52,7 +52,7 @@ Oxford Astrophysics\label{inst:oap} }
 %aims
 {This paper aims to introduce a simulations framework and methodology for quantifying the impact of beamshapes on radio interferometer performance and calibratability. We then apply the methodology to a comparative study of several possible MeerKAT dish designs.}
 %methods
-{Advances in software and computing power have made it possible both to derive detailed beamshapes from electromagnetic simulations, and to apply these in all-sky interferometric simulations. We use {{\bf (Isak please fill in)}} to derive beamshapes, and then feed these into a MeqTrees-based simulations framework called BeamSims. Central to this is a new beam interpolation module, which can calculate beam gains based on gridded beamshapes specified via external files, while
+{Advances in software and computing power have made it possible both to derive detailed beamshapes from electromagnetic simulations, and to apply these in all-sky interferometric simulations. We use a full wave electromagnatic (EM) solver -- the Multilevel Fast Multipole Method (MLFMM) in FEKO -- to calculate the beamshapes, and then feed these into a MeqTrees-based simulations framework called BeamSims. Central to this is a new beam interpolation module, which can calculate beam gains based on gridded beamshapes specified via external files, while
 applying effects such as sky rotation and pointing error. The simulated visibilities are then fed to a number of MeqTrees calibration scripts. The statistics of the resulting images are then used to derive telescope performance figures.}
 %results
 {Isak sleeps well. Write the rest later.}
@@ -116,35 +116,194 @@ The NVSS provides a 1.4 GHz source catalog covering the entire sky north of $-40
 
 For deeper models, we use samplings from the S$^3$-SEX simulation. This provides a statistically realistic distribution of extragalactic radio continuum sources in a $20\degr\times20\degr$ area, all the way down to nJy flux levels -- well below what is required for our purposes.
 
+
 \subsection{Simulated PB patterns}
 \label{sec:emsims}
 
-Isak, this is your section. Need to give an overview of the EM simulations, etc. Also need to explain what the three different OG variants are.
+\subsubsection{Pattern calculation}
+\label{sec:patcalc}
+% Overview of the EM simulation technique
+
+Generally the electromagnetic analysis of reflector antennas is done with high
+frequency approximation techniques.  For many years this was the only realistic
+option available to antenna designers.  By their very nature the accuracy of
+these techniques decrease as either the frequency of the reflector size is
+decreased.  For the current generation of telescopes constructed from arrays of
+relatively small dishes operating around 1~GHz, these techniques are pushed to
+their limits.  While possibly still acceptable for the main beam region, they
+are increasingly inaccurate for the far our sidelobe level calculations.
+
+The recent advantages in both computer technology and electromagnetic algorithms
+now allow an accurate alternative.  The patterns used for this comparison are
+calculated with the Multilevel Fast Multipole Method (MLFMM) in
+FEKO\footnote{FEKO is a commercial electromagnetic solver from EM Software \&
+  Systems~-~S.A.\ (Pty) Ltd.  See www.feko.info.  These analyses were done with
+  the parallel version of Suite 6.1.}.  The MLFMM is an iterative extension of
+the method of moments (MoM) in which the electromagnetic fields are written in
+terms of the (unknown) electric currents flowing on all conducting surfaces. The
+currents are then determined by solving a discretised set of differential
+equations subject to the boundary condition that the tangential electric field
+on the conducting surfaces should be proportional to the product of the surface
+impedance and the current.  This yields an accurate solution provided only that
+the physical geometry is modelled correctly.  In the standard MoM formulation,
+the fields on all surfaces are influenced by all the currents.  The solution
+then requires inverting a large dense matrix which limits the electromagnetic
+problem size that can be solved with a given amount of computational resources.
+In the MLFMM the interactions are grouped in multiple levels, resulting in a
+sparse matrix that can be solved iteratively.  The result is that much larger
+problems can be solved \citep{mlfmm,mlfmm-feko}, still with full accuracy.
+
+
+\subsubsection{Optics options}
+\label{sec:optics}
+
+The performance reference for the MeerKAT dishes is the centre-fed prime focus
+(F/D=0.38) KAT-7 dishes.  The feeds for these dishes have been optimised for
+sensitivity which naturally leads to an illumination pattern with very low
+sidelobes.  One disadvantage of the centre-fed prime focus design is the
+scattering caused by the feed and strut blockage.  The struts were designed to
+reduce wide-angle scattering, but this is limited by the requirement to keep the
+struts mechanically simple (i.e.\ reduce cost).
+%Oleg, do we need to include a reference to what KAT-7 is?
+
+To allow direct comparison with the 13.5~m projected diameter MeerKAT dishes,
+the 12~m KAT-7 dish is scaled by a factor 13.5/12.  In practice the struts would
+need mechanical optimisation, but it is believed that this is good enough for
+the present comparison.  This dish is excited by the KAT-7 horn and constitutes
+the prime focus (PF) dish used in the rest of this comparison.
+
+The initial offset Gregorian dish and matching axially corrugated feed horn were
+designed for sidelobes lower than -28~dB.  The dish size was determined to
+provide the required system sensitivity with a 64 element array.  The remaining
+parameters were optimised in conjunction with the mechanical design.  The dish
+parameters \citep[as defined in][]{granet-parameters} are $D_m = 13.5$~m,
+$\theta_0 = -63.20^\circ$, $\theta_e = 48.89^\circ$, $\beta = 45.47^\circ$, $L_s
+= 2.419$~m and the focal length $F$ of the main reflector is 5.486~m.  In
+addition, the bottom of the sub-reflector is extended by $20^\circ$ (measured
+form the feed position) -- as shown in Fig.~\ref{TU3e20:optics} -- to reduce the
+spill-over noise \citep{icea-dish-design}.  This is the default offset Gregorian
+(OG) dish used in this comparison.
+
+\begin{figure}
+\centering \includegraphics[width=258.48pt]{TU3e20-optics}
+\caption{\label{TU3e20:optics}The default offset Gregorian dish viewed from 
+  $\theta=70^\circ$ (the angle from the optical axis which is parallel to the 
+  $z$-axis in the figure) and  $\phi=70^\circ$ ($20^\circ$ from full side-on).
+  The sub-reflector extension is shown grey.}
+\end{figure}
+
+Generally the gain of dual reflector systems can be substantially improved by
+shaping the optics.  This allows better use of the effective aperture leading to
+higher gain, but typically also increased sidelobes.  With a -28~dB first
+sidelobe specification, there is very little advantage in shaping the system.
+The sidelobe specification is, however, done partly to improve imaging which is
+the purpose of this comparison.  The specification was therefore relaxed to allow
+testing the actual impact of the higher sidelobes.  The shaped option thus have
+a -23~dB limit on the second sidelobe.  Shaped systems typically use a feed
+horn with a narrower pattern as well as a larger sub-reflector edge angle.  This
+results in a lower edge illumination and less lost spill-over efficiency.  (The
+improved aperture illumination is achieved by spreading the feed pattern more
+towards the edges of the main dish.)  Thus an additional feed horn was optimised
+for this system.  As the shaped system already has less spill-over, the extension
+on this design is only $15^\circ$ \citep{icea-dish-design}.  This is the shaped
+OG option used here.
+
+To really determine the impact of shaping, we also need to compare it with an
+unshaped system having the same specifications.  (An unshaped system does allow
+greater flexibility in the future, hence the shaped option should only be
+considered if it is substantially better.) Hence a second feed was optimised for
+the default OG dish with the relaxed sidelobe requirement.  This is the OG with
+hard edge illumination used in this comparison.
+
+
+\subsubsection{Calculated patterns}
+\label{sec:patterns}
+
+Fig.~\ref{fig:pb180} shows the full sphere normalised horizontal polarisation
+beam patterns of the four optics candidates at 1440~MHz.  The patterns are
+similar for vertical polarisation and also for all frequencies over the band
+under consideration.  Fig.~\ref{fig:pb18} shows detail of the main beam region
+of these patterns.
+
+% The trim commands below remove the colourbar legends from the top images
+\begin{figure*}
+  \includegraphics[width=\columnwidth,clip=true,trim=0 42 0 0]{K7s_full}\hfill%
+  \includegraphics[width=\columnwidth,clip=true,trim=0 42 0 0]{TU3e20_full}
+  \includegraphics[width=\columnwidth]{TS3e15h_full}\hfill%
+  \includegraphics[width=\columnwidth]{TU3e20h_full}
+  \caption{\label{fig:pb180}Normalised primary beam amplitude (in dB) for
+    horizontal polarisation at 1440~MHz.  The pattern is displayed as a function
+    of the polar coordinate angles $\theta$ (measured from the optical axis and
+    displayed as the distance from the centre of these images) and $\phi$
+    (measured around the $\theta=0^\circ$ axis and displayed on a constant
+    radius in the figures).  The $\phi=0^\circ$ direction is vertical and upward
+    if the alt-az mounted dish is pointing towards the horizon.  This
+    "projection" opens the back half of the pattern outward -- the entire
+    outside border (at $\theta=180^\circ$) corresponds to a single angular
+    direction opposite the main beam. The top left picture is for prime focus,
+    the top right for the default offset Gregorian; the bottom left for the
+    shaped offset Gregorian and the bottom right for the offset Gregorian
+    optimised with higher sidelobes (hard edge illumination).  For the offset
+    Gregorian options, the projection of the sub-reflector is below these
+    images, i.e.\ the main reflector lies towards $\phi=0^\circ$.}
+\end{figure*}
 
 \begin{figure*}
-  \includegraphics[width=\columnwidth]{beam-og-90}\hfill%
-  \includegraphics[width=\columnwidth]{beam-pf-90}
-  \caption{\label{fig:pb90}Primary beam amplitude (log scale) out to 90$\degr$, offset Gregorian (left) vs. prime focus dish (right). Images are in sine projection and are thus severely distorted towards the corners. Grid circles are drawn for rough reference only, and are not accurate towards the edges.}
+  \includegraphics[width=\columnwidth,clip=true,trim=0 42 0 0]{K7s_main}\hfill%
+  \includegraphics[width=\columnwidth,clip=true,trim=0 42 0 0]{TU3e20_main}
+  \includegraphics[width=\columnwidth]{TS3e15h_main}\hfill%
+  \includegraphics[width=\columnwidth]{TU3e20h_main}
+  \caption{\label{fig:pb18}Primary beam amplitude (dB scale) for the main beam
+    region of the patterns shown in Fig.~\ref{fig:pb180}.  The top left picture
+    is for prime focus, the top right for the default offset Gregorian; the
+    bottom left for the shaped offset Gregorian and the bottom right for the
+    offset Gregorian optimised with higher sidelobes (hard edge illumination).}
 \end{figure*}
-\begin{figure*}
-  \includegraphics[width=.33\textwidth]{beam-og-20}\hfill%
-  \includegraphics[width=.33\textwidth]{beam-ogs-20}\hfill%
-  \includegraphics[width=.33\textwidth]{beam-pf-20}
-  \caption{\label{fig:pb20}Primary beam amplitude (log scale), inner 20$\degr$. Offset Gregorian (left) vs. shaped offset Gregorian (center) vs. prime focus dish (right).}
-%% 90 deg:
-% ./emss2fits.py ../TU3e20_centre_h_1440_@label.pat -y --labels a,b,c,d,e,h --ampl -r 900 -R .1 TU3e20_hy_90deg.fits 
-% ./emss2fits.py ../K7s_centre_h_1440_@label.pat -y --labels a,b,c,d,e,h --ampl -r 900 -R .1 K7s_hy_90deg.fits 
-%% 20 deg:
-%./emss2fits.py ../TU3e20_centre_h_1440_@label.pat -y --labels a,b,c,d,e,h --ampl -r 1000 -R .02 TU3e20_hy_20deg.fits
-%./emss2fits.py ../K7s_centre_h_1440_@label.pat -y --labels a,b,c,d,e,h --ampl -r 1000 -R .02 K7s_hy_20deg.fits
-%% tigger settings: MIRP colormap, 4 log cycles, .0001 to .1 limits
- 
-\end{figure*}
+
+For the prime focus dish, horizontal polarisation is blocked more by the
+horizontal struts than the vertical ones such that the scattering cones
+associated with the horizontal struts are larger than the other two.  This
+results in a large "fan beam" sidelobe orthogonal to the polarisation direction
+through the region of the main beam.  For vertical polarisation, it is the other
+way around and the image is rotated by $90^\circ$.  The back lobes ($\theta >
+90^\circ$) of the PF dish are primarily due to diffraction from the dish edge
+with is at a constant distance from the feed.  Hence the back lobes are
+relatively circular.
+
+For the offset Gregorian patterns the first peak (roughly in the range $30^\circ
+> \theta > 60^\circ$) is due to the spill-over from the feed past the
+sub-reflector. This is markedly less for the shaped system due to its lower edge
+taper.  In all OG cases, the sub-reflector extension ensure that this peak does
+not close below the main beam (intercepting the ground as the dish is tipped
+towards the ground).  The second peak (around $\theta = 75^\circ$ for $\phi =
+0^\circ$) is due to the spill-over from the sub-reflector just above the main
+reflector.  This line extends to $\theta = 180^\circ$ which is where the
+spill-over from the sub-reflector passes the bottom of the main reflector.
+These sidelobes are slightly lower in amplitude for the shaped system, but not
+materially so.  The sharp peak at $\theta = 120^\circ$ and $\phi = 0^\circ$ is
+the diffraction back lobe of the main reflector.
+
+As expected the inner side-lobes for the shaped OG system and the hard edge
+illuminated OG system are higher than for the default OG system.  Note also that
+the general near-in sidelobes (in the absence of the strut scattering cones) of
+the PF dish are indeed lower than for the OG system -- this is due to the
+improved efficiency of all the OG systems.  The near-in sidelobes of the
+unshaped OG systems appear a little more circular than for the shapes system,
+but this is again not material.
+
+It is interesting to note that the side-lobe spacing of the PF dish appears to
+be double that of the OG dishes.  The reason for this is that alternating
+side-lobes in the aperture pattern of the PF dish alternate in side and these
+interfere constructively and destructively with the wide beam caused by the feed
+blockage.
 
 
 \subsection{Interferometric simulations}
 
-The conventional approach to simulation in MeqTrees is to build a measurement equation using the RIME formalism, and evaluate this equation for every time and frequency bin of the desired MS. For an LSM consisting of a source catalog, a typical RIME used in the present study would look as follows:
+The conventional approach to simulation in MeqTrees is to build a measurement
+equation using the RIME formalism, and evaluate this equation for every time and
+frequency bin of the desired MS. For an LSM consisting of a source catalog, a
+typical RIME used in the present study would look as follows:
 
   \begin{equation}\label{eq:rime0}
   \coh{V}{pq} = \jones{G}{p} \left ( \sum_{s} S_{spq} {\jones{E}{sp} K_{sp} \coh{B}{s} K^\herm_{sq} \jonesT{E}{sq}} \right ) \jonesT{G}{q}
