@@ -180,13 +180,13 @@ parameters \citep[as defined in][]{granet-parameters} are $D_m = 13.5$~m,
 $\theta_0 = -63.20^\circ$, $\theta_e = 48.89^\circ$, $\beta = 45.47^\circ$, $L_s
 = 2.419$~m and the focal length $F$ of the main reflector is 5.486~m.  In
 addition, the bottom of the sub-reflector is extended by $20^\circ$ (measured
-form the feed position) -- as shown in Fig.~\ref{TU3e20:optics} -- to reduce the
+form the feed position) -- as shown in Fig.~\ref{fig:TU3e20:optics} -- to reduce the
 spill-over noise \citep{icea-dish-design}.  This is the default offset Gregorian
 (OG) dish used in this comparison.
 
 \begin{figure}
 \centering \includegraphics[width=258.48pt]{TU3e20-optics}
-\caption{\label{TU3e20:optics}The default offset Gregorian dish viewed from 
+\caption{\label{fig:TU3e20:optics}The default offset Gregorian dish viewed from 
   $\theta=70^\circ$ (the angle from the optical axis which is here aligned with the 
   $z$-axis) and  $\phi=70^\circ$ ($20^\circ$ from full side-on).
   The sub-reflector extension is shown grey.}
@@ -441,20 +441,10 @@ The basic idea of a FSCN simulation is very simple. We take an all-sky model and
 Given the performance considerations of Sect.~\ref{sec:performance}, complete and sufficiently deep all-sky simulations are impractical due to the very high source counts. We have therefore taken a few shortcuts:
 
 \begin{itemize}
-  \item We only simulate a hemisphere (i.e. to a radius of $90\degr$ from phase centre) and not the full sky, and we do not take into account horizon masking. As we shall see later, the bulk of FSCN is contributed by sources within $10\degr$ of centre, so this shortcut is justified.
-  \item We only simulate $\sim4000$ sources at a time, down to a flux threshold of 0.5 Jy, and extrapolate the contribution of fainter sources. This is discussed further in Sect.~\ref{sec:source-counts}.
-  \item To reduce data size, we typically simulate only a few frequency channels, and use relatively long (60~s) integrations. This is discussed further in Sect.~\ref{sec:smearing}.
+  \item We only simulate a hemisphere (i.e. to a radius of $90\degr$ from phase centre) and not the full sky, and we do not take into account horizon masking. As we shall see later, the bulk of FSCN is contributed by sources within $10\degr$ of centre, so this shortcut is justified. A proper analysis of the effects of this shortcut is given in Sect.~\ref{sec:horizon-masking}.
+  \item We restrict each simulation to $\sim4000$ sources at a time; we have therefore imposed a lower flux threshold of 0.5 Jy, and extrapolate the contribution of fainter sources as discussed in Sect.~\ref{sec:source-counts}.
+  \item To reduce data size, we typically simulate only a few frequency channels, and use relatively long (60~s) integrations. The effect of this on our FSCN results is discussed further in Sect.~\ref{sec:smearing}.
 \end{itemize}
-
-\subsection{Randomizing PB sidelobes}
-\label{sec:randomizing}
-
-A recently developed approach to reducing the FSCN is randomization of PB sidelobes across stations. The LOFAR telescope, in which each station is an aperture array, achieves this via the simple expedient of using a different orientation for the layout of each station. This introduces an essentially random complex gain error for distant sources, thus averaging down their response. Another option for aperture arrays (or indeed PAFs) is to randomize sidelobes by manipulating beamformer weights.
-
-With dishes, PB sidelobes may be randomized in two ways, depending on basic design. A symmetric dish (i.e. the prime focus design) can employ the random rotation trick. This is probably mechanically prohibitive with an asymmetric design such as the offset Gregorian, but here sidelobes may be randomized by introducing small variations in the dish surfaces\footnote{Since the PB is essentially a Fourier transform of the aperture illumination function, far PB sidelobes correspond to small-scale variations in the AIF.}. To a certain extent, the latter happens anyway due to manufacturing tolerances, but may also be done deliberately. (Note also that this approach does not work well for the PF design, since it cannot randomize the dominant X-shaped sidelobes associated with the feed supports.) Note also that another source of randomization is sky rotation, since over a long synthesis, distant sources will rotate through many sidelobes. This should be particularly noticeable with the OG design, where far sidelobes 
-have a checkerboard-like pattern.
-
-From first principles, we would expect randomization to suppress FSCN as $\sqrt{N}$, where $N$ is the number of stations. Rotational randomization is straightforward to incorporate into the simulations: it is just a matter of introducing a random rotation angle when converting source coordinates in the {\tt emss\_beams} module. This does make for noticeably slower simulations, since E-Jones values then need to be computed individually per station -- unlike the non-randomized case -- but not prohibitively so. Surface randomization is much more difficult to simulate properly, but, given how random the far sidelobes of an OG are along any concentric circular track, we may assume that rotational randomization produces a sufficiently close approximation (at least beyond $r_0\sim10\degr$). We discuss the results below (Sects.~\ref{sec:meerkat-costcurve} and \ref{sec:other-arrays}).
 
 \subsection{Observational configuration}
 \label{sec:config}
@@ -486,21 +476,95 @@ order to reduce this variance, we average FSCN levels (quadratically, since this
 
 \subsection{Source counts and extrapolation to fainter sources}
 \label{sec:source-counts}
-Having imposed a lower flux cut-off of 0.5 Jy for practical reasons, we end up missing an extremely significant contribution from the massive population of weaker sources. In terms of Eq.~(\ref{eq:fscn}), our simulations correspond to limits of $0.5$ to $S_\mathrm{max}=3$ on the second integral (rather than $0$ to $3$). From this it follows that the factor by which we underestimate the FSCN in our simulations is
+% 304,538,103 sources in the Wilman sim.
+
+The FSCN value described by Eq.~(\ref{eq:fscn}) includes a term which depends on the integral of the differential source counts $n(S)$. Since our measured values of FSCN are derived from simulations using a sky model with source fluxes in the range 0.5~$\leq$~$S$~$\leq$~3 Jy they are missing a potentially significant contribution from the faint source population. In this section we derive a correction factor to the FSCN values of the form
 
 \begin{equation}
-\left [ \frac{\sigma_\mathrm{0}}{\sigma_\mathrm{0.5}}\right ]^2 = 
-\left [ \int\limits_{0}^{S_\mathrm{max}} S^2n(S)\DD{S} \right ] 
-\left [ \int\limits_{0.5}^{S_\mathrm{max}} S^2n(S)\DD{S} \right ]^{-1},
+\left[\frac{\sigma_{0}}{\sigma_{0.5}}\right]^{2} = \left[\int\limits_{0}^{S_\mathrm{max}} S^{2}~n(S)~dS\right]  \left[\int\limits_{0.5}^{S_\mathrm{max}} S^{2}~n(S)~dS\right]^{-1},
+\label{eq:fscn_correction}
 \end{equation}
 
-where $\sigma_0$ is the ``true'' FSCN level corresponding to the entire source population, and $\sigma_{0.5}$ is the FSCN contribution from sources brighter than $0.5$ Jy.
+\noindent where $\sigma_{0}$ is the \emph{true} FSCN value including all sources up to a flux limit $S_\mathrm{max}$, and $\sigma_{0.5}$ is the FSCN level including only the sources between our lower flux cut off of 0.5~Jy and $S_\mathrm{max}$. Note that $S_\mathrm{max}$ is set to 3 Jy when evaluating the integrals due to the 3~Jy upper flux limit imposed to exclude the A-team sources. 
 
-{\bf OMS: Ian, this is your section. Please use Wilman's raw numbers for $n(S)$ to evaluate the equation above and derive a correction factor. A pretty plot of $S^2n(S)$ versus $S$ would also be illuminating.}
+As is consistent with the sky model setup described in Section 2.1, the integrated source counts for the correction factor are computed from the S$^{3}$-SEX simulation \citep{Wilman-simulation}. The 1.4~GHz flux densities of the $\sim$300 million sources in the simulation are first placed into 250 logarithmically spaced flux bins, forming $n(S)$ and allowing Eq.~(\ref{eq:fscn_correction}) to be numerically evaluated, resulting in a value of $\sigma_{0}$/$\sigma_{0.5}$~=~3.66.
 
-{\bf As a quick-and-dirty ``empirical'' check, what I've done so far is taken a deep S3-SEX query, built a cumulative histogram of $S^2n(S)$, and numerically integrated from 0 to $S_{max}$=3 and from 0.5 to 3. This gave me a ratio of about 7$\sim$10 between the two integrals, so I've been conservatively using $\sqrt{10}$ as the correction factor thus far.}
+The differential source counts derived from the Wilman simulation are shown by the black squares on Fig.~\ref{fig:source_counts}. The distribution is Euclidean-normalized for ease of comparison to observationally-derived values which are shown by the red circles. Details of these data and an review of the subject of radio source counts are provided by \citet{deZotti-surveys}. 
 
-The resulting correction factor of $\sqrt{10}$ has been applied to all simulation results below. 
+The limitations of the S$^{3}$-SEX simulation are described by \citet{Wilman-simulation}, but of particular concern for this work is the possible significant deviation of the simulation from the observed source counts at sub-mJy levels, and the implications this may have for the correction factor described by Eq.~(\ref{eq:fscn_correction}). The observations in Fig.~\ref{fig:source_counts} show a flattening, or possible turn-up in the source counts at the faint end of the distribution. This picture is reinforced by the triangles on Fig.~\ref{fig:source_counts} which are the radio source counts derived by applying infrared-radio correlations to the $K$-band luminosity function, which has been explored down to very faint levels (Jarvis 2012, in prep.). The completeness limit of the $K$-band data causes the sudden decline which does not reflect the true behaviour of the counts.
+
+The observed inflection in the source counts remains the subject of much debate and is generally thought to be caused by the dominant source population shifting from active galactic nuclei (AGN) to star-forming galaxies at these flux levels \citep[e.g.][]{Padovani-VLA-Chandra-DFS} although radio-weak AGN may also be a significant contributor to the counts \citep{Simpson-Subaru-XMM}. 
+
+For reasons of consistency we adopt the previously derived value of 3.66 for the FSCN correction factor in the simulations that follow. However given the deviation of the simulation from the observations which we have outlined above, and in order to probe how much we may be underestimating the FSCN correction factor, we also implement a toy model which deviates from the S$^{3}$-SEX simulation at the approximate point where the counts begin to turn up, as marked by the dashed vertical line on Fig.~\ref{fig:source_counts}. This model is implemented by applying a power-law correction to the S$^{3}$-SEX counts which is unity at the marked cross-over point and increases with decreasing flux such that the new model approximately tracks the upper envelope of the observed values. This model is shown on Fig.~\ref{fig:source_counts} by the small black dots. 
+
+Evaluating the correction factor for the toy ``extreme faint counts" model results in value of 6.72, a factor $\simeq$1.8 higher than the adopted value. This demonstrates that the ``cost curves" we derive in the following section are not critically sensitive to the size of the unknown faint source population, even for unrealistically large counts.
+
+Future deep surveys with new and improved radio interferometers such as the EVLA and MeerKAT \citep[e.g.][]{Jarvis-MeerKAT-SALT,Heywood-MESMER} will probe the extremely faint end of the source count distribution. Such experiments form one of the many reasons why the investigation of hitherto negligible effects such as FSCN is vital.
+
+\begin{figure}
+\centering
+%\includegraphics[width = 0.8 \textwidth]{1400_source_counts}
+\caption{Euclidean-normalised radio source counts at 1.4 GHz. The red data points represent counts derived by several authors, as collated by \citet{deZotti-surveys}. The black squares show the source counts from the S$^{3}$-SEX simulation derived by binning all $\sim$300 million sources over the full 400 square degree sky area into 250 logarithmically-spaced flux bins. The triangles are radio source counts derived from $K$-band infrared magnitudes (Jarvis 2012, in prep.). The two solid vertical lines span the flux density range over which NVSS sources are selected. The small black squares show the toy model which we implement to investigate the potential effect of an extremely large population of faint sources. The model applies a power-law modification to the S$^{3}$-SEX counts and the point where the models converge is marked by the dashed vertical line.  \label{fig:source_counts}}
+\end{figure}
+
+\subsection{The classical confusion limit}
+
+An image of the sky reaches the classical confusion limit when the background source population can no longer be resolved into individual sources, i.e.~when the density of sources $n(S)$ reaches a critical value. Depending on the spatial resolution of the instrument the confusion limit places a fundamental limit on the depth that can be reached by any observation.
+
+In this section we compute the confusion limit of MeerKAT. The area of the PSF ($\Omega_\mathrm{PSF}$) for MeerKAT is determined by running a full 12-hour synthesis simulation ($\nu_\mathrm{min}$~=~1.440 GHz, $\Delta \nu$~=~20~MHz) for a variety of Declinations: 0$^{\circ}$, -30$^{\circ}$, -60$^{\circ}$ and -90$^{\circ}$. A 2D Gaussian is then fitted to the main lobe of the PSFs derived from these simulations for both uniform and natural weighting of the visibilities. The PSF parameters are given in Tab.~\ref{tab:conf_beams}.
+
+The density of sources within a PSF area is determined by using the source counts from the S$^{3}$-SEX simulation \citep{Wilman-simulation}. For a given RMS noise value $\sigma_\mathrm{map}$ the number of detected sources per square degree is calculated: $n(S > \sigma_\mathrm{map})$. There is no formal definition for the number of PSF areas per source below which the map is said to be confusion limited, so we adopt the often-used rule-of-thumb which places the number at 10. The map is thus confusion limited if the following condition is satisfied:
+
+\begin{equation}
+n(S > \sigma_\mathrm{map})~\Omega_\mathrm{PSF} > 1 / 10.
+\label{eq:conf_limit}
+\end{equation}
+
+Four Declinations and two weighting schemes means that we calculate the confusion noise $\sigma_\mathrm{conf}$ for eight different scenarios. The source count data described in Sect.~\ref{sec:source-counts} is employed here, with the confusion limit determined by the lower edge of the flux bin in which the condition in Eq.~(\ref{eq:conf_limit}) becomes satisfied for each of the eight beam sizes. The beam sizes and the results are given in Tab.~\ref{tab:conf_beams} and the confusion limit is shown graphically in Fig.~\ref{fig:conf_limits}. The actual quoted flux limits are subject to an uncertainty associated with the width of the bin, which is $\sim$10\% at these levels. The density of sources $n(S)$ is also averaged over the full sky area of the simulation, whereas in reality this will be dependent on the clustering strength due to cosmic variance. For comparison, the L-band confusion limit of the Very Large Array in D-configuration\footnote{{\tt http://www.vla.nrao.edu/astro/guides/vlas/current/node11.html}
+} (
+maximum baseline = 1~km) is 86~$\mu$Jy beam$^{-1}$.
+
+\begin{table*}
+\centering
+%\begin{minipage}{158mm}
+\caption{Uniform and naturally weighted PSF properties for the MeerKAT array at 1.4 GHz for a variety of Declinations, and the corresponding approximate confusion noise limit.\label{tab:conf_beams}}
+\begin{tabular}{llllll}
+\hline
+\hline
+Declination (deg) & Weighting scheme & $B_{maj}$ (arcsec) & $B_{min}$ (arcsec) & PA (deg) & $\sigma_{conf}$ ($\mu$Jy beam$^{-1}$) \\ \hline
+0   & natural & 15.18 & 12.85 & -12.98 & 156\\
+-30 & natural & 13.94 & 12.78 & 107.00 & 139\\
+-60 & natural & 13.85 & 12.45 & 96.70  & 139\\
+-90 & natural & 13.90 & 13.87 & 30.53  & 156\\
+0   & uniform & 6.94  & 6.48  & -28.55 & 41\\
+-30 & uniform & 5.66  & 5.33  & -51.08 & 30\\
+-60 & uniform & 5.40  & 5.12  & 115.84 & 26\\
+-90 & uniform & 5.27  & 5.26  & 52.03  & 26\\ \hline
+\end{tabular}
+%\end{minipage}
+\end{table*}
+
+\begin{figure}
+\centering
+%\includegraphics[width = 0.8 \textwidth]{1400_confusion}
+\caption{The effects of the classical confusion limit on a 1.4 GHz MeerKAT observation. The abscissa represents the theoretical map noise as derived by the standard noise equation for a radio interferometer. The ordinate shows the corresponding classical confusion noise limit for a map that reaches a particular depth. The beam areas are calculated from a full 12-hour synthesis for four Declination values, and for both uniform and naturally weighted images.\label{fig:conf_limits}}
+\end{figure}
+
+% Having imposed a lower flux cut-off of 0.5 Jy for practical reasons, we end up missing an extremely significant contribution from the massive population of weaker sources. In terms of Eq.~(\ref{eq:fscn}), our simulations correspond to limits of $0.5$ to $S_\mathrm{max}=3$ on the second integral (rather than $0$ to $3$). From this it follows that the factor by which we underestimate the FSCN in our simulations is
+% 
+% \begin{equation}
+% \left [ \frac{\sigma_\mathrm{0}}{\sigma_\mathrm{0.5}}\right ]^2 = 
+% \left [ \int\limits_{0}^{S_\mathrm{max}} S^2n(S)\DD{S} \right ] 
+% \left [ \int\limits_{0.5}^{S_\mathrm{max}} S^2n(S)\DD{S} \right ]^{-1},
+% \end{equation}
+% 
+% where $\sigma_0$ is the ``true'' FSCN level corresponding to the entire source population, and $\sigma_{0.5}$ is the FSCN contribution from sources brighter than $0.5$ Jy.
+% 
+% {\bf OMS: Ian, this is your section. Please use Wilman's raw numbers for $n(S)$ to evaluate the equation above and derive a correction factor. A pretty plot of $S^2n(S)$ versus $S$ would also be illuminating.}
+% 
+% {\bf As a quick-and-dirty ``empirical'' check, what I've done so far is taken a deep S3-SEX query, built a cumulative histogram of $S^2n(S)$, and numerically integrated from 0 to $S_{max}$=3 and from 0.5 to 3. This gave me a ratio of about 7$\sim$10 between the two integrals, so I've been conservatively using $\sqrt{10}$ as the correction factor thus far.}
+% 
+% The resulting correction factor of $\sqrt{10}$ has been applied to all simulation results below. 
 
 
 
@@ -508,8 +572,8 @@ The resulting correction factor of $\sqrt{10}$ has been applied to all simulatio
 \label{sec:meerkat-costcurve}
 
 \begin{figure*}
-  \includegraphics[width=\columnwidth]{costcurve-main}\hfill
-  \includegraphics[width=\columnwidth]{costcurve-main-robust}
+  \includegraphics[width=\textwidth]{costcurve-main}\hfill
+%  \includegraphics[width=\columnwidth]{costcurve-main-robust}
 %  \includegraphics[width=\textwidth]{costcurve-main}
 \caption{\label{fig:cc-main}Cost curves: a comparison of FSCN levels as a function of imaging radius, for different MeerKAT dish configurations. The horizontal red line indicates MeerKAT's extreme sensitivity limit for a 5000~h pointing. The plot corresponds to the canonical observational configuration of Sect.~\ref{sec:config}, and a naturally weighted PSF.}
 % plot-cc.py horizon-masked/MeerKAT64*natural* -f 10 -t - --x0 1 -a "2.6/1e-7/-/red/-MeerKAT 5000h" --x0 2 --x1 90 -o costcurve-main
@@ -518,22 +582,41 @@ The resulting correction factor of $\sqrt{10}$ has been applied to all simulatio
 
 The main result for MeerKAT is presented in Fig.~\ref{fig:cc-main}. This contains a number of ``cost curves'' for the various MeerKAT dish options. Each cost curve shows, as a function of $r_0$, the total contribution to the FSCN from sources beyond a radius of $r_0$. It is a \emph{cost} curve because it shows the radius $r_0$ out to which we must image and deconvolve in order to suppress the FSCN to a given level -- and imaging radius directly drives computational cost. 
 
-A few interesting points arise from this plot:
+The most striking feature of this plot is the completely different character of FSCN as a function of $r_0$ for the PF and OG type dishes. The OG curves have an almost flat ``plateau'' between 10$\degr$ and 75$\degr$ (less than a factor of 2 change), while the PF curves maintain nearly constant slope all the way out to 90$\degr$. This is no doubt due to the different dominant features of their PB patterns (Fig.~\ref{fig:pb180}). The PF designs pick up most of their FSCN via the X-shaped sidelobes associated with the feed supports, which are significant at all radii. In contrast, the OG designs pick up a fair chunk of FSCN via the sub-reflector spill-over patch between $75\degr$ and $90\degr$, and then pick up relatively little all the way in to $10\degr$. In other words, as we increase our imaging radius $r_0$, OG designs yield a sharp drop in FSCN until about $10\degr$ -- but once this ``optimal'' radius is reached, increasing $r_0$ further yields very little further improvement, until about $75\degr$. The PF design, on the other hand, shows a much slower but steady decrease in FSCN all the way out to $90\degr$.
+
+A few other interesting points arise from this plot:
 
 \begin{itemize}
   \item This suggests that at MeerKAT's extreme sensitivity limit of $0.1 \mu\mathrm{Jy}$, we must image out to $\sim$10$\degr$ with the default OG dishes, $\sim$20$\degr$ with rotationally randomized PF dishes, and $\sim$30$\degr$ with non-randomized PF dishes (but see the caveat on absolute performance figures below). This is a potentially a massive cost difference!
   \item The OG and PF curves cross over at $\sim$40$\degr$.
   \item Sky rotation makes virtually no difference to the PF design, but provides about a factor of 2 FSCN suppression (beyond $10\degr$) in the OG design.
   \item The shaped OG design starts paying off beyond a radius of $8\degr$, but causes considerably higher FSCN closer in. It is not obvious whether this is a good trade-off or bad, since higher close-in sidelobes can make calibration more difficult.
-  \item The hard edge illumination OG design does only slightly worse than the default, by less than a factor of 2.
+  \item The hard edge illumination OG design does only slightly worse than the default, to within a factor of 2.
   \item At $10\degr$, sidelobe randomization of OGs does at least a good a job as shaping.
   \item A combination of shaped OGs and sidelobe randomization provides the lowest FSCN levels from $\sim$6$\degr$ out.
   FSCN levels of $0.1 \mu\mathrm{Jy}$ are then achieved by $7\degr$ (provided sidelobe randomization through surface variations can actually be done this close in), which halves the required imaging area, compared to the default OG design. Once again, this has to be weighed against the extra calibration costs associated with higher close-in sidelobes.
 \end{itemize}
 
+\subsection{Full sky models and horizon masking}
+\label{sec:horizon-masking}
+
+
+
+
 \section{FSCN suppression}
 
 Note that while Fig.~\ref{fig:cc-main} is an excellent indicator of the \emph{relative} performance of the various dish designs, one must be very careful when drawing conclusions on \emph{absolute} performance. The reason for this is that absolute FSCN levels are subject to two other attenuating factors -- see Fig.~2 of \citet{SKA54-expa,SKA54} for a reminder -- which can cause the vertical axis of the cost curves to shifted up and down significantly. Firstly, this is the asymptotic rms PSF sidelobe level, which depends on imaging weights. Secondly, this is the correlator response function $C(r)$, which is determined by time and bandwidth averaging. We shall now consider these two factors in detail.
+
+\subsection{Randomizing PB sidelobes}
+\label{sec:randomizing}
+
+A recently developed approach to reducing the FSCN is randomization of PB sidelobes across stations. The LOFAR telescope, in which each station is an aperture array, achieves this via the simple expedient of using a different orientation for the layout of each station. This introduces an essentially random complex gain error for distant sources, thus averaging down their response. Another option for aperture arrays (or indeed PAFs) is to randomize sidelobes by manipulating beamformer weights.
+
+With dishes, PB sidelobes may be randomized in two ways, depending on basic design. A symmetric dish (i.e. the prime focus design) can employ the random rotation trick. This is most likely mechanically prohibitive with an asymmetric design such as the offset Gregorian. Distant sidelobes may also be randomized by introducing small variations in the dish surfaces\footnote{Since the PB is essentially a Fourier transform of the aperture illumination function, far PB sidelobes correspond to small-scale variations in the AIF.}. To a certain extent, the latter happens anyway due to manufacturing tolerances, but may also be done deliberately. Note, however, that the dominant FSCN contribution appears to be associated with the X-shaped sidelobes caused by the feed supports (in the PF case), and the sub-reflector spill-over ``patch'' (in the OG case), neither of which is significantly affected by dish surface variations.
+
+Another intrinsic source of randomization is sky rotation, since over a long synthesis, distant sources will rotate through many sidelobes. This is particularly noticeable with the OG design, where far sidelobes have a checkerboard-like pattern. 
+
+From first principles, we would expect randomization to suppress FSCN as $\sqrt{N}$, where $N$ is the number of stations. Rotational randomization is straightforward to incorporate into the simulations: it is just a matter of introducing a random rotation angle when converting source coordinates in the {\tt emss\_beams} module. This does make for noticeably slower simulations, since E-Jones values then need to be computed individually per station -- unlike the non-randomized case -- but not prohibitively so. We discuss the results in Sects.~\ref{sec:meerkat-costcurve} and \ref{sec:other-arrays}.
 
 \subsection{Effect of imaging weights}
 \label{sec:img-weights}
@@ -743,7 +826,10 @@ These results suggest that a joint optimization of primary beam and PSF shape ca
 
 \acknowledgements{Dedicated to the memory of Prof. Steve Rawlings, who drove \& inspired a lot of the research that went into this work -- and will be missed for immeasurably more than that. 
 
-This work is based upon research supported by the South African Research Chairs Initiative of the Department of Science and Technology and National Research Foundation.}
+This work is based upon research supported by the South African Research Chairs Initiative of the Department of Science and Technology and National Research Foundation.
+
+We thank Matt Jarvis for useful discussions and pre-publication data pertaining to the faint radio source population.
+}
 
 \bibliographystyle{aa}
 
