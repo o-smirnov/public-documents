@@ -38,7 +38,7 @@
 Department of Astronomy, University of Cape Town, Private Bag X3, Rondebosch 7701, South Africa\\\email{bradley@ast.uct.ac.za}\and 
 \label{inst:ska-sa}SKA South Africa, 3rd Floor, The Park, Park Road, Pinelands, 7405, South Africa\and
 EMSS Antennas, PO Box 1579, Stellenbosch, 7599, South Africa\label{inst:emss} \and 
-Oxford Astrophysics\label{inst:oap} }
+Astrophysics, Department of Physics, University of Oxford, Keble Road, Oxford, OX1 3RH, UK\label{inst:oap} }
 
 \date{}
 
@@ -109,8 +109,9 @@ The corrupted visibilities are then fed through a standard calibration pipeline 
 % In very broad terms, our methodology comes down to generating a set of simulated science skies and instrumental error patterns. These are used to generate simulated ``corrupted'' visibilities using the mathematical framework of the radio interferometry measurement equation \citep[RIME; see][]{ME1,RRIME1}. The corrupted visibilities are then fed through a standard calibration pipeline, and the resulting images compared to the known science skies that we started with. From the comparison we derive the various FoMs.
 
 \subsection{Model skies}
+\label{sec:modelskies}
 
-We use two sources for our model skies: the NRAO VLA Sky Survey \citep[NVSS:][]{NVSS} and the SKADS Simulated Skies extragalactic source database \citep[S$^3$-SEX:][]{S3-SEX}. 
+We use two sources for our model skies: the NRAO VLA Sky Survey \citep[NVSS:][]{NVSS} and the SKADS Simulated Skies extragalactic source database \citep[S$^3$-SEX:][]{Wilman-simulation}. 
 
 The NVSS provides a 1.4 GHz source catalog covering the entire sky north of $-40\degr$ declination, complete from about 2.5 mJy up. We use the online SAO CATS interface \citep{SAO-CATS} to extract subsets of the NVSS. Our simulated instrument is meant to observe the Southern sky, for which no comparable survey exists. However, for the purposes of our study we only require a statistically realistic sky and not necessarily the true sky. We therefore adopt a strategy whereby extracts from the NVSS are shifted (via spherical coordinate transforms) south to provide model skies down to the 2.5 mJy level. As the nominal resolution of the NVSS is much lower than that of MeerKAT, there is little point in using the NVSS source extent information. We therefore treat all NVSS sources as point sources. 
 
@@ -333,7 +334,7 @@ tensors from $N_s$ separately generated Jones matrices. In this ``backwards comp
 
 As an aside, we should note another advantage of using a tensor (rather than a $2\times2$ matrix) as the basic computational unit. The tensor approach explicitly groups related computations together into larger chunks, 
 rather than spreading them through different nodes of the tree. This proves far more amenable to a GPU-based implementation. One result of this is the recent development of a {\tt CUDAPSVTensor} node class, which is 
-essentially a CUDA-accelerated version of {\tt PSVTensor}. Since the two node classes are identical in terms of interface, MeqTrees is able to select at script complication time whether to use one or the other. This is still a work in progress -- in particular, {\tt CUDAPSVTensor} did not support E-Jones terms at time of writing, and so was not used to run the simulations reported on here -- but it shows great promise for the future.
+essentially a CUDA-accelerated version of {\tt PSVTensor}. Since the two node classes are identical in terms of interface, MeqTrees is able to select at script compilation time whether to use one or the other. This is still a work in progress -- in particular, {\tt CUDAPSVTensor} did not support E-Jones terms at time of writing, and so was not used to run the simulations reported on here -- but it shows great promise for the future.
 
 %NB: need to update this with some performance figures once Richard's CUDA nodes work.
 
@@ -361,7 +362,7 @@ An image-based simulation derived in this way cannot be entirely accurate, since
 
 The two subsets are simulated separately, and the resulting visibilities are simply added together.
 
-For the limited-FoV simulations of Sect.~\ref{sec:dde}, it turns out to be most convenient to use the NVSS to provide a ``bright'' population of discrete sources from 3 mJy up, and S$^3$-SEX to provide a ``faint'' population from 3 mJy down. The latter was converted into a FITS image using the mapmaker script from the S$^3$-Tools package. 
+For the limited-FoV simulations of Sect.~\ref{sec:dde}, it turns out to be most convenient to use the NVSS to provide a ``bright'' population of discrete sources from 3 mJy up, and S$^3$-SEX to provide a ``faint'' population from 3 mJy down. The latter was converted into a FITS image using the mapmaker script from the S$^3$-Tools package \citep{S3-SEX}. 
 
 For the full-sky simulations of Sect.~\ref{sec:fsn}, we dispensed with the faint sky altogether.
 
@@ -376,7 +377,7 @@ This implementation is quite generic, in the sense that arbitrary beam patterns 
 
 While developed for MeerKAT simulations, {\tt emss\_beams} is also quite generic, and could be used with any kind of primary beam, provided the beam patterns are gridded onto spherical coordinates, and written into a properly formatted ASCII file. It supports simultaneous interpolation through multiple superimposed patterns, with the resulting gains added together. This feature can be put to use in two particularly interesting ways. Firstly, the beam may be specified as a superposition of component patterns (e.g. main reflector, subreflector, feed). Secondly, different grid steps may be used for different parts of the beam, with e.g. a finer grid for the main lobe, and coarser grids for sidelobes. 
 
-The variable grid step option is particularly important, since we need simulated beam patterns for the entire sky (or at least out to $\theta=90\degr$) on the one hand, and a high-resolution grid on the other (at least in the main lobe and first few sidelobes, where accuracy is important). The EM simulations of Sect.~\ref{sec:emsims} are extremely expensive computationally, so doing them for an entire hemisphere with a high-resolution grid would be prohibitively expensive. Instead, we separate the coordinate plane into six regions by $\theta$, i.e into an inner circle $0\leq\theta<\theta_1$, and 5 concentric annuli $\theta_{i-1}\leq\theta<\theta_i$, and use progressively coarser grid steps as we go out in $\theta$ (see Table~\ref{tab:grids}). 
+The variable grid step option is particularly important, since we need simulated beam patterns for the entire sky (or at least out to $\theta=90\degr$) on the one hand, and a high-resolution grid on the other (at least in the main lobe and first few sidelobes, where accuracy is important). The EM simulations of Sect.~\ref{sec:emsims} are extremely expensive computationally, so doing them for an entire hemisphere with a high-resolution grid would be prohibitively expensive. Instead, we separate the coordinate plane into six regions by $\theta$, i.e into an inner circle $0\leq\theta<\theta_1$, and 5 concentric annuli $\theta_{i-1}\leq\theta<\theta_i$, and use progressively coarser grid steps as we go out in $\theta$ (see Tab.~\ref{tab:grids}). 
 
 \begin{table}
 \begin{center}
@@ -469,9 +470,9 @@ To make the sky models for this simulation, we extracted NVSS samplings of compl
 \caption{\label{fig:fscn-fields}FSCN levels (offset Gregorian vs. prime focus) for the 9 hemisphere models used in the simulations. The plot on the left is for $r_0=3.25\degr$, the plot on the right is for $r_0=10\degr$. The increased variance in the left plot is caused by the stronger close-in sidelobes. Note how the shaped OG design is especially susceptible to this.}
 \end{figure*}
 
-A handful of the strongest sources in the sky -- the ``A-team'' of  Cas~A, Vir~A, etc. -- can provide a dominant contribution to FSCN even from relatively distant sidelobes. This is a well-known problem, and current real-life data reduction practice is to treat such sources on an individual basis, by including them in the calibration model. Their contribution is thus effectively removed even before imaging. We have therefore excluded the A-team -- or, more generally, all sources brighter than 3~Jy -- from the sky models, on the assumption that such sources would have to be subtracted individually during calibration anyway. We also found that a simple 3~Jy cutoff was insufficient, as the NVSS represents each A-team source by a whole cluster of point sources, with a large number of them slipping below the threshold of them 3~Jy, but making a noticeable FSCN contribution through sheer numbers. We therefore removed such clusters from the models by hand.
+A handful of the strongest sources in the sky -- the ``A-team'' of  Cas~A, Vir~A, etc. -- can provide a dominant contribution to FSCN even from relatively distant sidelobes. This is a well-known problem, and current real-life data reduction practice is to treat such sources on an individual basis, by including them in the calibration model. Their contribution is thus effectively removed even before imaging. We have therefore excluded the A-team -- or, more generally, all sources brighter than 3~Jy -- from the sky models, on the assumption that such sources would have to be subtracted individually during calibration anyway. We also found that a simple 3~Jy cutoff was insufficient, as the NVSS represents each A-team source by a whole cluster of point sources, with a large number of them slipping below the threshold of 3~Jy, but making a noticeable FSCN contribution through sheer numbers. We therefore removed such clusters from the models by hand.
 
-We also noticed early on that even with the A-team excluded, our simulations were still fairly sensitive (at least for smaller values of $r_0$) to choice of sky model, which is probably due to small number statistics, i.e. a dominant contribution from a few of the brighter close-in sources sitting in (or passing through) particularly strong sidelobes. Figure~\ref{fig:fscn-fields} provides an indication of how FSCN varies across the 9 hemisphere models. This plots the simulated FSCN corresponding to the various offset Gregorian flavours against that for the prime focus dish, for all 9 models. The plot on the left is for $r_0=3.25\degr$ (third sidelobe and out), the plot on the right is for $r_0=10\degr$. It is clear that most of the variation is caused by the close-in sidelobes: there's roughly a factor of 2 variation across models at $r_0=3.25\degr$ (even more than 2 for the shaped OG design, which is to be expected, given it's higher close-in sidelobes), but considerably less than that at $r_0=10\degr$. In 
+We also noticed early on that even with the A-team excluded, our simulations were still fairly sensitive (at least for smaller values of $r_0$) to choice of sky model, which is probably due to small number statistics, i.e. a dominant contribution from a few of the brighter close-in sources sitting in (or passing through) particularly strong sidelobes. Fig.~\ref{fig:fscn-fields} provides an indication of how FSCN varies across the 9 hemisphere models. This plots the simulated FSCN corresponding to the various offset Gregorian flavours against that for the prime focus dish, for all 9 models. The plot on the left is for $r_0=3.25\degr$ (third sidelobe and out), the plot on the right is for $r_0=10\degr$. It is clear that most of the variation is caused by the close-in sidelobes: there's roughly a factor of 2 variation across models at $r_0=3.25\degr$ (even more than 2 for the shaped OG design, which is to be expected, given it's higher close-in sidelobes), but considerably less than that at $r_0=10\degr$. In 
 order to reduce this variance, we average FSCN levels (quadratically, since this is rms) across all 9 fields in all subsequent plots.
 
 \subsection{Source counts and extrapolation to fainter sources}
@@ -487,67 +488,84 @@ The FSCN value described by Eq.~(\ref{eq:fscn}) includes a term which depends on
 
 \noindent where $\sigma_{0}$ is the \emph{true} FSCN value including all sources up to a flux limit $S_\mathrm{max}$, and $\sigma_{0.5}$ is the FSCN level including only the sources between our lower flux cut off of 0.5~Jy and $S_\mathrm{max}$. Note that $S_\mathrm{max}$ is set to 3 Jy when evaluating the integrals due to the 3~Jy upper flux limit imposed to exclude the A-team sources. 
 
-As is consistent with the sky model setup described in Section 2.1, the integrated source counts for the correction factor are computed from the S$^{3}$-SEX simulation \citep{Wilman-simulation}. The 1.4~GHz flux densities of the $\sim$300 million sources in the simulation are first placed into 250 logarithmically spaced flux bins, forming $n(S)$ and allowing Eq.~(\ref{eq:fscn_correction}) to be numerically evaluated, resulting in a value of $\sigma_{0}$/$\sigma_{0.5}$~=~3.66.
+As is consistent with the sky model setup described in Section \ref{sec:modelskies}, the integrated source counts for the correction factor are computed from the S$^{3}$-SEX simulation \citep{Wilman-simulation}. The 1.4~GHz flux densities of the $\sim$259 million sources in the simulation are first placed into 1000 logarithmically spaced flux bins, forming $n(S)$ and allowing Eq.~(\ref{eq:fscn_correction}) to be numerically evaluated, resulting in a value of $\sigma_{0}$/$\sigma_{0.5}$~=~2.72.
 
 The differential source counts derived from the Wilman simulation are shown by the black squares on Fig.~\ref{fig:source_counts}. The distribution is Euclidean-normalized for ease of comparison to observationally-derived values which are shown by the red circles. Details of these data and an review of the subject of radio source counts are provided by \citet{deZotti-surveys}. 
 
-The limitations of the S$^{3}$-SEX simulation are described by \citet{Wilman-simulation}, but of particular concern for this work is the possible significant deviation of the simulation from the observed source counts at sub-mJy levels, and the implications this may have for the correction factor described by Eq.~(\ref{eq:fscn_correction}). The observations in Fig.~\ref{fig:source_counts} show a flattening, or possible turn-up in the source counts at the faint end of the distribution. This picture is reinforced by the triangles on Fig.~\ref{fig:source_counts} which are the radio source counts derived by applying infrared-radio correlations to the $K$-band luminosity function, which has been explored down to very faint levels (Jarvis 2012, in prep.). The completeness limit of the $K$-band data causes the sudden decline which does not reflect the true behaviour of the counts.
+The limitations of the S$^{3}$-SEX simulation are described by \citet{Wilman-simulation}, but of particular concern for this work is the possible significant deviation of the simulation from the observed source counts at sub-mJy levels, and the implications this may have for the correction factor described by Eq.~(\ref{eq:fscn_correction}). The observations in Fig.~\ref{fig:source_counts} show a flattening, or possible turn-up in the source counts at the faint end of the distribution. This picture is reinforced by the triangles on Fig.~\ref{fig:source_counts} which are the radio source counts derived by applying infrared-radio correlations to the $K$-band luminosity function, which has been explored down to very faint levels (Jarvis 2012, in prep.). The completeness limit of the $K$-band data causes the sudden decline at the faint end which does not reflect the true behaviour of the counts.
 
 The observed inflection in the source counts remains the subject of much debate and is generally thought to be caused by the dominant source population shifting from active galactic nuclei (AGN) to star-forming galaxies at these flux levels \citep[e.g.][]{Padovani-VLA-Chandra-DFS} although radio-weak AGN may also be a significant contributor to the counts \citep{Simpson-Subaru-XMM}. 
 
-For reasons of consistency we adopt the previously derived value of 3.66 for the FSCN correction factor in the simulations that follow. However given the deviation of the simulation from the observations which we have outlined above, and in order to probe how much we may be underestimating the FSCN correction factor, we also implement a toy model which deviates from the S$^{3}$-SEX simulation at the approximate point where the counts begin to turn up, as marked by the dashed vertical line on Fig.~\ref{fig:source_counts}. This model is implemented by applying a power-law correction to the S$^{3}$-SEX counts which is unity at the marked cross-over point and increases with decreasing flux such that the new model approximately tracks the upper envelope of the observed values. This model is shown on Fig.~\ref{fig:source_counts} by the small black dots. 
+For reasons of consistency we adopt the previously derived value of 2.72 for the FSCN correction factor in the simulations that follow. However given the deviation of the simulation from the observations which we have outlined above, and in order to probe how much we may be underestimating the FSCN correction factor, we also implement a toy model which deviates from the S$^{3}$-SEX simulation at the approximate point where the counts begin to turn up, as marked by the dashed vertical line on Fig.~\ref{fig:source_counts}. This model is implemented by applying a power-law correction to the S$^{3}$-SEX counts which is unity at the marked cross-over point and increases with decreasing flux such that the new model approximately tracks the upper envelope of the observed values. This model is shown on Fig.~\ref{fig:source_counts} by the small black dots. 
 
-Evaluating the correction factor for the toy ``extreme faint counts" model results in value of 6.72, a factor $\simeq$1.8 higher than the adopted value. This demonstrates that the ``cost curves" we derive in the following section are not critically sensitive to the size of the unknown faint source population, even for unrealistically large counts.
+Evaluating the correction factor for the toy ``extreme faint counts" model results in value of 5.48, a factor $\simeq$2 higher than the adopted value. This demonstrates that the ``cost curves" we derive in the following section are not critically sensitive to the size of the unknown faint source population, even for unrealistically large counts.
 
-Future deep surveys with new and improved radio interferometers such as the EVLA and MeerKAT \citep[e.g.][]{Jarvis-MeerKAT-SALT,Heywood-MESMER} will probe the extremely faint end of the source count distribution. Such experiments form one of the many reasons why the investigation of hitherto negligible effects such as FSCN is vital.
+Future deep surveys with new and improved radio interferometers such as the EVLA and MeerKAT \citep[e.g.][]{Jarvis-MeerKAT-SALT,Heywood-MESMER} will probe the extremely faint end of the source count distribution. The sensitivity demands of such experiments form one of the many reasons why the investigation of hitherto negligible effects such as FSCN is vital.
 
 \begin{figure}
 \centering
-%\includegraphics[width = 0.8 \textwidth]{1400_source_counts}
-\caption{Euclidean-normalised radio source counts at 1.4 GHz. The red data points represent counts derived by several authors, as collated by \citet{deZotti-surveys}. The black squares show the source counts from the S$^{3}$-SEX simulation derived by binning all $\sim$300 million sources over the full 400 square degree sky area into 250 logarithmically-spaced flux bins. The triangles are radio source counts derived from $K$-band infrared magnitudes (Jarvis 2012, in prep.). The two solid vertical lines span the flux density range over which NVSS sources are selected. The small black squares show the toy model which we implement to investigate the potential effect of an extremely large population of faint sources. The model applies a power-law modification to the S$^{3}$-SEX counts and the point where the models converge is marked by the dashed vertical line.  \label{fig:source_counts}}
+\includegraphics[width = \columnwidth]{1400_source_counts_1000}
+\caption{Euclidean-normalised radio source counts at 1.4 GHz. The red data points represent counts derived by several authors, as collated by \citet{deZotti-surveys}. The black squares show the source counts from the S$^{3}$-SEX simulation derived by binning all $\sim$259 million sources over the full 400 square degree sky area into 1000 logarithmically-spaced flux bins. The triangles are radio source counts derived from $K$-band infrared magnitudes (Jarvis 2012, in prep.). The two solid vertical lines span the flux density range over which NVSS sources are selected. The small black squares show the toy model which we implement to investigate the potential effect of an extremely large population of faint sources. The model applies a power-law modification to the S$^{3}$-SEX counts and the point where the models converge is marked by the dashed vertical line.  \label{fig:source_counts}}
 \end{figure}
 
 \subsection{The classical confusion limit}
 
-An image of the sky reaches the classical confusion limit when the background source population can no longer be resolved into individual sources, i.e.~when the density of sources $n(S)$ reaches a critical value. Depending on the spatial resolution of the instrument the confusion limit places a fundamental limit on the depth that can be reached by any observation.
+An image reaches the classical confusion limit when the radio sky can no longer be resolved into individual sources, i.e.~when the density of sources $n(S)$ reaches a critical resolution-dependent value. Classical confusion thus places a fundamental limit on the depth that can be reached by any observation.
 
-In this section we compute the confusion limit of MeerKAT. The area of the PSF ($\Omega_\mathrm{PSF}$) for MeerKAT is determined by running a full 12-hour synthesis simulation ($\nu_\mathrm{min}$~=~1.440 GHz, $\Delta \nu$~=~20~MHz) for a variety of Declinations: 0$^{\circ}$, -30$^{\circ}$, -60$^{\circ}$ and -90$^{\circ}$. A 2D Gaussian is then fitted to the main lobe of the PSFs derived from these simulations for both uniform and natural weighting of the visibilities. The PSF parameters are given in Tab.~\ref{tab:conf_beams}.
-
-The density of sources within a PSF area is determined by using the source counts from the S$^{3}$-SEX simulation \citep{Wilman-simulation}. For a given RMS noise value $\sigma_\mathrm{map}$ the number of detected sources per square degree is calculated: $n(S > \sigma_\mathrm{map})$. There is no formal definition for the number of PSF areas per source below which the map is said to be confusion limited, so we adopt the often-used rule-of-thumb which places the number at 10. The map is thus confusion limited if the following condition is satisfied:
+In this section we compute the confusion limit of MeerKAT. The density of sources within a PSF area (or resolution element) is determined by using the source counts from the S$^{3}$-SEX simulation \citep{Wilman-simulation}. For a given flux limit $\sigma_\mathrm{map}$ the number of detected sources per square degree is calculated: $n(S > \sigma_\mathrm{map})$. There is no formal definition for the number of resolution elements per source below which the map is said to be confusion limited, so we adopt the often-used rule-of-thumb which places the number at 10. The map is thus confusion limited if the following condition is satisfied:
 
 \begin{equation}
 n(S > \sigma_\mathrm{map})~\Omega_\mathrm{PSF} > 1 / 10.
 \label{eq:conf_limit}
 \end{equation}
 
-Four Declinations and two weighting schemes means that we calculate the confusion noise $\sigma_\mathrm{conf}$ for eight different scenarios. The source count data described in Sect.~\ref{sec:source-counts} is employed here, with the confusion limit determined by the lower edge of the flux bin in which the condition in Eq.~(\ref{eq:conf_limit}) becomes satisfied for each of the eight beam sizes. The beam sizes and the results are given in Tab.~\ref{tab:conf_beams} and the confusion limit is shown graphically in Fig.~\ref{fig:conf_limits}. The actual quoted flux limits are subject to an uncertainty associated with the width of the bin, which is $\sim$10\% at these levels. The density of sources $n(S)$ is also averaged over the full sky area of the simulation, whereas in reality this will be dependent on the clustering strength due to cosmic variance. For comparison, the L-band confusion limit of the Very Large Array in D-configuration\footnote{{\tt http://www.vla.nrao.edu/astro/guides/vlas/current/node11.html}
-} (
-maximum baseline = 1~km) is 86~$\mu$Jy beam$^{-1}$.
+The area of the PSF ($\Omega_\mathrm{PSF}$) for MeerKAT is determined by running a full 12-hour synthesis simulation ($\nu_\mathrm{min}$~=~1.440 GHz, $\Delta \nu$~=~20~MHz) for a variety of Declinations: 0$^{\circ}$, -30$^{\circ}$, -60$^{\circ}$ and -90$^{\circ}$. A 2D Gaussian is then fitted to the main lobe of the PSFs derived from these simulations for both uniform and natural weighting of the visibilities.
 
-\begin{table*}
-\centering
-%\begin{minipage}{158mm}
-\caption{Uniform and naturally weighted PSF properties for the MeerKAT array at 1.4 GHz for a variety of Declinations, and the corresponding approximate confusion noise limit.\label{tab:conf_beams}}
-\begin{tabular}{llllll}
-\hline
-\hline
-Declination (deg) & Weighting scheme & $B_{maj}$ (arcsec) & $B_{min}$ (arcsec) & PA (deg) & $\sigma_{conf}$ ($\mu$Jy beam$^{-1}$) \\ \hline
-0   & natural & 15.18 & 12.85 & -12.98 & 156\\
--30 & natural & 13.94 & 12.78 & 107.00 & 139\\
--60 & natural & 13.85 & 12.45 & 96.70  & 139\\
--90 & natural & 13.90 & 13.87 & 30.53  & 156\\
-0   & uniform & 6.94  & 6.48  & -28.55 & 41\\
--30 & uniform & 5.66  & 5.33  & -51.08 & 30\\
--60 & uniform & 5.40  & 5.12  & 115.84 & 26\\
--90 & uniform & 5.27  & 5.26  & 52.03  & 26\\ \hline
-\end{tabular}
-%\end{minipage}
-\end{table*}
+Unlike natural weighting, uniform weighting will not deliver a characteristic resolution. The combination of the area of sky that one wishes to image and the angular pixel scale within the map define the grid in the $uv$-plane upon which the visibilities are placed in order to be Fourier transformed. As such the sky area covered by the image defines the size of the grid cell in $uv$ space, and variation of this parameter can thus significantly affect the subsequent visibility weights.
+
+Whereas natural weighting simply applies unity weights to each visibility, the uniform scheme ensures that multiple visibilities occupying a single $uv$ grid cell are downweighted such that the sum of their weights is unity. To put this another way: natural weighting applies unity weights to the visibilities, uniform weighting applies unity weight to the $uv$ grid cells.
+
+Since there are always more short baselines than long ones, the usual (and generally desired) effect of uniform weighting is to downweight the shorter baselines in the center of the $uv$ plane and emphasise the longer baselines. The end result is higher resolution at the expense of raw sensitivity.
+
+Consider the (likely highly impractical) case where an extremely small field is imaged and a single $uv$ cell in the corresponding $uv$ grid is large enough to encompass all baseline lengths. The imager will compute weights to force the overall weight of this single $uv$ cell to be 1. Since this cell contains all the visibilities they will all be weighted equally and the effect is identical to natural weighting. As the field of view of the map expands the $uv$ cell size shrinks. Eventually some of the longer baselines will enter adjacent cells. When the weights are determined this time the longer baselines will be highly emphasised; the resolution will be maximal but the sensitivity will be severely affected due to the downweighting of all the other baselines. As the map size increases, the $uv$ cell size decreases along with the effective resolution, and the sensitivity of the map increases as more of the inner regions of the $uv$ plane tend towards their naturally weighted values.
+
+These effects are distilled graphically into Fig.~\ref{fig:uniform_confusion}. The upper red horizontal line shows the confusion limit of a naturally weighted MeerKAT image. The lower red line shows the nominal 5000-hour 1-GHz bandwidth sensitivity target, as featured on other figures. The solid lines show the confusion limit for a uniformly-weighted image as a function of field of view for the four Declination values noted above. Note that the field of view parameter here is not to be confused with the field of view imposed by the primary beam response; it is simply the extent of the radio map. The figure extends to one full hemisphere. The dashed lines show the theoretical thermal noise limit in a synthesis map as given by e.g.~\citet{tms1}, Eq.~6.62. The ratio of the rms to mean imaging weights is computed for each scenario by directly reading the values from the imaging weights column from the simulated Measurement Set. The extents of the major axes of the PSFs are also plotted on Fig.~\ref{fig:uniform_confusion}, with values listed in arcseconds.
+
+For small fields of view the uniform weighted confusion limit and the thermal noise limit both track the naturally weighted value as expected. Eventually the longest baselines take precedent, the confusion limit drops and the thermal noise value jumps up. As the field of view then increases the trade-off between these two values becomes apparent.{\bf IH: I still need to explain the turn up. First rule...}
+
+There are two main conclusions to draw from this figure. The first is that uniform weighting is not a panacea when it comes to circumventing the classical confusion limit in an interferometric observation. There is at all times a trade-off between both the confusion limit and the sensitivity which will be both instrument and observation specific. The optimum field of view, \emph{considering solely these two effects}, is where the solid and dashed lines in Fig.~\ref{fig:uniform_confusion} cross. The second conclusion is that without long baselines MeerKAT will never deliver its nominal 5000 hour continuum sensitivity, being at best an order of magnitude off.
+
+A discussion of how the choice of imaging weights relates to FSCN is given in Sec.~\ref{sec:img-weights}.
+
+{\bf IH: Do we still want a table of confusion limit values? I've also computed them for the VLA (ABCD) in a consistent manner for comparison...}
+
+% Four Declinations and two weighting schemes means that we calculate the confusion noise $\sigma_\mathrm{conf}$ for eight different scenarios. The source count data described in Sect.~\ref{sec:source-counts} is employed here, with the confusion limit determined by the lower edge of the flux bin in which the condition in Eq.~(\ref{eq:conf_limit}) becomes satisfied for each of the eight beam sizes. The beam sizes and the results are given in Tab.~\ref{tab:conf_beams} and the confusion limit is shown graphically in Fig.~\ref{fig:conf_limits}. The actual quoted flux limits are subject to an uncertainty associated with the width of the bin, which is $\sim$10\% at these levels. The density of sources $n(S)$ is also averaged over the full sky area of the simulation, whereas in reality this will be dependent on the clustering strength due to cosmic variance. For comparison, the L-band confusion limit of the Very Large Array in D-configuration\footnote{{\tt http://www.vla.nrao.edu/astro/guides/vlas/\\current/node11.html}
+% } (maximum baseline = 1~km) is 86~$\mu$Jy beam$^{-1}$.
+
+% \begin{table*}
+% \centering
+\begin{minipage}{158mm}
+% \caption{Uniform and naturally weighted PSF properties for the MeerKAT array at 1.4 GHz for a variety of Declinations, and the corresponding approximate confusion noise limit.\label{tab:conf_beams}}
+% \begin{tabular}{llllll}
+% \hline
+% \hline
+% Declination (deg) & Weighting scheme & $B_{maj}$ (arcsec) & $B_{min}$ (arcsec) & PA (deg) & $\sigma_{conf}$ ($\mu$Jy beam$^{-1}$) \\ \hline
+% 0   & natural & 15.18 & 12.85 & -12.98 & 156\\
+% -30 & natural & 13.94 & 12.78 & 107.00 & 139\\
+% -60 & natural & 13.85 & 12.45 & 96.70  & 139\\
+% -90 & natural & 13.90 & 13.87 & 30.53  & 156\\
+% 0   & uniform & 6.94  & 6.48  & -28.55 & 41\\
+% -30 & uniform & 5.66  & 5.33  & -51.08 & 30\\
+% -60 & uniform & 5.40  & 5.12  & 115.84 & 26\\
+% -90 & uniform & 5.27  & 5.26  & 52.03  & 26\\ \hline
+% \end{tabular}
+\end{minipage}
+% \end{table*}
 
 \begin{figure}
 \centering
-%\includegraphics[width = 0.8 \textwidth]{1400_confusion}
-\caption{The effects of the classical confusion limit on a 1.4 GHz MeerKAT observation. The abscissa represents the theoretical map noise as derived by the standard noise equation for a radio interferometer. The ordinate shows the corresponding classical confusion noise limit for a map that reaches a particular depth. The beam areas are calculated from a full 12-hour synthesis for four Declination values, and for both uniform and naturally weighted images.\label{fig:conf_limits}}
+\includegraphics[width = \columnwidth]{uniform_confusion}
+\caption{The effects of the map size on the uniformly-weighted PSF (vertical lines show the major axes), and consequently the thermal map noise (dashed line) and confusion limit (solid line). The effect is calculated for a full plausible range of image fields of view and four four representative Declination values: 0$^{\circ}$, -30$^{\circ}$, -60$^{\circ}$ and -90$^{\circ}$. Refer to the text for further discussion.\label{fig:uniform_confusion}}
 \end{figure}
 
 % Having imposed a lower flux cut-off of 0.5 Jy for practical reasons, we end up missing an extremely significant contribution from the massive population of weaker sources. In terms of Eq.~(\ref{eq:fscn}), our simulations correspond to limits of $0.5$ to $S_\mathrm{max}=3$ on the second integral (rather than $0$ to $3$). From this it follows that the factor by which we underestimate the FSCN in our simulations is
@@ -587,7 +605,7 @@ The most striking feature of this plot is the completely different character of 
 A few other interesting points arise from this plot:
 
 \begin{itemize}
-  \item This suggests that at MeerKAT's extreme sensitivity limit of $0.1 \mu\mathrm{Jy}$, we must image out to $\sim$10$\degr$ with the default OG dishes, $\sim$20$\degr$ with rotationally randomized PF dishes, and $\sim$30$\degr$ with non-randomized PF dishes (but see the caveat on absolute performance figures below). This is a potentially a massive cost difference!
+  \item This suggests that at MeerKAT's extreme sensitivity limit of $0.1 \mu\mathrm{Jy}$, we must image out to $\sim$10$\degr$ with the default OG dishes, $\sim$20$\degr$ with rotationally randomized PF dishes, and $\sim$30$\degr$ with non-randomized PF dishes (but see the caveat on absolute performance figures below). This is a potentially a huge cost difference!
   \item The OG and PF curves cross over at $\sim$40$\degr$.
   \item Sky rotation makes virtually no difference to the PF design, but provides about a factor of 2 FSCN suppression (beyond $10\degr$) in the OG design.
   \item The shaped OG design starts paying off beyond a radius of $8\degr$, but causes considerably higher FSCN closer in. It is not obvious whether this is a good trade-off or bad, since higher close-in sidelobes can make calibration more difficult.
@@ -646,7 +664,7 @@ suggests that the correlator FoV tailoring technique proposed by Lonsdale et al.
 \subsection{Bandwidth averaging and multi-frequency synthesis}
 \label{sec:freq-avg}
 
-Attenuation due to bandwidth averaging has the same underlying cause as that due to time averaging. The basic effect can expected to scale as a sinc function of fractional bandwidth. Figure~\ref{fig:bandwidth-smearing} shows the result of simulations using a single channel of increasing width. The quantity being plotted is the FSCN suppression factor, normalized to unity at 1.25~MHz.
+Attenuation due to bandwidth averaging has the same underlying cause as that due to time averaging. The basic effect can expected to scale as a sinc function of fractional bandwidth. Fig.~\ref{fig:bandwidth-smearing} shows the result of simulations using a single channel of increasing width. The quantity being plotted is the FSCN suppression factor, normalized to unity at 1.25~MHz.
 
 Bandwidth averaging allows for some interesting trade-offs between spectral resolution, sensitivity, and FSCN. Given a frequency band $\Delta\nu_\mathrm{tot}$ split into $N_\mathrm{tot}$ channels, one could choose to average all the channels together prior to imaging, or split the band into sub-bands and average each sub-band, or image each channel separately, or employ multi-frequency synthesis (MFS) with some combination of channel averaging. 
 
@@ -661,7 +679,7 @@ All this suggests that bandwidth averaging offers a lot of scope for FSCN suppre
 
 Before we can extrapolate any of the present insights to the SKA, we need to develop our understanding of how FSCN scales with array size and layout. Towards this end, we have performed the same simulations on three hypothetical smaller instruments: WesterKAT (14 dishes), VLAKAT (27 dishes) and LOFARKAT (40 dishes). Each of these represents an existing array layout (WSRT, EVLA and LOFAR) shifted to MeerKAT's geographical position, and equipped with MeerKAT dishes. (This was done to keep all other elements of the simulation except array configuration as identical as possible.) We used the same canonical observational configuration described in Sect.~\ref{sec:config}, except for WesterKAT, for which the synthesis time was increased to 12 hours to obtain full $uv$-coverage. 
 
-Table ~\ref{tab:kats} summarizes the various scaling factors of these arrays relative to MeerKAT. (Note that the ratio of the number of $uv$-samples $N_s$ is nominally the same as the ratio of baseline numbers $N_b$, or the square of the ratio of antenna numbers $N_a$, except for WesterKAT, for which the $N_s$ is higher by a factor of 1.5 due to the increased synthesis time.) 
+Tab.~\ref{tab:kats} summarizes the various scaling factors of these arrays relative to MeerKAT. (Note that the ratio of the number of $uv$-samples $N_s$ is nominally the same as the ratio of baseline numbers $N_b$, or the square of the ratio of antenna numbers $N_a$, except for WesterKAT, for which the $N_s$ is higher by a factor of 1.5 due to the increased synthesis time.) 
 
 For natural weighting, \citet{SKA49} suggests a scaling law for rms PSF sidelobes of $1/\sqrt{N_s}$, where $N_s$ is the number of $uv$-samples. The number in the last column of Tab.~\ref{tab:kats} gives this number for the other arrays relative to MeerKAT. Can we expect FSCN to scale in the same way? Figs.~\ref{fig:cc-westerkat}--\ref{fig:fscn-rr-suppression} suggest that the answer is a lot more complicated, at least in the smaller array regime. 
 
@@ -827,6 +845,8 @@ These results suggest that a joint optimization of primary beam and PSF shape ca
 \acknowledgements{Dedicated to the memory of Prof. Steve Rawlings, who drove \& inspired a lot of the research that went into this work -- and will be missed for immeasurably more than that. 
 
 This work is based upon research supported by the South African Research Chairs Initiative of the Department of Science and Technology and National Research Foundation.
+
+IH acknowledges the support of the South East Physics Network (SEPnet).
 
 We thank Matt Jarvis for useful discussions and pre-publication data pertaining to the faint radio source population.
 }
