@@ -26,6 +26,7 @@
 
 \newcommand{\EDIT}[1]{#1}
 
+\newcommand{\uJy}{$\mu\mathrm{Jy}$}
 
 \begin{document}
 
@@ -410,49 +411,49 @@ The variable grid step option is particularly important, since we need simulated
 {\bf OMS: need to describe this.}
 
 
-\section{Far sidelobe confusion noise (FSCN)}
+\section{Sidelobe confusion noise}
 \label{sec:fsn}
 
-Sidelobe confusion, also called confusion noise, arises due to non-zero PSF sidelobe response away from centre. An interferometer does not sample the $uv$-plane fully, and gaps in the $uv$-coverage produce PSF sidelobes that are non-zero, even asymptotically. This in turn causes every source in the sky, no matter how distant, to contribute some ``confusing'' signal to every pixel of an interferometric map. Given a large number of sources, this contribution becomes essentially a random noise floor, thus justifying the name of confusion noise.
+Sidelobe confusion noise (SCN) arises due to non-zero PSF sidelobe response away from centre. An interferometer does not sample the $uv$-plane fully, and gaps in the $uv$-coverage produce PSF sidelobes that are non-zero, even asymptotically. This in turn causes every source in the sky, no matter how distant, to contribute some ``confusing'' signal to every pixel of an interferometric map. Given a large number of sources, this contribution becomes essentially a random noise floor, thus justifying the name of confusion noise.
 
 In practice, confusion noise is attenuated by a number of factors such PSF sidelobe level, primary beam sidelobe level and time/frequency averaging \citep[see Fig.~2 in][for an illustration]{SKA54-expa,SKA54}. Furthermore, by imaging and deconvolving sources within the FoV, one can progressively remove their contribution from confusion noise. This is what allows existing observatories to produce images that are limited by thermal noise (or calibration artefacts) rather than confusion. Typically, there's been little need to image and deconvolve sources beyond the main lobe, or at most the first sidelobe, of the primary beam, with sources in further primary beam sidelobes attenuated to negligible levels (barring pathological cases of really bright confusing sources in the sidelobes, which can be dealt with on an individual basis during calibration).
 
-However, with the increased sensitivity of new instruments such as MeerKAT (and in the future the SKA), the thermal noise floor drops considerably. In particular, MeerKAT is designed to reach a thermal noise limit of 0.1 $\mu$Jy for a 5000-hour pointing. Such sensitivity levels make far-sidelobe confusion noise (FSCN) very much non-negligible. One would potentially need to image and deconvolve sources over a much larger sky area -- i.e. including the second, third, etc. primary beam sidelobe -- to reach the thermal noise again. This can potentially blow up computational costs, which scale directly with imaged sky area. The primary beam plays a crucial role in all this, since it attenuates the FSCN. As we show below, choice of optics can make an order of magnitude difference in FSCN levels.
+However, with the increased sensitivity of new instruments such as MeerKAT (and in the future the SKA), the thermal noise floor drops considerably. In particular, MeerKAT is designed to reach a thermal noise limit of 0.1 \uJy for a 5000-hour pointing. Such sensitivity levels make sidelobe confusion noise very much non-negligible. One would potentially need to image and deconvolve sources over a much larger sky area -- i.e. including the second, third, etc. primary beam sidelobe -- to reach the thermal noise again. This can potentially blow up computational costs, which scale directly with imaged sky area. Furthermore, as we show in Sect.~\ref{sec:meerkat-costcurve}, there is an asymptotic SCN level beyond which deconvolution is impossible. The primary beam plays a crucial role in all this, since it directly attenuates SCN. As we show below, choice of optics can make up to an order of magnitude difference in SCN levels.
 
 \subsection{Prior work}
 
-\citet[][see Appendix B]{VLA146} showed that FSCN can be analytically estimated as a random walk process in the complex plane. \citet[][]{SKA54-expa,SKA54} followed up on this in the context of SKA design. Distilling their results into a single equation (and using slightly different notation, for consistency with the present work), we have:
+\citet[][see Appendix B]{VLA146} showed that SCN can be analytically estimated as a random walk process in the complex plane. \citet[][]{SKA54-expa,SKA54} followed up on this in the context of SKA design. Distilling their results into a single equation (and using slightly different notation, for consistency with the present work), we have:
 
 \newcommand{\DD}[1]{\,\mathrm{d}{#1}}
 
 \begin{equation}
 \label{eq:fscn}
-  \sigma^2_\mathrm{FSCN}(r_0) = \left [ \int\limits_{r_0}^{\infty} P^2(r)C^2(r)E^2(r) \DD{r} \right ]
+  \sigma^2_\mathrm{SCN}(r_0) = \left [ \int\limits_{r_0}^{\infty} P^2(r)C^2(r)E^2(r) \DD{r} \right ]
 \left[ \int\limits_{0}^{S_\mathrm{max}} S^2n(S)\DD{S}\right ] 
 \end{equation}
 
-Here, $S$ is source flux, $n(S)$ is the differential source count, $P(r)$ is the PSF level at distance $r$ from centre, $C(r)$ is correlator attenuation due to time/bandwidth averaging, and $E(r)$ is the primary beam. However, as the individual terms in the first integration are difficult (if not impossible) to estimate analytically, this equation cannot easily be turned into quantitative estimates. Furthermore, it treats $P$ and $E$ as radially symmetric (although this can be generalized by using a two-dimensional integral). An even more subtle problem is that this formulation implicitly assumes a snapshot observation, and cannot properly account for time- and station-variable primary beams -- which can actually have quite a significant an impact on FSCN, as we'll show below.
+Here, $S$ is source flux, $n(S)$ is the differential source count, $P(r)$ is the PSF level at distance $r$ from centre, $C(r)$ is correlator attenuation due to time/bandwidth averaging, and $E(r)$ is the primary beam. However, as the individual terms in the first integration are difficult (if not impossible) to estimate analytically, this equation cannot easily be turned into quantitative estimates. Furthermore, it treats $P$ and $E$ as radially symmetric (although this can be generalized by using a two-dimensional integral). An even more subtle problem is that this formulation implicitly assumes a snapshot observation, and cannot properly account for time- and station-variable primary beams -- which can actually have quite a significant an impact on SCN, as we'll show below.
 
-The aim of this part of the work is therefore to use simulations to derive quantitative estimates of FSCN levels for different MeerKAT dish designs -- taking into account sky rotation and other effects -- and to establish a methodology for similar studies of SKA designs.
+The aim of this part of the work is therefore to use simulations to derive quantitative estimates of SCN levels for different MeerKAT dish designs -- taking into account sky rotation and other effects -- and to establish a methodology for similar studies of SKA designs.
 
 \subsection{Simulation technique}
 
-The basic idea of a FSCN simulation is very simple. We take an all-sky model and make a hole in the middle: that is, exclude sources within a certain radius $r_0$ of the phase centre. Then, we run this model through an interferometric simulator with a variety of primary beam patterns, and use the resulting visibilities to make an image of the nominally empty sky in the middle. This image is non-zero due to FSCN, and the rms pixel value gives us the FSCN level corresponding to sources with $r>r_0$, i.e. the fundamental confusion noise floor that we can achieve by fully deconvolving an image of radius $r_0$.
+The basic idea of a SCN simulation is very simple. We take an all-sky model and make a hole in the middle: that is, exclude sources within a certain radius $r_0$ of the phase centre. Then, we run this model through an interferometric simulator with a variety of primary beam patterns, and use the resulting visibilities to make an image of the nominally empty sky in the middle. This image is non-zero due to SCN, and the rms pixel value gives us the SCN level corresponding to sources with $r>r_0$, i.e. the fundamental confusion noise floor that we can achieve by fully deconvolving an image of radius $r_0$.
 
 Given the performance considerations of Sect.~\ref{sec:performance}, complete and sufficiently deep all-sky simulations are impractical due to the very high source counts. We have therefore taken a few shortcuts:
 
 \begin{itemize}
-  \item We only simulate a hemisphere (i.e. to a radius of $90\degr$ from phase centre) and not the full sky, and we do not take into account horizon masking. As we shall see later, the bulk of FSCN is contributed by sources within $10\degr$ of centre, so this shortcut is justified. A proper analysis of the effects of this shortcut is given in Sect.~\ref{sec:horizon-masking}.
+  \item We only simulate a hemisphere (i.e. to a radius of $90\degr$ from phase centre) and not the full sky, and we do not take into account horizon masking. As we shall see later, the bulk of SCN is contributed by sources within $10\degr$ of centre, so this shortcut is justified. A proper analysis of the effects of this shortcut is given in Sect.~\ref{sec:horizon-masking}.
   \item We restrict each simulation to $\sim4000$ sources at a time; we have therefore imposed a lower flux threshold of 0.5 Jy, and extrapolate the contribution of fainter sources as discussed in Sect.~\ref{sec:source-counts}.
-  \item To reduce data size, we typically simulate only a few frequency channels, and use relatively long (60~s) integrations. The effect of this on our FSCN results is discussed further in Sect.~\ref{sec:smearing}.
+  \item To reduce data size, we typically simulate only a few frequency channels, and use relatively long (60~s) integrations. The effect of this on our SCN results is discussed further in Sect.~\ref{sec:smearing}.
 \end{itemize}
 
 \subsection{Observational configuration}
 \label{sec:config}
 
-The observational configuration used in the simulation is set up by generating an ``empty'' measurement set with appropriate metadata, for which we use the {\tt makems} tool\footnote{{\tt makems} is standalone utility written by Ger van Diepen which generates measurement sets based on simple configuration files. It is available from the MeqTrees (and LOFAR) software repositories. The simulation tools found in CASA may also be used for this purpose.}. For the FSCN simulations, we have used the following configuration: 64-dish MeerKAT layout (cite?), 8 hour observation, field centred at RA=0h, Dec=-40\degr, 60~s integration, 8 channels, 20~MHz band centred on 1450~MHz. We shall refer to this as the ``canonical'' configuration from now on.
+The observational configuration used in the simulation is set up by generating an ``empty'' measurement set with appropriate metadata, for which we use the {\tt makems} tool\footnote{{\tt makems} is standalone utility written by Ger van Diepen which generates measurement sets based on simple configuration files. It is available from the MeqTrees (and LOFAR) software repositories. The simulation tools found in CASA may also be used for this purpose.}. For the SCN simulations, we have used the following configuration: 64-dish MeerKAT layout (cite?), 8 hour observation, field centred at RA=0h, Dec=-40\degr, 60~s integration, 8 channels, 20~MHz band centred on 1450~MHz. We shall refer to this as the ``canonical'' configuration from now on.
 
-A real-life MeerKAT observation would use shorter ($\leq10$~s) integrations, and a much wider band, with more frequency channels. This does have an impact on FSCN levels, but not a major one. Sect.~\ref{sec:smearing} examines this issue in more detail.
+A real-life MeerKAT observation would use shorter ($\leq10$~s) integrations, and a much wider band, with more frequency channels. This does have an impact on SCN levels, but not a major one. Sect.~\ref{sec:smearing} examines this issue in more detail.
 
 \subsection{Sky models}
 
@@ -460,35 +461,53 @@ To make the sky models for this simulation, we extracted NVSS samplings of compl
 
 \begin{figure}
 \centering \includegraphics[width=.7\columnwidth]{ncp-skymodel-transp}
-\caption{\label{fig:ncp-skymodel}A typical hemisphere sky model used for the FSCN simulation. This particular hemisphere was centred on the NCP, i.e. this is essentially just the Northern sky between 0.5 and 3 Jy. Source clusters associated with the A-team are indicated in red.}
+\caption{\label{fig:ncp-skymodel}A typical hemisphere sky model used for the SCN simulation. This particular hemisphere was centred on the NCP, i.e. this is essentially just the Northern sky between 0.5 and 3 Jy. Source clusters associated with the A-team are indicated in red.}
 \end{figure}
 
 \begin{figure*}
   \includegraphics[width=\columnwidth]{cc-fields-325}
   \includegraphics[width=\columnwidth]{cc-fields-10}
 %  \includegraphics[width=\textwidth]{costcurve-main}
-\caption{\label{fig:fscn-fields}FSCN levels (offset Gregorian vs. prime focus) for the 9 hemisphere models used in the simulations. The plot on the left is for $r_0=3.25\degr$, the plot on the right is for $r_0=10\degr$. The increased variance in the left plot is caused by the stronger close-in sidelobes. Note how the shaped OG design is especially susceptible to this.}
+\caption{\label{fig:fscn-fields}SCN levels (offset Gregorian vs. prime focus) for the 9 hemisphere models used in the simulations. The plot on the left is for $r_0=3.25\degr$, the plot on the right is for $r_0=10\degr$. The increased variance in the left plot is caused by the stronger close-in sidelobes. Note how the shaped OG design is especially susceptible to this.}
 \end{figure*}
 
-A handful of the strongest sources in the sky -- the ``A-team'' of  Cas~A, Vir~A, etc. -- can provide a dominant contribution to FSCN even from relatively distant sidelobes. This is a well-known problem, and current real-life data reduction practice is to treat such sources on an individual basis, by including them in the calibration model. Their contribution is thus effectively removed even before imaging. We have therefore excluded the A-team -- or, more generally, all sources brighter than 3~Jy -- from the sky models, on the assumption that such sources would have to be subtracted individually during calibration anyway. We also found that a simple 3~Jy cutoff was insufficient, as the NVSS represents each A-team source by a whole cluster of point sources, with a large number of them slipping below the threshold of 3~Jy, but making a noticeable FSCN contribution through sheer numbers. We therefore removed such clusters from the models by hand.
+A handful of the strongest sources in the sky -- the ``A-team'' of  Cas~A, Vir~A, etc. -- can provide a dominant contribution to SCN even from relatively distant sidelobes. This is a well-known problem, and current real-life data reduction practice is to treat such sources on an individual basis, by including them in the calibration model. Their contribution is thus effectively removed even before imaging. We have therefore excluded the A-team -- or, more generally, all sources brighter than 3~Jy -- from the sky models, on the assumption that such sources would have to be subtracted individually during calibration anyway. We also found that a simple 3~Jy cutoff was insufficient, as the NVSS represents each A-team source by a whole cluster of point sources, with a large number of them slipping below the threshold of 3~Jy, but making a noticeable SCN contribution through sheer numbers. We therefore removed such clusters from the models by hand.
 
-We also noticed early on that even with the A-team excluded, our simulations were still fairly sensitive (at least for smaller values of $r_0$) to choice of sky model, which is probably due to small number statistics, i.e. a dominant contribution from a few of the brighter close-in sources sitting in (or passing through) particularly strong sidelobes. Fig.~\ref{fig:fscn-fields} provides an indication of how FSCN varies across the 9 hemisphere models. This plots the simulated FSCN corresponding to the various offset Gregorian flavours against that for the prime focus dish, for all 9 models. The plot on the left is for $r_0=3.25\degr$ (third sidelobe and out), the plot on the right is for $r_0=10\degr$. It is clear that most of the variation is caused by the close-in sidelobes: there's roughly a factor of 2 variation across models at $r_0=3.25\degr$ (even more than 2 for the shaped OG design, which is to be expected, given it's higher close-in sidelobes), but considerably less than that at $r_0=10\degr$. In 
-order to reduce this variance, we average FSCN levels (quadratically, since this is rms) across all 9 fields in all subsequent plots.
+We also noticed early on that even with the A-team excluded, our simulations were still fairly sensitive (at least for smaller values of $r_0$) to choice of sky model, which is probably due to small number statistics, i.e. a dominant contribution from a few of the brighter close-in sources sitting in (or passing through) particularly strong sidelobes. Fig.~\ref{fig:fscn-fields} provides an indication of how SCN varies across the 9 hemisphere models. This plots the simulated SCN corresponding to the various offset Gregorian flavours against that for the prime focus dish, for all 9 models. The plot on the left is for $r_0=3.25\degr$ (third sidelobe and out), the plot on the right is for $r_0=10\degr$. It is clear that most of the variation is caused by the close-in sidelobes: there's roughly a factor of 2 variation across models at $r_0=3.25\degr$ (even more than 2 for the shaped OG design, which is to be expected, given it's higher close-in sidelobes), but considerably less than that at $r_0=10\degr$. In 
+order to reduce this variance, we average SCN levels (quadratically, since this is rms) across all 9 fields in all subsequent plots.
 
 \subsection{Source counts and extrapolation to fainter sources}
 \label{sec:source-counts}
 % 304,538,103 sources in the Wilman sim.
 
-The FSCN value described by Eq.~(\ref{eq:fscn}) includes a term which depends on the integral of the differential source counts $n(S)$. Since our measured values of FSCN are derived from simulations using a sky model with source fluxes in the range 0.5~$\leq$~$S$~$\leq$~3 Jy they are missing a potentially significant contribution from the faint source population. In this section we derive a correction factor to the FSCN values of the form
+The SCN value described by Eq.~(\ref{eq:fscn}) includes a term which depends on the integral of the differential source counts $n(S)$. Since our measured values of SCN are derived from simulations using a sky model with source fluxes in the range 0.5~$\leq$~$S$~$\leq$~3 Jy, they are missing a potentially significant contribution from the faint source population. Let us define the {\em fractional SCN} function $F(S_0)$ as
 
 \begin{equation}
-\left[\frac{\sigma_{0}}{\sigma_{0.5}}\right]^{2} = \left[\int\limits_{0}^{S_\mathrm{max}} S^{2}~n(S)~dS\right]  \left[\int\limits_{0.5}^{S_\mathrm{max}} S^{2}~n(S)~dS\right]^{-1},
+F(S_0) = \left[\int\limits_{S_0}^{S_\mathrm{max}} S^{2}~n(S)~dS\right]^\frac{1}{2} \left[\int\limits_{0}^{S_\mathrm{max}} S^{2}~n(S)~dS\right]^{-\frac{1}{2}},
 \label{eq:fscn_correction}
 \end{equation}
 
-\noindent where $\sigma_{0}$ is the \emph{true} FSCN value including all sources up to a flux limit $S_\mathrm{max}$, and $\sigma_{0.5}$ is the FSCN level including only the sources between our lower flux cut off of 0.5~Jy and $S_\mathrm{max}$. Note that $S_\mathrm{max}$ is set to 3 Jy when evaluating the integrals due to the 3~Jy upper flux limit imposed to exclude the A-team sources. 
+representing the fraction of SCN contributed by sources in the flux range $S_0\leq S \leq S_\mathrm{max}$. From Eq.~(\ref{eq:fscn}) we can then see that we need to apply a correction factor to our simulated SCN values of the form
 
-As is consistent with the sky model setup described in Section \ref{sec:modelskies}, the integrated source counts for the correction factor are computed from the S$^{3}$-SEX simulation \citep{Wilman-simulation}. The 1.4~GHz flux densities of the $\sim$259 million sources in the simulation are first placed into 1000 logarithmically spaced flux bins, forming $n(S)$ and allowing Eq.~(\ref{eq:fscn_correction}) to be numerically evaluated, resulting in a value of $\sigma_{0}$/$\sigma_{0.5}$~=~2.72.
+\begin{equation}
+\sigma_{0} = \sigma_{0.5}/F(0.5)
+\label{eq:fscn_correction1}
+\end{equation}
+
+
+\noindent where $\sigma_{0}$ is the \emph{true} SCN value including all sources up to a flux limit $S_\mathrm{max}$, and $\sigma_{0.5}$ is the SCN contribution of sources between our lower flux cut off of 0.5~Jy and $S_\mathrm{max}$. Note that $S_\mathrm{max}$ is set to 3 Jy when evaluating the integrals due to the 3~Jy upper flux limit imposed to exclude the A-team sources. 
+
+As is consistent with the sky model setup described in Section \ref{sec:modelskies}, the integrated source counts we use to
+obtain $F(S_0)$ are computed from the S$^{3}$-SEX simulation \citep{Wilman-simulation}. The 1.4~GHz flux densities of the $\sim$259 million sources in the simulation are first placed into 1000 logarithmically spaced flux bins, forming $n(S)$ and allowing $F(S_0)$ to be numerically evaluated, resulting in a value of $\sigma_{0}$/$\sigma_{0.5}\simeq2.7$. Figure~\ref{fig:F(S)} shows a plot of the $F(S_0)$ function. This function proves to be of critical importance in further discussion, so we will be returning to this figure in later sections.
+
+\begin{figure}
+\centering
+\includegraphics[width = \columnwidth]{fractional-fscn}
+\caption{The function $F(S_0)$, representing the fractional SCN contributed by sources in the flux range $S_0\leq S \leq S_\mathrm{max}$.
+The vertical line indicates our simulation flux cutoff of 0.5~Jy. The horizontal lines correspond to fractions of one half and one tenth.
+\label{fig:F(S)}}
+\end{figure}
+
 
 The differential source counts derived from the Wilman simulation are shown by the black squares on Fig.~\ref{fig:source_counts}. The distribution is Euclidean-normalized for ease of comparison to observationally-derived values which are shown by the red circles. Details of these data and an review of the subject of radio source counts are provided by \citet{deZotti-surveys}. 
 
@@ -496,11 +515,11 @@ The limitations of the S$^{3}$-SEX simulation are described by \citet{Wilman-sim
 
 The observed inflection in the source counts remains the subject of much debate and is generally thought to be caused by the dominant source population shifting from active galactic nuclei (AGN) to star-forming galaxies at these flux levels \citep[e.g.][]{Padovani-VLA-Chandra-DFS} although radio-weak AGN may also be a significant contributor to the counts \citep{Simpson-Subaru-XMM}. 
 
-For reasons of consistency we adopt the previously derived value of 2.72 for the FSCN correction factor in the simulations that follow. However given the deviation of the simulation from the observations which we have outlined above, and in order to probe how much we may be underestimating the FSCN correction factor, we also implement a toy model which deviates from the S$^{3}$-SEX simulation at the approximate point where the counts begin to turn up, as marked by the dashed vertical line on Fig.~\ref{fig:source_counts}. This model is implemented by applying a power-law correction to the S$^{3}$-SEX counts which is unity at the marked cross-over point and increases with decreasing flux such that the new model approximately tracks the upper envelope of the observed values. This model is shown on Fig.~\ref{fig:source_counts} by the small black dots. 
+For reasons of consistency we adopt the previously derived value of 2.72 for the SCN correction factor in the simulations that follow. However given the deviation of the simulation from the observations which we have outlined above, and in order to probe how much we may be underestimating the SCN correction factor, we also implement a toy model which deviates from the S$^{3}$-SEX simulation at the approximate point where the counts begin to turn up, as marked by the dashed vertical line on Fig.~\ref{fig:source_counts}. This model is implemented by applying a power-law correction to the S$^{3}$-SEX counts which is unity at the marked cross-over point and increases with decreasing flux such that the new model approximately tracks the upper envelope of the observed values. This model is shown on Fig.~\ref{fig:source_counts} by the small black dots. 
 
 Evaluating the correction factor for the toy ``extreme faint counts" model results in value of 5.48, a factor $\simeq$2 higher than the adopted value. This demonstrates that the ``cost curves" we derive in the following section are not critically sensitive to the size of the unknown faint source population, even for unrealistically large counts.
 
-Future deep surveys with new and improved radio interferometers such as the EVLA and MeerKAT \citep[e.g.][]{Jarvis-MeerKAT-SALT,Heywood-MESMER} will probe the extremely faint end of the source count distribution. The sensitivity demands of such experiments form one of the many reasons why the investigation of hitherto negligible effects such as FSCN is vital.
+Future deep surveys with new and improved radio interferometers such as the EVLA and MeerKAT \citep[e.g.][]{Jarvis-MeerKAT-SALT,Heywood-MESMER} will probe the extremely faint end of the source count distribution. The sensitivity demands of such experiments form one of the many reasons why the investigation of hitherto negligible effects such as SCN is vital.
 
 \begin{figure}
 \centering
@@ -529,17 +548,19 @@ Since there are always more short baselines than long ones, the usual (and gener
 
 Consider the (likely highly impractical) case where an extremely small field is imaged and a single $uv$ cell in the corresponding $uv$ grid is large enough to encompass all baseline lengths. The imager will compute weights to force the overall weight of this single $uv$ cell to be 1. Since this cell contains all the visibilities they will all be weighted equally and the effect is identical to natural weighting. As the field of view of the map expands the $uv$ cell size shrinks. Eventually some of the longer baselines will enter adjacent cells. When the weights are determined this time the longer baselines will be highly emphasised; the resolution will be maximal but the sensitivity will be severely affected due to the downweighting of all the other baselines. As the map size increases, the $uv$ cell size decreases along with the effective resolution, and the sensitivity of the map increases as more of the inner regions of the $uv$ plane tend towards their naturally weighted values.
 
-These effects are distilled graphically into Fig.~\ref{fig:uniform_confusion}. The upper red horizontal line shows the confusion limit of a naturally weighted MeerKAT image. The lower red line shows the nominal 5000-hour 1-GHz bandwidth sensitivity target, as featured on other figures. The solid lines show the confusion limit for a uniformly-weighted image as a function of field of view for the four Declination values noted above. Note that the field of view parameter here is not to be confused with the field of view imposed by the primary beam response; it is simply the extent of the radio map. The figure extends to one full hemisphere. The dashed lines show the theoretical thermal noise limit in a synthesis map as given by e.g.~\citet{tms1}, Eq.~6.62. The ratio of the rms to mean imaging weights is computed for each scenario by directly reading the values from the imaging weights column from the simulated Measurement Set. The extents of the major axes of the PSFs are also plotted on Fig.~\ref{fig:uniform_confusion}, with values listed in arcseconds.
+These effects are distilled graphically into Fig.~\ref{fig:uniform_confusion}. The upper red horizontal line shows the confusion limit of a naturally weighted MeerKAT image. The lower red line shows the nominal 5000-hour 1-GHz bandwidth sensitivity target, as featured on other figures. The solid lines show the confusion limit for a uniformly-weighted image as a function of field of view for the four Declination values noted above. Note that the field of view parameter here is not to be confused with the field of view imposed by the primary beam response; it is simply the extent of the radio map. The figure extends to one full hemisphere. The dashed lines show the theoretical thermal noise limit in a synthesis map as given by e.g.~\citet{tms1}, Eq.~6.62. The ratio of the rms to mean imaging weights is computed for each scenario by directly reading the values from the imaging weights column from the simulated Measurement Set. The extents of the major axes of the PSFs are also plotted on Fig.~\ref{fig:uniform_
+confusion}, with values listed in arcseconds.
 
 For small fields of view the uniform weighted confusion limit and the thermal noise limit both track the naturally weighted value as expected. Eventually the longest baselines take precedent, the confusion limit drops and the thermal noise value jumps up. As the field of view then increases the trade-off between these two values becomes apparent.{\bf IH: I still need to explain the turn up. First rule...}
 
 There are two main conclusions to draw from this figure. The first is that uniform weighting is not a panacea when it comes to circumventing the classical confusion limit in an interferometric observation. There is at all times a trade-off between both the confusion limit and the sensitivity which will be both instrument and observation specific. The optimum field of view, \emph{considering solely these two effects}, is where the solid and dashed lines in Fig.~\ref{fig:uniform_confusion} cross. The second conclusion is that without long baselines MeerKAT will never deliver its nominal 5000 hour continuum sensitivity, being at best an order of magnitude off.
 
-A discussion of how the choice of imaging weights relates to FSCN is given in Sec.~\ref{sec:img-weights}.
+A discussion of how the choice of imaging weights relates to SCN is given in Sec.~\ref{sec:img-weights}.
 
 {\bf IH: Do we still want a table of confusion limit values? I've also computed them for the VLA (ABCD) in a consistent manner for comparison...}
 
-% Four Declinations and two weighting schemes means that we calculate the confusion noise $\sigma_\mathrm{conf}$ for eight different scenarios. The source count data described in Sect.~\ref{sec:source-counts} is employed here, with the confusion limit determined by the lower edge of the flux bin in which the condition in Eq.~(\ref{eq:conf_limit}) becomes satisfied for each of the eight beam sizes. The beam sizes and the results are given in Tab.~\ref{tab:conf_beams} and the confusion limit is shown graphically in Fig.~\ref{fig:conf_limits}. The actual quoted flux limits are subject to an uncertainty associated with the width of the bin, which is $\sim$10\% at these levels. The density of sources $n(S)$ is also averaged over the full sky area of the simulation, whereas in reality this will be dependent on the clustering strength due to cosmic variance. For comparison, the L-band confusion limit of the Very Large Array in D-configuration\footnote{{\tt http://www.vla.nrao.edu/astro/guides/vlas/\\current/node11.html}
+% Four Declinations and two weighting schemes means that we calculate the confusion noise $\sigma_\mathrm{conf}$ for eight different scenarios. The source count data described in Sect.~\ref{sec:source-counts} is employed here, with the confusion limit determined by the lower edge of the flux bin in which the condition in Eq.~(\ref{eq:conf_limit}) becomes satisfied for each of the eight beam sizes. The beam sizes and the results are given in Tab.~\ref{tab:conf_beams} and the confusion limit is shown graphically in Fig.~\ref{fig:conf_limits}. 
+%The actual quoted flux limits are subject to an uncertainty associated with the width of the bin, which is $\sim$10\% at these levels. The density of sources $n(S)$ is also averaged over the full sky area of the simulation, whereas in reality this will be dependent on the clustering strength due to cosmic variance. For comparison, the L-band confusion limit of the Very Large Array in D-configuration\footnote{{\tt http://www.vla.nrao.edu/astro/guides/vlas/\\current/node11.html}
 % } (maximum baseline = 1~km) is 86~$\mu$Jy beam$^{-1}$.
 
 % \begin{table*}
@@ -568,7 +589,7 @@ A discussion of how the choice of imaging weights relates to FSCN is given in Se
 \caption{The effects of the map size on the uniformly-weighted PSF (vertical lines show the major axes), and consequently the thermal map noise (dashed line) and confusion limit (solid line). The effect is calculated for a full plausible range of image fields of view and four four representative Declination values: 0$^{\circ}$, -30$^{\circ}$, -60$^{\circ}$ and -90$^{\circ}$. Refer to the text for further discussion.\label{fig:uniform_confusion}}
 \end{figure}
 
-% Having imposed a lower flux cut-off of 0.5 Jy for practical reasons, we end up missing an extremely significant contribution from the massive population of weaker sources. In terms of Eq.~(\ref{eq:fscn}), our simulations correspond to limits of $0.5$ to $S_\mathrm{max}=3$ on the second integral (rather than $0$ to $3$). From this it follows that the factor by which we underestimate the FSCN in our simulations is
+% Having imposed a lower flux cut-off of 0.5 Jy for practical reasons, we end up missing an extremely significant contribution from the massive population of weaker sources. In terms of Eq.~(\ref{eq:fscn}), our simulations correspond to limits of $0.5$ to $S_\mathrm{max}=3$ on the second integral (rather than $0$ to $3$). From this it follows that the factor by which we underestimate the SCN in our simulations is
 % 
 % \begin{equation}
 % \left [ \frac{\sigma_\mathrm{0}}{\sigma_\mathrm{0.5}}\right ]^2 = 
@@ -576,7 +597,7 @@ A discussion of how the choice of imaging weights relates to FSCN is given in Se
 % \left [ \int\limits_{0.5}^{S_\mathrm{max}} S^2n(S)\DD{S} \right ]^{-1},
 % \end{equation}
 % 
-% where $\sigma_0$ is the ``true'' FSCN level corresponding to the entire source population, and $\sigma_{0.5}$ is the FSCN contribution from sources brighter than $0.5$ Jy.
+% where $\sigma_0$ is the ``true'' SCN level corresponding to the entire source population, and $\sigma_{0.5}$ is the SCN contribution from sources brighter than $0.5$ Jy.
 % 
 % {\bf OMS: Ian, this is your section. Please use Wilman's raw numbers for $n(S)$ to evaluate the equation above and derive a correction factor. A pretty plot of $S^2n(S)$ versus $S$ would also be illuminating.}
 % 
@@ -585,61 +606,154 @@ A discussion of how the choice of imaging weights relates to FSCN is given in Se
 % The resulting correction factor of $\sqrt{10}$ has been applied to all simulation results below. 
 
 
-
-\subsection{MeerKAT results}
+\section{MeerKAT SCN and cost curves}
 \label{sec:meerkat-costcurve}
 
-\begin{figure*}
-  \includegraphics[width=\textwidth]{costcurve-main}\hfill
+\begin{figure}
+\includegraphics[width=\columnwidth]{costcurve-main}
+%  \includegraphics[width=\textwidth]{costcurve-main}\hfill
 %  \includegraphics[width=\columnwidth]{costcurve-main-robust}
 %  \includegraphics[width=\textwidth]{costcurve-main}
-\caption{\label{fig:cc-main}Cost curves: a comparison of FSCN levels as a function of imaging radius, for different MeerKAT dish configurations. The horizontal red line indicates MeerKAT's extreme sensitivity limit for a 5000~h pointing. The plot corresponds to the canonical observational configuration of Sect.~\ref{sec:config}, and a naturally weighted PSF.}
-% plot-cc.py horizon-masked/MeerKAT64*natural* -f 10 -t - --x0 1 -a "2.6/1e-7/-/red/-MeerKAT 5000h" --x0 2 --x1 90 -o costcurve-main
+\caption{\label{fig:cc-main}Cost curves: a comparison of SCN levels as a function of radius, for different MeerKAT dish configurations. The horizontal red line indicates MeerKAT's extreme sensitivity limit for a 5000~h pointing. The plot corresponds to the canonical observational configuration of Sect.~\ref{sec:config}, and a naturally weighted PSF.}
+% plot-cc.py horizon-masked/MeerKAT64*natural* -t - --x0 1 -a "2.6/1e-7/-/red/-MeerKAT 5000h" --x0 2 --x1 90 --simulation-cutoff 0.5 -o costcurve-main -t -
 % plot-cc.py horizon-masked/MeerKAT64*briggs_r0* -f 10 -t - --x0 1 -a "30/1e-7/-/red/-MeerKAT 5000h" --x0 2 --x1 90 -o costcurve-main-robust
-\end{figure*}
+\end{figure}
 
-The main result for MeerKAT is presented in Fig.~\ref{fig:cc-main}. This contains a number of ``cost curves'' for the various MeerKAT dish options. Each cost curve shows, as a function of $r_0$, the total contribution to the FSCN from sources beyond a radius of $r_0$. It is a \emph{cost} curve because it shows the radius $r_0$ out to which we must image and deconvolve in order to suppress the FSCN to a given level -- and imaging radius directly drives computational cost. 
+The simulations discussed above produce the differential SCN contribution $D_i$ corresponding to each annular LSM of radius $r_1,...,r_N$. For analysis purposes, it is useful to present this data as a series of {\em cost curves} representing the various MeerKAT dish options (Fig.~\ref{fig:cc-main}). Each cost curve $C_i=C(r_i)$ is computed as
 
-The most striking feature of this plot is the completely different character of FSCN as a function of $r_0$ for the PF and OG type dishes. The OG curves have an almost flat ``plateau'' between 10$\degr$ and 75$\degr$ (less than a factor of 2 change), while the PF curves maintain nearly constant slope all the way out to 90$\degr$. This is no doubt due to the different dominant features of their PB patterns (Fig.~\ref{fig:pb180}). The PF designs pick up most of their FSCN via the X-shaped sidelobes associated with the feed supports, which are significant at all radii. In contrast, the OG designs pick up a fair chunk of FSCN via the sub-reflector spill-over patch between $75\degr$ and $90\degr$, and then pick up relatively little all the way in to $10\degr$. In other words, as we increase our imaging radius $r_0$, OG designs yield a sharp drop in FSCN until about $10\degr$ -- but once this ``optimal'' radius is reached, increasing $r_0$ further yields very little further improvement, until about $75\degr$. The PF design, on the other hand, shows a much slower but steady decrease in FSCN all the way out to $90\degr$.
+\[
+  C_i = \sqrt{\sum_{j=i}^{N} D^2_j},
+\]
+
+since SCN adds quadratically. The function $C(r)$ then represents the total contribution to SCN from sources beyond a radius of $r$. It is a \emph{cost} curve because it shows the radius $r$ out to which we must image and {\em fully deconvolve all sources} in order to suppress the SCN to a given level, and this radius directly drives observational and computational costs. 
+
+\subsection{Asymptotic SCN}
+\label{sec:asymptotic-fscn}
+
+Let us consider what ``fully deconvolving all sources'' really means. Figure~\ref{fig:F(S)} suggests that the fraction of SCN contributed by sources below 1 \uJy\ is vanishingly small (and in fact $F(10^{-6})\simeq0.983$, and $F(10^{-7})\simeq0.997$), so ``all'' can perhaps be taken to mean all sources brighter than some threshold in the sub-\uJy\ range. Ignoring the problem of classical confusion for the time being, and assuming an all-powerful deconvolution algorithm, the sources to be deconvolved still must, as a minimum, be detectable above the thermal noise. Let us then conservatively assume that for 0.1 \uJy\ thermal noise, we can deconvolve down to a depth of 0.5 \uJy. Assuming a single pointing, the latter number actually refers to {\em apparent} rather than intrinsic flux. From Fig.~\ref{fig:power-beam} we can see that attenuation by the power beam quickly drops below $10^{-3}$ beyond the first sidelobe ($r>2\degr$); in the second sidelobe and beyond, our deconvolution depth of 0.5 \uJy\ {\em apparent} flux 
+then actually corresponds to 0.5 \underline{milli}Jansky {\em intrinsic} flux. Referring back to Fig.~\ref{fig:F(S)}, we can then see that an appreciable fraction of SCN (i.e. about 20\%, at 0.5 mJy depth) becomes ``locked in'', in the sense that the sources contributing it are individually swallowed by thermal noise (while the sum of their contributions may remain well be above the thermal noise!)
+
+\begin{figure}
+\includegraphics[width=\columnwidth]{power-beam-radial}
+\caption{\label{fig:power-beam}Mean power beam as a function of radius, for the four different optics.}
+% plot-cc.py horizon-masked/MeerKAT64*natural* -f 10 -t - --x0 1 -a "2.6/1e-7/-/red/-MeerKAT 5000h" --x0 2 --x1 90 -o costcurve-main
+% bplot.py
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=\columnwidth]{costcurve-main-asymptotic}
+%  \includegraphics[width=\textwidth]{costcurve-main}\hfill
+%  \includegraphics[width=\columnwidth]{costcurve-main-robust}
+%  \includegraphics[width=\textwidth]{costcurve-main}
+\caption{\label{fig:cc-main-asymptotic}The cost curves of Fig.~\ref{fig:cc-main}, corrected for limited deconvolution depth due to power beam attenuation. This assumes a deconvolution depth of 0.5 \uJy. Note that the ordinate here is linear rather than log scale.}
+%plot-cc.py horizon-masked/MeerKAT64*natural* --simulation-cutoff 0.5 -t - --x0 1 --x0 2 --x1 90 -o costcurve-main-asymptotic --deconvolution-cutoff 5e-7 -p upper_right --linear-y --y-format .1f --y-scale 1e+6 -y 'SCN contribution from $r>r_0$, $\mu\mathrm{Jy}$'
+\end{figure}
+
+We should then correct the curves of Fig.~\ref{fig:cc-main} for the fact that at any given radius, attenuation by the power beam (as given by Fig.~\ref{fig:power-beam}) ``hides'' the fainter sources, and ensures that some fraction of SCN (as given by Fig.~\ref{fig:F(S)}) cannot be removed at all. Figure~\ref{fig:cc-main-asymptotic} represents a synthesis of these three figures. To be specific, the corrected cost curves $C'(r)$ in this figure are computed as:
+
+\[
+  C'_i = \sqrt{ \sum_{j=1}^{N} D^2_j - \sum_{j=1}^{i-1} [F(S_\mathrm{lim}/E^2_j) D_j ]^2 }, \;\;\;\;\; C'_1=C_1.
+\]
+
+Here, $S_\mathrm{lim}$ is the deconvolution depth at field centre, $E^2_j$ is the mean power beam at radius $r_j$ (which we derive from the beam patterns of Sect.~\ref{sec:patterns}), and $F(S)$ is the fractional FSCN curve shown in Fig.~\ref{fig:F(S)}. Note that the ``all sources deconvolved'' scenario of Fig.~\ref{fig:cc-main} corresponds to $S_\mathrm{lim}=0$, in which case $C'(r)$ becomes equivalent to $C(r)$.
+
+The rather startling conclusion to be drawn here is the existence of an {\em asymptotic} SCN level, which is almost fully determined by the first two or three PB sidelobes, and beyond which a single deep pointing simply cannot go. 
+
+\begin{figure}
+\includegraphics[width=\columnwidth]{costcurves-asymptotic}
+
+% plot-cc.py horizon-masked/MeerKAT64_8h60s_20M8ch_og.natural_512_32.cost.txt:o-:green:'10 $\mu$Jy':5e-5 horizon-masked/MeerKAT64_8h60s_20M8ch_og.natural_512_32.cost.txt:o-:blue:'1 $\mu$Jy':5e-6 horizon-masked/MeerKAT64_8h60s_20M8ch_og.natural_512_32.cost.txt:o-:red:'0.1 $\mu$Jy':5e-7 horizon-masked/MeerKAT64_8h60s_20M8ch_og.natural_512_32.cost.txt:o-:cyan:'10 nJy':5e-8 horizon-masked/MeerKAT64_8h60s_20M8ch_og.natural_512_32.cost.txt:o-:purple:'1 nJy':5e-9 --simulation-cutoff 0.5 -t - --x0 1 --x0 2 --x1 90 -o costcurves-asymptotic -p lower_right --linear-y --y-format .1f --y-scale 1e+6 -y 'SCN contribution from $r>r_0$, $\mu\mathrm{Jy}$' -a "5/1e-7/:/red/-  0.1 $\mu\mathrm{Jy}$" -a "5/1e-6/:/blue/-  1 $\mu\mathrm{Jy}$"
+
+\caption{\label{fig:cc-asymptotes}Asymptotic SCN limits for the default offset Gregorian dish, over a range of sensitivities $\sigma$ (indicated in the legend) and a deconvolution depth of $S_\mathrm{lim}=5\sigma$. Horizontal lines correspond to 0.1 and 1 \uJy.}
+\end{figure}
+
+
+This asymptotic SCN level naturally depends on deconvolution depth $S_{\lim}$, which is proportional to the the sensitivity limit $\sigma$. Figure~\ref{fig:cc-asymptotes} shows asymptotic SCN curves for a range of $\sigma$ values. Note how the asymptotic level has a logarithmic-like dependence on $\sigma$ (ultimately, this is due to the $F(S)$ function of Fig.~\ref{fig:F(S)} following a power law). From this, it follows that 0.1 \uJy\ sensitivity cannot be achieved at all in this particular observational configuration, as we'd hit the asymptotic SCN limit (0.8 \uJy) well before the thermal limit. In contrast, a sensitivity of 1 \uJy\ is well within reach, and we'd only need to deconvolve out to 3$\degr$ -- the second sidelobe -- to get there; and at a sensitivity of 10 \uJy, SCN becomes a complete non-factor. Qualitatively, this explains why older observatories have barely needed to worry about SCN, while for the SKA it may become a very significant performance limit, and thus a design driver.
+
+On the subject of design drivers, we should highlight another important conclusion -- asymptotic SCN is almost completely determined by the first two or three PB sidelobes! For the prime focus optics considered here, it is a factor of 3-4 higher than for offset Gregorians.
+
+\subsection{Survey-assisted SCN}
+
+The asymptotic SCN limit appears to be fundamental, but as derived above, it only applies to a single pointing. If we were to completely survey (with multiple pointings, or with a PAF) a sky area of a given radius $r_0$ to some depth $S_0$, we could then subtract the resulting global sky model (GSM) from an even deeper central pointing, suppressing a substantial fraction of SCN (recall that, e.g., $F(1$\uJy$)\simeq0.983$), out to a radius of $r_0$. Under this scenario, the residual survey-assisted SCN can be estimated as
+
+\[
+  C''_i = \sqrt{ \sum_{j=1}^{N} D^2_j - F^2(S_0) \sum_{j=1}^{i-1} D_j^2 }, \;\;\;\;\; C''_1=C_1.
+\]
+
+\begin{figure}
+\includegraphics[width=\columnwidth]{costcurve-survey-1uJy}
+\caption{\label{fig:cc-survey-1uJy}Survey-assisted SCN, for a survey depth of 1 \uJy.}
+% plot-cc.py horizon-masked/MeerKAT64*natural* -t - --x0 1 --x0 2 --x1 90 --simulation-cutoff 0.5 -o costcurve-survey-1uJy -t - --deconvolution-cutoff 1e-7 --intrinsic-cutoff
+\end{figure}
+
+The resulting cost curves for $S_0=1$ \uJy\ are shown in Fig.~\ref{fig:cc-survey-1uJy}. (Note that ``cost'' now comes to mean survey area cost, rather than imaging and deconvolution cost.) These still show an asymptotic limit, albeit setting in further out (at $r=10\degr$) and a factor of $\sim3$ deeper -- but ultimately, the $1-F(S_0)$ fraction of SCN ``frozen in'' at the near sidelobes still comes to dominate. Fig.~\ref{fig:cc-survey-multi} shows the offset Gregorian curve for a range of $S_0$ values. Note that the $0.1$ \uJy\ limit remains out of reach even with a full survey to that depth (the red curve shows that knowing the sky {\em a priori} down to 0.1 \uJy\ doesn't even reduce SCN itself to that level, making the survey itself intrinsically impossible!) And on the other hand, as we saw above, 1 \uJy\ can be achieved with a single pointing. This suggests that deep large-area surveys cannot substantially lower the SCN limit -- the gains to be had add up to a factor of few at most, and only at very considerable expense.
+
+\begin{figure}
+\includegraphics[width=\columnwidth]{costcurve-survey-multiple}
+\caption{\label{fig:cc-survey-multi}Survey-assisted SCN for the offset Gregorian dish, over a range of survey depths $S_0$. Note that each step in depth corresponds to a factor of 100 in observing time!}
+% plot-cc.py horizon-masked/MeerKAT64*natural* -t - --x0 1 --x0 2 --x1 90 --simulation-cutoff 0.5 -o costcurve-survey-1uJy -t - --deconvolution-cutoff 1e-7 --intrinsic-cutoff
+\end{figure}
+
+We should also note that accurate subtraction of a global sky model requires a correspondingly accurate global PB model. In real life, PB's are subject to pointing error and mechanical deformation of the antennas, which means that beyond the first few sidelobes, there's little hope for any accuracy at all. However, the asymptotic nature of our SCN curves suggests that this hardly matters, as fundamental SCN limits are fully determined within the first few sidelobes. There is truly nothing to be gained from subtracting GSM sources (the A-team excepted) more than a few degrees away from the centre of the field.
+
+\subsection{Intrinsic SCN}
+
+Given the considerations above
+
+The most striking feature of this plot is the completely different character of SCN as a function of $r_0$ for the PF and OG type dishes. The OG curves have an almost flat ``plateau'' between 10$\degr$ and 75$\degr$ (less than a factor of 2 change), while the PF curves maintain nearly constant slope all the way out to 90$\degr$. This is no doubt due to the different dominant features of their PB patterns (Fig.~\ref{fig:pb180}). The PF designs pick up most of their SCN via the X-shaped sidelobes associated with the feed supports, which are significant at all radii. In contrast, the OG designs pick up a fair chunk of SCN via the sub-reflector spill-over patch between $75\degr$ and $90\degr$, and then pick up relatively little all the way in to $10\degr$. 
+
+In other words, OG designs have a natural ``easy'' SCN limit which can be arrived at by deconvolving to a relatively small radius ($r_0<10\degr$), and a ``very hard'' limit -- about an order of magnitude lower -- which can only be attained by deconvolving beyond $r_0>75\degr$. The PF designs, on the other hand, show a much slower but steady decrease in SCN all the way out to $90\degr$. One conclusion from this is that OG designs are far superior in terms of imaging cost as long as the  interferometer's noise floor (as determined by thermal noise and confusion) is above the ``easy'' SCN limit, but if a lower noise floor is available, the PF designs can reach it more cheaply.
 
 A few other interesting points arise from this plot:
 
 \begin{itemize}
-  \item This suggests that at MeerKAT's extreme sensitivity limit of $0.1 \mu\mathrm{Jy}$, we must image out to $\sim$10$\degr$ with the default OG dishes, $\sim$20$\degr$ with rotationally randomized PF dishes, and $\sim$30$\degr$ with non-randomized PF dishes (but see the caveat on absolute performance figures below). This is a potentially a huge cost difference!
-  \item The OG and PF curves cross over at $\sim$40$\degr$.
-  \item Sky rotation makes virtually no difference to the PF design, but provides about a factor of 2 FSCN suppression (beyond $10\degr$) in the OG design.
-  \item The shaped OG design starts paying off beyond a radius of $8\degr$, but causes considerably higher FSCN closer in. It is not obvious whether this is a good trade-off or bad, since higher close-in sidelobes can make calibration more difficult.
+  \item MeerKAT's nominal sensitivity limit of $0.1 \mu\mathrm{Jy}$ is just below (less than a factor of 2) the ``easy'' SCN limit of the default OG design, and just at the ``easy'' limit ($r_0=10\degr$) of the shaped OG design. For the PF dishes,  the same limit is reached at $r_0\simeq$30$\degr$, or $r_0\simeq$20$\degr$ with rotationally randomized dishes (but see the caveat on absolute performance figures below). This is potentially a massive cost difference.
+  \item The default OG and PF curves cross over at $\sim$30$\degr$.
+  \item Sky rotation makes virtually no difference to the PF design, but provides roughly a factor of 2 SCN suppression (beyond $10\degr$) in the OG design.
+  \item Compared to the default OG, the shaped OG design starts paying off beyond a radius of $8\degr$, but causes considerably higher SCN closer in. It is not obvious whether this is a good trade-off or bad, since higher close-in sidelobes can make calibration more difficult.
   \item The hard edge illumination OG design does only slightly worse than the default, to within a factor of 2.
-  \item At $10\degr$, sidelobe randomization of OGs does at least a good a job as shaping.
-  \item A combination of shaped OGs and sidelobe randomization provides the lowest FSCN levels from $\sim$6$\degr$ out.
-  FSCN levels of $0.1 \mu\mathrm{Jy}$ are then achieved by $7\degr$ (provided sidelobe randomization through surface variations can actually be done this close in), which halves the required imaging area, compared to the default OG design. Once again, this has to be weighed against the extra calibration costs associated with higher close-in sidelobes.
+  \item At $10\degr$, rotational sidelobe randomization of OGs offers more benefits than shaping.
+  \item A combination of shaped OGs and sidelobe randomization provides the lowest SCN levels from $\sim$7$\degr$ out.
+  SCN levels of $0.1 \mu\mathrm{Jy}$ are achieved at the same radius (provided sidelobe randomization through surface variations can actually be done this close in), which halves the required imaging area, compared to the default OG design. Once again, this has to be weighed against the extra calibration costs associated with higher close-in sidelobes.
 \end{itemize}
 
 \subsection{Full sky models and horizon masking}
 \label{sec:horizon-masking}
 
+Most of the simulations presented here are simplified in one important respect: the sky models are restricted to a single full hemisphere (``half-sky'') centred on the pointing direction -- thus essentially ignoring the backlobe of the primary beam -- and no horizon masking is applied. When pointed at a source below zenith, a real-life dish sees both more and less of the sky: some sources in the sidelobes which would otherwise have contributed to SCN are masked by the horizon, while on the opposite side, part of the sky beyond the hemisphere contributes to SCN via the backlobes of the primary beam pattern.\footnote{In addition, ``hot'' ground radiation is picked up via sidelobes and backlobes. This effectively increases the thermal noise level, but is independent of the SCN problem, and so will not be considered here further.} Since sidelobes are generally much higher than backlobes, one would in principle expect pointing to zenith to be the worst case as far as SCN is concerned. 
 
+Since our simulated beam patterns extend to a full sphere (Fig.~\ref{fig:pb180}), and the BeamSims simulator is capable of both applying horizon masking, and using full-sphere sky models, we can also properly simulate the full-sky case. However, this results in a significant increase in computation time due both to the larger number of sources that need to be simulated, and the extra coordinate conversions required to determine which sources lie below the horizon at any given time. Using a half-sky model and no horizon masking produces significantly faster simulations. To investigate whether this is a valid approximation, we have performed a restricted set of full-sky horizon-masked simulations, and compared the results to the half-sky, unmasked case (Fig.~\ref{fig:cc-hm}). This shows that the difference is indeed negligible, and we are fully justified in using the faster half-sky approach in other simulations. 
 
+\begin{figure}
+  \includegraphics[width=\columnwidth]{cc-horizonmasked}\hfill
+%  \includegraphics[width=\columnwidth]{costcurve-main-robust}
+%  \includegraphics[width=\textwidth]{costcurve-main}
+\caption{\label{fig:cc-hm}A comparison of cost curves for a full-sky horizon-masked simulation, and a half-sky unmasked simulation.}
+% plot-cc.py horizon-masked/MeerKAT64*natural* -f 10 -t - --x0 1 -a "2.6/1e-7/-/red/-MeerKAT 5000h" --x0 2 --x1 90 -o costcurve-main
+% plot-cc.py horizon-masked/MeerKAT64*briggs_r0* -f 10 -t - --x0 1 -a "30/1e-7/-/red/-MeerKAT 5000h" --x0 2 --x1 90 -o costcurve-main-robust
+\end{figure}
+% plot-cc.py MK64/MeerKAT64_8h60s_20M8ch_og.natural_512_32.cost.txt:o:none:"OG half-sky" MK64/hm/MeerKAT64_8h60s_20M8ch_hm_og.natural_512_32.cost.txt:x:none:"OG full-sky"  --x1 150 --r1 150 MK64/MeerKAT64_8h60s_20M8ch_pf.natural_512_32.cost.txt:s:none:"PF half-sky" MK64/hm/MeerKAT64_8h60s_20M8ch_hm_pf.natural_512_32.cost.txt:+:none:"PF full-sky"  -t ""
 
-\section{FSCN suppression}
+\section{SCN suppression}
 
-Note that while Fig.~\ref{fig:cc-main} is an excellent indicator of the \emph{relative} performance of the various dish designs, one must be very careful when drawing conclusions on \emph{absolute} performance. The reason for this is that absolute FSCN levels are subject to two other attenuating factors -- see Fig.~2 of \citet{SKA54-expa,SKA54} for a reminder -- which can cause the vertical axis of the cost curves to shifted up and down significantly. Firstly, this is the asymptotic rms PSF sidelobe level, which depends on imaging weights. Secondly, this is the correlator response function $C(r)$, which is determined by time and bandwidth averaging. We shall now consider these two factors in detail.
+Note that while Fig.~\ref{fig:cc-main} is an excellent indicator of the \emph{relative} performance of the various dish designs, one must be very careful when drawing conclusions on \emph{absolute} performance. The reason for this is that absolute SCN levels are subject to two other attenuating factors -- see Fig.~2 of \citet{SKA54-expa,SKA54} for a reminder -- which can cause the vertical axis of the cost curves to shifted up and down significantly. Firstly, this is the asymptotic rms PSF sidelobe level, which depends on imaging weights. Secondly, this is the correlator response function $C(r)$, which is determined by time and bandwidth averaging. We shall now consider these two factors in detail.
 
 \subsection{Randomizing PB sidelobes}
 \label{sec:randomizing}
 
-A recently developed approach to reducing the FSCN is randomization of PB sidelobes across stations. The LOFAR telescope, in which each station is an aperture array, achieves this via the simple expedient of using a different orientation for the layout of each station. This introduces an essentially random complex gain error for distant sources, thus averaging down their response. Another option for aperture arrays (or indeed PAFs) is to randomize sidelobes by manipulating beamformer weights.
+A recently developed approach to reducing the SCN is randomization of PB sidelobes across stations. The LOFAR telescope, in which each station is an aperture array, achieves this via the simple expedient of using a different orientation for the layout of each station. This introduces an essentially random complex gain error for distant sources, thus averaging down their response. Another option for aperture arrays (or indeed PAFs) is to randomize sidelobes by manipulating beamformer weights.
 
-With dishes, PB sidelobes may be randomized in two ways, depending on basic design. A symmetric dish (i.e. the prime focus design) can employ the random rotation trick. This is most likely mechanically prohibitive with an asymmetric design such as the offset Gregorian. Distant sidelobes may also be randomized by introducing small variations in the dish surfaces\footnote{Since the PB is essentially a Fourier transform of the aperture illumination function, far PB sidelobes correspond to small-scale variations in the AIF.}. To a certain extent, the latter happens anyway due to manufacturing tolerances, but may also be done deliberately. Note, however, that the dominant FSCN contribution appears to be associated with the X-shaped sidelobes caused by the feed supports (in the PF case), and the sub-reflector spill-over ``patch'' (in the OG case), neither of which is significantly affected by dish surface variations.
+With dishes, PB sidelobes may be randomized in two ways, depending on basic design. A symmetric dish (i.e. the prime focus design) can employ the random rotation trick. This is most likely mechanically prohibitive with an asymmetric design such as the offset Gregorian. Distant sidelobes may also be randomized by introducing small variations in the dish surfaces\footnote{Since the PB is essentially a Fourier transform of the aperture illumination function, far PB sidelobes correspond to small-scale variations in the AIF.}. To a certain extent, the latter happens anyway due to manufacturing tolerances, but may also be done deliberately. Note, however, that the dominant SCN contribution appears to be associated with the X-shaped sidelobes caused by the feed supports (in the PF case), and the sub-reflector spill-over ``patch'' (in the OG case), neither of which is significantly affected by dish surface variations. There is more to be gained from rotational randomization then, and this trick is most likely only 
+available to the PF designs.
 
-Another intrinsic source of randomization is sky rotation, since over a long synthesis, distant sources will rotate through many sidelobes. This is particularly noticeable with the OG design, where far sidelobes have a checkerboard-like pattern. 
+Another intrinsic source of randomization is sky rotation, since over a long synthesis, distant sources will rotate through many sidelobes. This is particularly noticeable with the OG design, where far sidelobes have a checkerboard-like pattern. Since this happens virtually coherently on all antennas, the randomizing effect should be less than that of antenna-to-antenna rotational randomization, and indeed the curves of Fig.~\ref{fig:cc-main} bear this out.
 
-From first principles, we would expect randomization to suppress FSCN as $\sqrt{N}$, where $N$ is the number of stations. Rotational randomization is straightforward to incorporate into the simulations: it is just a matter of introducing a random rotation angle when converting source coordinates in the {\tt emss\_beams} module. This does make for noticeably slower simulations, since E-Jones values then need to be computed individually per station -- unlike the non-randomized case -- but not prohibitively so. We discuss the results in Sects.~\ref{sec:meerkat-costcurve} and \ref{sec:other-arrays}.
+From first principles, we would expect randomization to suppress SCN as $\sqrt{N}$, where $N$ is the number of stations. Rotational randomization is straightforward to incorporate into the simulations: it is just a matter of introducing a random rotation angle when converting source coordinates in the {\tt emss\_beams} module. This does make for noticeably slower simulations, since E-Jones values then need to be computed individually per station -- unlike the non-randomized case -- but not prohibitively so. We discuss the results in Sects.~\ref{sec:meerkat-costcurve} and \ref{sec:other-arrays}.
 
 \subsection{Effect of imaging weights}
 \label{sec:img-weights}
 
-Different imaging weights can be used to optimize the PSF shape for maximum sensitivity (natural weighting), minimum sidelobe level (uniform weighting), or some trade-off between the two \citep[robust or Briggs weighting:][]{briggs-thesis}. Obviously, this directly affects FSCN levels. \citet{SKA49} gives an analytic estimate of asymptotic rms PSF sidelobe levels for natural and uniform weighting. Our simulations allow us to explore this empirically: Fig.~\ref{fig:cc-weights} shows cost curves for the OG and PF designs obtained using natural and uniform weights. Robust weighting produces intermediate curves closer to one or the other extreme, based on the value of the robustness parameter.
+Different imaging weights can be used to optimize the PSF shape for maximum sensitivity (natural weighting), minimum sidelobe level (uniform weighting), or some trade-off between the two \citep[robust or Briggs weighting:][]{briggs-thesis}. Obviously, this directly affects SCN levels. \citet{SKA49} gives an analytic estimate of asymptotic rms PSF sidelobe levels for natural and uniform weighting. Our simulations allow us to explore this empirically: Fig.~\ref{fig:cc-weights} shows cost curves for the OG and PF designs obtained using natural and uniform weights. Robust weighting produces intermediate curves closer to one or the other extreme, based on the value of the robustness parameter.
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{cc-mk-nat-vs-uni}
@@ -648,15 +762,15 @@ Different imaging weights can be used to optimize the PSF shape for maximum sens
 % ../stats-3cbr/plot-cc.py ../stats-3cbr/costs-256pix/MeerKAT64_8h60s_20M8ch_{og,pf}.{natural,uniform}.*  -f 10 -t - --x0 1 -a "2.6/1e-7/-/red/-MeerKAT 5000h" -c a -s w -o cc-mk-nat-vs-uni
 \end{figure}
 
-It is to be expected that uniform weighting would suppress the FSCN, though a whole order of magnitude is somewhat surprising (see Sect.~\ref{sec:ifr-size} for a related discussion). Note, however, that this reduction comes at a cost of reduced sensitivity, and that MeerKAT's $0.1\mu$Jy in 5000 hours figure actually assumes natural weighting! Another interesting feature of these curves is that the pay-off of uniform weighting varies as a function of radius, and is slightly higher for the PF design. The effect can be understood by considering  Eq.~(\ref{eq:fscn}) again: this contains an integration over a product of the PSF by the primary beam. The spatial distribution of PSF and PB sidelobes relative to each other can obviously have a large effect. This raises the intriguing possibility that a \emph{joint} optimization of PB shape and PSF shape (and thus array configuration) can produce better FSCN suppression than independent optimization of the two. This ought to be explored further in the context of SKA 
+It is to be expected that uniform weighting would suppress the SCN, though a whole order of magnitude is somewhat surprising (see Sect.~\ref{sec:ifr-size} for a related discussion). Note, however, that this reduction comes at a cost of reduced sensitivity, and that MeerKAT's $0.1\mu$Jy in 5000 hours figure actually assumes natural weighting! Another interesting feature of these curves is that the pay-off of uniform weighting varies as a function of radius, and is slightly higher for the PF design. The effect can be understood by considering  Eq.~(\ref{eq:fscn}) again: this contains an integration over a product of the PSF by the primary beam. The spatial distribution of PSF and PB sidelobes relative to each other can obviously have a large effect. This raises the intriguing possibility that a \emph{joint} optimization of PB shape and PSF shape (and thus array configuration) can produce better SCN suppression than independent optimization of the two. This ought to be explored further in the context of SKA 
 design.
 
 \subsection{Time averaging}
 \label{sec:smearing}
 
-Since the correlator produces a complex average over the integration interval, the resulting complex amplitude of each source is attenuated by some factor $C(r)$ \citep[see Eq.~(\ref{eq:fscn}) above, and also Fig.~2 of][]{SKA54-expa,SKA54}. Lonsdale et al. suggest the use of weighted averages within the correlator, as well as baseline-dependent time averaging, as an effective means of FSCN suppression.
+Since the correlator produces a complex average over the integration interval, the resulting complex amplitude of each source is attenuated by some factor $C(r)$ \citep[see Eq.~(\ref{eq:fscn}) above, and also Fig.~2 of][]{SKA54-expa,SKA54}. Lonsdale et al. suggest the use of weighted averages within the correlator, as well as baseline-dependent time averaging, as an effective means of SCN suppression.
 
-The attenuation factor for time averaging follows a sinc function, and strongly depends on baseline length and orientation (or more precisely, the East-West component of the baseline). With each baseline being affected to a different extent, overall FSCN attenuation is difficult to predict analytically, but easy to simulate with our framework, by simply rerunning the same simulation over multiple measurement sets employing different integration times. Since averaging increases with integration time $\Delta t$, intuition suggests that using larger $\Delta t$ should lower the FSCN. In this case intuition misleads -- the curves in Fig.~\ref{fig:cc-time-smearing} show very little difference between the results for $\Delta t=10$, 30 and 60~s!
+The attenuation factor for time averaging follows a sinc function, and strongly depends on baseline length and orientation (or more precisely, the East-West component of the baseline). With each baseline being affected to a different extent, overall SCN attenuation is difficult to predict analytically, but easy to simulate with our framework, by simply rerunning the same simulation over multiple measurement sets employing different integration times. Since averaging increases with integration time $\Delta t$, intuition suggests that using larger $\Delta t$ should lower the SCN. In this case intuition misleads -- the curves in Fig.~\ref{fig:cc-time-smearing} show very little difference between the results for $\Delta t=10$, 30 and 60~s!
 
 Such a result appears to directly contradict Lonsdale et al., but in fact the contradiction is easily explained -- those authors considered the case of a snapshot observation, while we are simulating a full (8~hour, in this particular instance) synthesis. \citet{SKA49} showed that (naturally weighted) PSF sidelobes scale approximately as $1/\sqrt{N_s}$, where $N_s$ is the total number of $uv$-samples. However, with larger time bins, we collect fewer $uv$-samples during the same synthesis time, thus increasing PSF sidelobe level as $\sqrt{\Delta t}$. Returning to Eq.~(\ref{eq:fscn}), the drop in $C(r)$ due to longer integrations is then offset by an increase in $P(r)$ due to fewer $uv$-samples. The exact relationship is quite difficult to work out analytically, since one term scales as a sinc function and the other as a square root, but  Fig.~\ref{fig:cc-time-smearing} clearly shows that over the range of feasible MeerKAT integration times, the two terms approximately balance each other out. This also 
 suggests that the correlator FoV tailoring technique proposed by Lonsdale et al. will be of limited efficacy for a full synthesis observation.
@@ -664,24 +778,24 @@ suggests that the correlator FoV tailoring technique proposed by Lonsdale et al.
 \subsection{Bandwidth averaging and multi-frequency synthesis}
 \label{sec:freq-avg}
 
-Attenuation due to bandwidth averaging has the same underlying cause as that due to time averaging. The basic effect can expected to scale as a sinc function of fractional bandwidth. Fig.~\ref{fig:bandwidth-smearing} shows the result of simulations using a single channel of increasing width. The quantity being plotted is the FSCN suppression factor, normalized to unity at 1.25~MHz.
+Attenuation due to bandwidth averaging has the same underlying cause as that due to time averaging. The basic effect can expected to scale as a sinc function of fractional bandwidth. Fig.~\ref{fig:bandwidth-smearing} shows the result of simulations using a single channel of increasing width. The quantity being plotted is the SCN suppression factor, normalized to unity at 1.25~MHz.
 
-Bandwidth averaging allows for some interesting trade-offs between spectral resolution, sensitivity, and FSCN. Given a frequency band $\Delta\nu_\mathrm{tot}$ split into $N_\mathrm{tot}$ channels, one could choose to average all the channels together prior to imaging, or split the band into sub-bands and average each sub-band, or image each channel separately, or employ multi-frequency synthesis (MFS) with some combination of channel averaging. 
+Bandwidth averaging allows for some interesting trade-offs between spectral resolution, sensitivity, and SCN. Given a frequency band $\Delta\nu_\mathrm{tot}$ split into $N_\mathrm{tot}$ channels, one could choose to average all the channels together prior to imaging, or split the band into sub-bands and average each sub-band, or image each channel separately, or employ multi-frequency synthesis (MFS) with some combination of channel averaging. 
 
-Averaging $n$ channels together suppresses thermal noise by a simple factor of $\sqrt{n}$. FSCN suppression follows the somewhat more complicated sinc-based scaling law of Fig.~\ref{fig:bandwidth-smearing}, and depends on the fractional bandwidth being averaged together, rather than the number of channels per se. Finally, MFS imaging may be employed, which treats each channel (or averaged sub-band) as a separate $uv$-sample, thus reducing PSF sidelobes (see above) and thereby also suppressing FSCN. On the other hand, overly aggressive averaging distorts the resulting images (due to smearing of the Fourier components, and also due to interaction with intrinsic spectral variation of the sources themselves, especially in MFS mode) and destroys spectral information, and thus must be carefully balanced against the science goals of each particular observation.
+Averaging $n$ channels together suppresses thermal noise by a simple factor of $\sqrt{n}$. SCN suppression follows the somewhat more complicated sinc-based scaling law of Fig.~\ref{fig:bandwidth-smearing}, and depends on the fractional bandwidth being averaged together, rather than the number of channels per se. Finally, MFS imaging may be employed, which treats each channel (or averaged sub-band) as a separate $uv$-sample, thus reducing PSF sidelobes (see above) and thereby also suppressing SCN. On the other hand, overly aggressive averaging distorts the resulting images (due to smearing of the Fourier components, and also due to interaction with intrinsic spectral variation of the sources themselves, especially in MFS mode) and destroys spectral information, and thus must be carefully balanced against the science goals of each particular observation.
 
-All this suggests that bandwidth averaging offers a lot of scope for FSCN suppression, but no universal recipe, with different observational regimes benefiting from different trade-offs. The vertical axis of Fig.~\ref{fig:cc-main} can be moved around quite significantly, depending on bandwidth and spectral resolution requirements! In particular, for the two MeerKAT Key Science Projects that intend to reach the extreme sensitivity limit of $0.1\mu$Jy, LADUMA and MIGHTEE {\bf (cite?)}, a more detailed study of this issue should be made.
+All this suggests that bandwidth averaging offers a lot of scope for SCN suppression, but no universal recipe, with different observational regimes benefiting from different trade-offs. The vertical axis of Fig.~\ref{fig:cc-main} can be moved around quite significantly, depending on bandwidth and spectral resolution requirements! In particular, for the two MeerKAT Key Science Projects that intend to reach the extreme sensitivity limit of $0.1\mu$Jy, LADUMA and MIGHTEE {\bf (cite?)}, a more detailed study of this issue should be made.
 
-\section{FSCN for other arrays}
+\section{SCN for other arrays}
 \label{sec:other-arrays}
 
 {\bf NB: this is the old section making comparisons with VLAKAT and WesterKAT. This should be replaced by the MeerKAT16/32/48 comparison, see below}.
 
-Before we can extrapolate any of the present insights to the SKA, we need to develop our understanding of how FSCN scales with array size and layout. Towards this end, we have performed the same simulations on three hypothetical smaller instruments: WesterKAT (14 dishes), VLAKAT (27 dishes) and LOFARKAT (40 dishes). Each of these represents an existing array layout (WSRT, EVLA and LOFAR) shifted to MeerKAT's geographical position, and equipped with MeerKAT dishes. (This was done to keep all other elements of the simulation except array configuration as identical as possible.) We used the same canonical observational configuration described in Sect.~\ref{sec:config}, except for WesterKAT, for which the synthesis time was increased to 12 hours to obtain full $uv$-coverage. 
+Before we can extrapolate any of the present insights to the SKA, we need to develop our understanding of how SCN scales with array size and layout. Towards this end, we have performed the same simulations on three hypothetical smaller instruments: WesterKAT (14 dishes), VLAKAT (27 dishes) and LOFARKAT (40 dishes). Each of these represents an existing array layout (WSRT, EVLA and LOFAR) shifted to MeerKAT's geographical position, and equipped with MeerKAT dishes. (This was done to keep all other elements of the simulation except array configuration as identical as possible.) We used the same canonical observational configuration described in Sect.~\ref{sec:config}, except for WesterKAT, for which the synthesis time was increased to 12 hours to obtain full $uv$-coverage. 
 
 Tab.~\ref{tab:kats} summarizes the various scaling factors of these arrays relative to MeerKAT. (Note that the ratio of the number of $uv$-samples $N_s$ is nominally the same as the ratio of baseline numbers $N_b$, or the square of the ratio of antenna numbers $N_a$, except for WesterKAT, for which the $N_s$ is higher by a factor of 1.5 due to the increased synthesis time.) 
 
-For natural weighting, \citet{SKA49} suggests a scaling law for rms PSF sidelobes of $1/\sqrt{N_s}$, where $N_s$ is the number of $uv$-samples. The number in the last column of Tab.~\ref{tab:kats} gives this number for the other arrays relative to MeerKAT. Can we expect FSCN to scale in the same way? Figs.~\ref{fig:cc-westerkat}--\ref{fig:fscn-rr-suppression} suggest that the answer is a lot more complicated, at least in the smaller array regime. 
+For natural weighting, \citet{SKA49} suggests a scaling law for rms PSF sidelobes of $1/\sqrt{N_s}$, where $N_s$ is the number of $uv$-samples. The number in the last column of Tab.~\ref{tab:kats} gives this number for the other arrays relative to MeerKAT. Can we expect SCN to scale in the same way? Figs.~\ref{fig:cc-westerkat}--\ref{fig:fscn-rr-suppression} suggest that the answer is a lot more complicated, at least in the smaller array regime. 
 
 % {\bf OMS: I'm finding these figures a little bit mindblowing. There's lots of completely counterintuitive features here, and I think I can even explain some of them (``if you think you understand interferometry, you do not understand interferometry''), but I'd like to have some LOFARKAT sim to fill in the gap first, and completing the MeerKAT-related sections is more urgent. Brad: you need to generate us a LOFARKAT measurement set.}
 % 
@@ -719,9 +833,9 @@ For natural weighting, \citet{SKA49} suggests a scaling law for rms PSF sidelobe
 %   \includegraphics[width=\columnwidth]{cc-multiobs-frac-natural}
 %   \includegraphics[width=\columnwidth]{cc-multiobs-frac-uniform}
 % %  \includegraphics[width=\textwidth]{costcurve-main}
-% \caption{\label{fig:fscn-relative}FSCN levels of smaller arrays, normalized to MeerKAT64 levels. Horizontal lines correspond to median values.}
-% %  ./plot-cc.py WesterKAT_12h60s_20M8ch_og_natural_no_wproj.txt MeerKAT64_8h60s_20M8ch_og_natural_no_wproj.txt VLAKAT_8h60s_20M8ch_og_natural_no_wproj.txt MeerKAT64_8h60s_20M8ch_og_natural_no_wproj.txt WesterKAT_12h60s_20M8ch_pf_natural_no_wproj.txt MeerKAT64_8h60s_20M8ch_pf_natural_no_wproj.txt costs-256pix/VLAKAT_8h60s_20M8ch_pf.natural.cost.txt MeerKAT64_8h60s_20M8ch_pf_natural_no_wproj.txt -f 10 -s a -c n -o cc-multiobs-frac-natural -n --r1 80 -y "FSCN level relative to MeerKAT64" -p "upper left" --y0 0 -t "Natural weights" -M
-% %  ./plot-cc.py costs-256pix/WesterKAT_12h60s_20M8ch_og.uniform.cost.txt costs-256pix/MeerKAT64_8h60s_20M8ch_og.uniform.cost.txt costs-256pix/VLAKAT_8h60s_20M8ch_og.uniform.cost.txt costs-256pix/MeerKAT64_8h60s_20M8ch_og.uniform.cost.txt costs-256pix/WesterKAT_12h60s_20M8ch_pf.uniform.cost.txt costs-256pix/MeerKAT64_8h60s_20M8ch_pf.uniform.cost.txt costs-256pix/VLAKAT_8h60s_20M8ch_pf.uniform.cost.txt costs-256pix/MeerKAT64_8h60s_20M8ch_pf.uniform.cost.txt -f 10 -s a -c n -o cc-multiobs-frac-uniform -n --r1 80 -y "FSCN level relative to MeerKAT64" -p "upper left" --y0 0 -t "Uniform weights" -M
+% \caption{\label{fig:fscn-relative}SCN levels of smaller arrays, normalized to MeerKAT64 levels. Horizontal lines correspond to median values.}
+% %  ./plot-cc.py WesterKAT_12h60s_20M8ch_og_natural_no_wproj.txt MeerKAT64_8h60s_20M8ch_og_natural_no_wproj.txt VLAKAT_8h60s_20M8ch_og_natural_no_wproj.txt MeerKAT64_8h60s_20M8ch_og_natural_no_wproj.txt WesterKAT_12h60s_20M8ch_pf_natural_no_wproj.txt MeerKAT64_8h60s_20M8ch_pf_natural_no_wproj.txt costs-256pix/VLAKAT_8h60s_20M8ch_pf.natural.cost.txt MeerKAT64_8h60s_20M8ch_pf_natural_no_wproj.txt -f 10 -s a -c n -o cc-multiobs-frac-natural -n --r1 80 -y "SCN level relative to MeerKAT64" -p "upper left" --y0 0 -t "Natural weights" -M
+% %  ./plot-cc.py costs-256pix/WesterKAT_12h60s_20M8ch_og.uniform.cost.txt costs-256pix/MeerKAT64_8h60s_20M8ch_og.uniform.cost.txt costs-256pix/VLAKAT_8h60s_20M8ch_og.uniform.cost.txt costs-256pix/MeerKAT64_8h60s_20M8ch_og.uniform.cost.txt costs-256pix/WesterKAT_12h60s_20M8ch_pf.uniform.cost.txt costs-256pix/MeerKAT64_8h60s_20M8ch_pf.uniform.cost.txt costs-256pix/VLAKAT_8h60s_20M8ch_pf.uniform.cost.txt costs-256pix/MeerKAT64_8h60s_20M8ch_pf.uniform.cost.txt -f 10 -s a -c n -o cc-multiobs-frac-uniform -n --r1 80 -y "SCN level relative to MeerKAT64" -p "upper left" --y0 0 -t "Uniform weights" -M
 % \end{figure*}
 % 
 % 
@@ -729,19 +843,19 @@ For natural weighting, \citet{SKA49} suggests a scaling law for rms PSF sidelobe
 %   \includegraphics[width=\columnwidth]{rr-suppression-og}
 %   \includegraphics[width=\columnwidth]{rr-suppression-pf}
 % %  \includegraphics[width=\textwidth]{costcurve-main}
-% \caption{\label{fig:fscn-rr-suppression}FSCN suppression factor due to sidelobe randomization, for OG and PF designs.}
-% %./plot-cc.py costs-2048pix-no_wproj/WesterKAT_12h60s_20M8ch_pf.natural.txt costs-2048pix-no_wproj/WesterKAT_12h60s_20M8ch_pf_rr.natural.txt costs-2048pix-no_wproj/VLAKAT_8h60s_20M8ch_pf.natural.txt costs-2048pix-no_wproj/VLAKAT_8h60s_20M8ch_pf_rr.natural.txt costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_pf.natural.txt costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_pf_rr.natural.txt -n --r0 10 --x0 8 -y "FSCN suppression factor due to sidelobe randomization" --title "Prime focus" -p "upper left" -o "rr-suppression-pf"
-% %./plot-cc.py costs-2048pix-no_wproj/WesterKAT_12h60s_20M8ch_og.natural.txt costs-2048pix-no_wproj/WesterKAT_12h60s_20M8ch_og_rr.natural.txt costs-2048pix-no_wproj/VLAKAT_8h60s_20M8ch_og.natural.txt costs-2048pix-no_wproj/VLAKAT_8h60s_20M8ch_og_rr.natural.txt costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_og.natural.txt costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_og_rr.natural.txt -n --r0 10 --x0 8 -y "FSCN suppression factor due to sidelobe randomization" --title "Offset Gregorian" -p "upper left" -o "rr-suppression-og"
+% \caption{\label{fig:fscn-rr-suppression}SCN suppression factor due to sidelobe randomization, for OG and PF designs.}
+% %./plot-cc.py costs-2048pix-no_wproj/WesterKAT_12h60s_20M8ch_pf.natural.txt costs-2048pix-no_wproj/WesterKAT_12h60s_20M8ch_pf_rr.natural.txt costs-2048pix-no_wproj/VLAKAT_8h60s_20M8ch_pf.natural.txt costs-2048pix-no_wproj/VLAKAT_8h60s_20M8ch_pf_rr.natural.txt costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_pf.natural.txt costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_pf_rr.natural.txt -n --r0 10 --x0 8 -y "SCN suppression factor due to sidelobe randomization" --title "Prime focus" -p "upper left" -o "rr-suppression-pf"
+% %./plot-cc.py costs-2048pix-no_wproj/WesterKAT_12h60s_20M8ch_og.natural.txt costs-2048pix-no_wproj/WesterKAT_12h60s_20M8ch_og_rr.natural.txt costs-2048pix-no_wproj/VLAKAT_8h60s_20M8ch_og.natural.txt costs-2048pix-no_wproj/VLAKAT_8h60s_20M8ch_og_rr.natural.txt costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_og.natural.txt costs-2048pix-no_wproj/MeerKAT64_8h60s_20M8ch_og_rr.natural.txt -n --r0 10 --x0 8 -y "SCN suppression factor due to sidelobe randomization" --title "Offset Gregorian" -p "upper left" -o "rr-suppression-og"
 % \end{figure*}
 
-\section{FSCN scaling with array size}
+\section{SCN scaling with array size}
 \label{sec:meerkatjes}
 
 \begin{figure*}
   \includegraphics[width=.33\textwidth]{cc-meerkatjes-natural}\hfill%
   \includegraphics[width=.33\textwidth]{cc-meerkatjes-uniform}\hfill%
   \includegraphics[width=.33\textwidth]{cc-meerkatjes-robust}
-\caption{\label{fig:fscn-meerkatjes}FSCN levels for smaller MeerKATs, for OG and PF designs. Note how the naturally-weighted FSCN levels do not really scale down with array size.}
+\caption{\label{fig:fscn-meerkatjes}SCN levels for smaller MeerKATs, for OG and PF designs. Note how the naturally-weighted SCN levels do not really scale down with array size.}
 %./plot-cc.py costs/MK{16,32,48,64}/*{pf,og}.natural* costs/VLAKAT/*{pf,og}.natural* -f 10 -t "Natural weighting" --x0 2 --x1 90 -o cc-meerkatjes-natural -s D -a 0/1e-7/:/black/ --y0 1e-8 --y1 1e-5
 %./plot-cc.py costs/MK{16,32,48,64}/*{pf,og}.briggs_r_2* costs/VLAKAT/*{pf,og}.briggs_r_2* -f 10 -t "Uniform weighting" --x0 2 --x1 90 -o cc-meerkatjes-uniform -s D -a 0/1e-7/:/black/ --y0 1e-9 --y1 1e-5
 %./plot-cc.py costs/MK{16,32,48,64}/*{pf,og}.briggs_r0* costs/VLAKAT/*{pf,og}.briggs_r0* -f 10 -t "Robust weighting (r=0)" --x0 2 --x1 90 -o cc-meerkatjes-robust -s D -a 0/1e-7/:/black/ --y0 1e-9 --y1 1e-5
@@ -752,20 +866,20 @@ For natural weighting, \citet{SKA49} suggests a scaling law for rms PSF sidelobe
   \includegraphics[width=.33\textwidth]{cc-meerkatjes-ratio-og-nat}\hfill%
   \includegraphics[width=.33\textwidth]{cc-meerkatjes-ratio-og}\hfill%
   \includegraphics[width=.33\textwidth]{cc-meerkatjes-ratio-pf}
-\caption{\label{fig:fscn-meerkatjes-relative}Relative FSCN levels for smaller MeerKATs, for OG and PF designs, normalized to the MeerKAT64 level. Note how surprisingly well VLAKAT does!}
-%1; weight=natural; dish=og; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt  costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt -n -f 10 -t "Offset Gregorian, natural weighting" --x0 2 --x1 90 -o cc-meerkatjes-ratio-${dish}-nat -y "FSCN level relative to MeerKAT64" -s D -a 0/1/-/black/ -c a -M
-%2; weight=briggs_r0; dish=og; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt  costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt -n -f 10 -t "Offset Gregorian, robust weighting" --x0 2 --x1 90 -o cc-meerkatjes-ratio-${dish} -y "FSCN level relative to MeerKAT64" -s D -a 0/1/-/black/ -c a -M --y0 0.8 --y1 6 
-%3; weight=briggs_r0; dish=pf; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt  costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt -n -f 10 -t "Prime focus, robust weighting" --x0 2 --x1 90 -o cc-meerkatjes-ratio-${dish} -y "FSCN level relative to MeerKAT64" -s D -a 0/1/-/black/ -c a -M --y0 0.8 --y1 6 
+\caption{\label{fig:fscn-meerkatjes-relative}Relative SCN levels for smaller MeerKATs, for OG and PF designs, normalized to the MeerKAT64 level. Note how surprisingly well VLAKAT does!}
+%1; weight=natural; dish=og; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt  costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt -n -f 10 -t "Offset Gregorian, natural weighting" --x0 2 --x1 90 -o cc-meerkatjes-ratio-${dish}-nat -y "SCN level relative to MeerKAT64" -s D -a 0/1/-/black/ -c a -M
+%2; weight=briggs_r0; dish=og; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt  costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt -n -f 10 -t "Offset Gregorian, robust weighting" --x0 2 --x1 90 -o cc-meerkatjes-ratio-${dish} -y "SCN level relative to MeerKAT64" -s D -a 0/1/-/black/ -c a -M --y0 0.8 --y1 6 
+%3; weight=briggs_r0; dish=pf; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt  costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt -n -f 10 -t "Prime focus, robust weighting" --x0 2 --x1 90 -o cc-meerkatjes-ratio-${dish} -y "SCN level relative to MeerKAT64" -s D -a 0/1/-/black/ -c a -M --y0 0.8 --y1 6 
 \end{figure*}
 
 \begin{figure*}
   \includegraphics[width=.33\textwidth]{cc-meerkatjes-rrsupp-og-nat}\hfill%
   \includegraphics[width=.33\textwidth]{cc-meerkatjes-rrsupp-og}\hfill%
   \includegraphics[width=.33\textwidth]{cc-meerkatjes-rrsupp-pf}
-\caption{\label{fig:fscn-meerkatjes-rr-suppression}FSCN suppression factor due to sidelobe randomization, for OG and PF designs.}
-%3; weight=natural; dish=og; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}_rr.${weight}*txt -n -f 10 -t "Offset Gregorian, natural weighting" --x0 2 --x1 90 -o cc-meerkatjes-rrsupp-${dish}-nat -y "FSCN suppression factor due to sidelobe randomization" -s D -a 0/1/-/black/ -c a --y0 1 --y1 5
-%3; weight=briggs_r0; dish=og; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}_rr.${weight}*txt  -n -f 10 -t "Offset Gregorian, robust weighting" --x0 2 --x1 90 -o cc-meerkatjes-rrsupp-${dish} -y "FSCN suppression factor due to sidelobe randomization" -s D -a 0/1/-/black/ -c a --y0 1 --y1 5
-%3; weight=briggs_r0; dish=pf; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}_rr.${weight}*txt  -n -f 10 -t "Offset Gregorian, robust weighting" --x0 2 --x1 90 -o cc-meerkatjes-rrsupp-${dish} -y "FSCN suppression factor due to sidelobe randomization" -s D -a 0/1/-/black/ -c a --y0 1 --y1 5 &
+\caption{\label{fig:fscn-meerkatjes-rr-suppression}SCN suppression factor due to sidelobe randomization, for OG and PF designs.}
+%3; weight=natural; dish=og; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}_rr.${weight}*txt -n -f 10 -t "Offset Gregorian, natural weighting" --x0 2 --x1 90 -o cc-meerkatjes-rrsupp-${dish}-nat -y "SCN suppression factor due to sidelobe randomization" -s D -a 0/1/-/black/ -c a --y0 1 --y1 5
+%3; weight=briggs_r0; dish=og; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}_rr.${weight}*txt  -n -f 10 -t "Offset Gregorian, robust weighting" --x0 2 --x1 90 -o cc-meerkatjes-rrsupp-${dish} -y "SCN suppression factor due to sidelobe randomization" -s D -a 0/1/-/black/ -c a --y0 1 --y1 5
+%3; weight=briggs_r0; dish=pf; ./plot-cc.py costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}.${weight}*txt costs/MK16/MeerKAT16_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}.${weight}*txt costs/MK32/MeerKAT32_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}.${weight}*txt costs/MK48/MeerKAT48_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}.${weight}*txt costs/MK64/MeerKAT64_8h60s_20M8ch_${dish}_rr.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}.${weight}*txt costs/VLAKAT/VLAKAT_8h60s_20M8ch_${dish}_rr.${weight}*txt  -n -f 10 -t "Offset Gregorian, robust weighting" --x0 2 --x1 90 -o cc-meerkatjes-rrsupp-${dish} -y "SCN suppression factor due to sidelobe randomization" -s D -a 0/1/-/black/ -c a --y0 1 --y1 5 &
 \end{figure*}
 
 \section{Declination 30$\degr$ ghosts}
@@ -775,7 +889,7 @@ For natural weighting, \citet{SKA49} suggests a scaling law for rms PSF sidelobe
 \section{DDEs and calibration errors}
 \label{sec:dde}
 
-{\bf OMS: This FSCN thing is getting so long by itself I'm contemplating promoting the DDE section into a full-blown Paper~II. Objections?}
+{\bf OMS: This SCN thing is getting so long by itself I'm contemplating promoting the DDE section into a full-blown Paper~II. Objections?}
 
 \subsection{Pointing errors}
 
@@ -834,13 +948,13 @@ the context of the SKA design process, where several competing dish designs need
 
 The impact of primary beam shapes on radio interferometric performance is difficult to estimate analytically, due to many interacting factors of a complex nature. The BeamSims framework is a powerful tool for answering such questions ``empirically'' via simulations, and our methodology provides for a rigorous comparison of different dish and antenna designs.
 
-We have applied this to a study of far sidelobe confusion noise (FSCN) with a variety of MeerKAT dish designs, and found significant differences in FSCN levels. Offset Gregorian (OG) dishes perform up to an order of magnitude better than the prime focus design, as far as FSCN is concerned (at least in the inner 40$\degr$, where the bulk of the noise contribution comes from), and typically require a much smaller area of the sky to be imaged \& deconvolved to reach a given FSCN floor. Shaped OG dishes result in higher FSCN from near-in sidelobes (within $8\degr$), but provide ``quieter'' far sidelobes. We also find that randomizing the far sidelobes between dishes results in a significant reduction in FSCN.
+We have applied this to a study of sidelobe confusion noise (SCN) with a variety of MeerKAT dish designs, and found significant differences in SCN levels. Offset Gregorian (OG) dishes perform up to an order of magnitude better than the prime focus design, as far as SCN is concerned (at least in the inner 40$\degr$, where the bulk of the noise contribution comes from), and typically require a much smaller area of the sky to be imaged \& deconvolved to reach a given SCN floor. Shaped OG dishes result in higher SCN from near-in sidelobes (within $8\degr$), but provide ``quieter'' far sidelobes. We also find that randomizing the far sidelobes between dishes results in a significant reduction in SCN.
 
-We find that time averaging in the correlator does not provide any significant FSCN suppression over a full synthesis. Bandwidth averaging, on the other hand, is a powerful FSCN suppressor, but this must be traded off against spectral resolution and distortion in the images.
+We find that time averaging in the correlator does not provide any significant SCN suppression over a full synthesis. Bandwidth averaging, on the other hand, is a powerful SCN suppressor, but this must be traded off against spectral resolution and distortion in the images.
 
-A comparison of FSCN levels across other (existing) array configurations yields a number of surprises {\bf which I have yet to explain adequately, so never mind for now}.
+A comparison of SCN levels across other (existing) array configurations yields a number of surprises {\bf which I have yet to explain adequately, so never mind for now}.
 
-These results suggest that a joint optimization of primary beam and PSF shape can provide for significant FSCN suppression (in comparison with independent optimization of the two), and that this technique needs to be explored further in the context of SKA design.
+These results suggest that a joint optimization of primary beam and PSF shape can provide for significant SCN suppression (in comparison with independent optimization of the two), and that this technique needs to be explored further in the context of SKA design.
 
 \acknowledgements{Dedicated to the memory of Prof. Steve Rawlings, who drove \& inspired a lot of the research that went into this work -- and will be missed for immeasurably more than that. 
 
