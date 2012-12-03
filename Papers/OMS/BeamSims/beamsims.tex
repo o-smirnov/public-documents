@@ -428,11 +428,11 @@ However, with the increased sensitivity of new instruments such as MeerKAT (and 
 
 \begin{equation}
 \label{eq:fscn}
-  \sigma^2_\mathrm{SCN}(r_0) = \left [ \int\limits_{r_0}^{\infty} P^2(r)C^2(r)E^2(r) \DD{r} \right ]
+  \sigma^2_\mathrm{SCN}(r_0) = \left [ \int\limits_{r_0}^{\infty} P^2(r)C^2(r)E^4(r) \DD{r} \right ]
 \left[ \int\limits_{0}^{S_\mathrm{max}} S^2n(S)\DD{S}\right ] 
 \end{equation}
 
-Here, $S$ is source flux, $n(S)$ is the differential source count, $P(r)$ is the PSF level at distance $r$ from centre, $C(r)$ is correlator attenuation due to time/bandwidth averaging, and $E(r)$ is the primary beam. However, as the individual terms in the first integration are difficult (if not impossible) to estimate analytically, this equation cannot easily be turned into quantitative estimates. Furthermore, it treats $P$ and $E$ as radially symmetric (although this can be generalized by using a two-dimensional integral). An even more subtle problem is that this formulation implicitly assumes a snapshot observation, and cannot properly account for time- and station-variable primary beams -- which can actually have quite a significant an impact on SCN, as we'll show below.
+Here, $S$ is source flux, $n(S)$ is the differential source count, $P(r)$ is the PSF level at distance $r$ from centre, $C(r)$ is correlator attenuation due to time/bandwidth averaging, and $E^2(r)$ is the primary power beam. However, as the individual terms in the first integration are difficult (if not impossible) to estimate analytically, this equation cannot easily be turned into quantitative estimates. Furthermore, it treats $P$ and $E$ as radially symmetric (although this can be generalized by using a two-dimensional integral). An even more subtle problem is that this formulation implicitly assumes a snapshot observation, and cannot properly account for time- and station-variable primary beams -- which can actually have quite a significant an impact on SCN, as we'll show below.
 
 The aim of this part of the work is therefore to use simulations to derive quantitative estimates of SCN levels for different MeerKAT dish designs -- taking into account sky rotation and other effects -- and to establish a methodology for similar studies of SKA designs.
 
@@ -475,6 +475,15 @@ A handful of the strongest sources in the sky -- the ``A-team'' of  Cas~A, Vir~A
 
 We also noticed early on that even with the A-team excluded, our simulations were still fairly sensitive (at least for smaller values of $r_0$) to choice of sky model, which is probably due to small number statistics, i.e. a dominant contribution from a few of the brighter close-in sources sitting in (or passing through) particularly strong sidelobes. Fig.~\ref{fig:fscn-fields} provides an indication of how SCN varies across the 9 hemisphere models. This plots the simulated SCN corresponding to the various offset Gregorian flavours against that for the prime focus dish, for all 9 models. The plot on the left is for $r_0=3.25\degr$ (third sidelobe and out), the plot on the right is for $r_0=10\degr$. It is clear that most of the variation is caused by the close-in sidelobes: there's roughly a factor of 2 variation across models at $r_0=3.25\degr$ (even more than 2 for the shaped OG design, which is to be expected, given it's higher close-in sidelobes), but considerably less than that at $r_0=10\degr$. In 
 order to reduce this variance, we average SCN levels (quadratically, since this is rms) across all 9 fields in all subsequent plots.
+
+\subsection{Horizon masking}
+\label{sec:horizon-masking}
+
+The simulations presented here are simplified in one important respect: our sky models are restricted to a single full hemisphere (``half-sky'') centred on the pointing direction -- thus essentially ignoring the backlobe of the primary beam -- and no horizon masking is applied. When pointed at a source below zenith, a real-life dish sees both more and less of the sky: some sources in the sidelobes which would otherwise have contributed to SCN are masked by the horizon, while on the opposite side, part of the sky beyond the hemisphere contributes to SCN via the backlobes of the primary beam pattern.\footnote{In addition, ``hot'' ground radiation is picked up via sidelobes and backlobes. This effectively increases the thermal noise level, but is independent of the SCN problem, and so will not be considered here further.} Since sidelobes are generally much higher than backlobes, one would in principle expect pointing to zenith to be the worst case as far as SCN is concerned. 
+
+Since our simulated beam patterns extend to a full sphere (Fig.~\ref{fig:pb180}), and the BeamSims framework is capable of both applying horizon masking, and using full-sphere sky models, we can also properly simulate the full-sky case. However, this results in a significant increase in computation time due both to the larger number of sources that need to be simulated, and the extra coordinate conversions required to determine which sources lie below the horizon at any given time. Using a half-sky model and no horizon masking produces significantly faster simulations. 
+
+To verify the validity of this approximation, we have also carried out a restricted set of full-sky horizon-masked simulations, and compared the results to the half-sky, unmasked case. This is presented in Sect.~\ref{sec:results-horizon-masking} and Fig.~\ref{fig:cc-hm}. Looking ahead, we can say that the difference in SCN levels between the two simulations turns out to be entirely negligible.
 
 \subsection{Source counts and extrapolation to fainter sources}
 \label{sec:source-counts}
@@ -614,7 +623,8 @@ A discussion of how the choice of imaging weights relates to SCN is given in Sec
 %  \includegraphics[width=\textwidth]{costcurve-main}\hfill
 %  \includegraphics[width=\columnwidth]{costcurve-main-robust}
 %  \includegraphics[width=\textwidth]{costcurve-main}
-\caption{\label{fig:cc-main}Cost curves: a comparison of SCN levels as a function of radius, for different MeerKAT dish configurations. The horizontal red line indicates MeerKAT's extreme sensitivity limit for a 5000~h pointing. The plot corresponds to the canonical observational configuration of Sect.~\ref{sec:config}, and a naturally weighted PSF.}
+\caption{\label{fig:cc-main}Cost curves: a comparison of SCN levels as a function of radius, for different MeerKAT dish configurations. The horizontal red line indicates MeerKAT
+qs extreme sensitivity limit for a 5000~h pointing. The plot corresponds to the canonical observational configuration of Sect.~\ref{sec:config}, and a naturally weighted PSF.}
 % plot-cc.py horizon-masked/MeerKAT64*natural* -t - --x0 1 -a "2.6/1e-7/-/red/-MeerKAT 5000h" --x0 2 --x1 90 --simulation-cutoff 0.5 -o costcurve-main -t -
 % plot-cc.py horizon-masked/MeerKAT64*briggs_r0* -f 10 -t - --x0 1 -a "30/1e-7/-/red/-MeerKAT 5000h" --x0 2 --x1 90 -o costcurve-main-robust
 \end{figure}
@@ -630,8 +640,9 @@ since SCN adds quadratically. The function $C(r)$ then represents the total cont
 \subsection{Asymptotic SCN}
 \label{sec:asymptotic-fscn}
 
-Let us consider what ``fully deconvolving all sources'' really means. Figure~\ref{fig:F(S)} suggests that the fraction of SCN contributed by sources below 1 \uJy\ is vanishingly small (and in fact $F(10^{-6})\simeq0.983$, and $F(10^{-7})\simeq0.997$), so ``all'' can perhaps be taken to mean all sources brighter than some threshold in the sub-\uJy\ range. Ignoring the problem of classical confusion for the time being, and assuming an all-powerful deconvolution algorithm, the sources to be deconvolved still must, as a minimum, be detectable above the thermal noise. Let us then conservatively assume that for 0.1 \uJy\ thermal noise, we can deconvolve down to a depth of 0.5 \uJy. Assuming a single pointing, the latter number actually refers to {\em apparent} rather than intrinsic flux. From Fig.~\ref{fig:power-beam} we can see that attenuation by the power beam quickly drops below $10^{-3}$ beyond the first sidelobe ($r>2\degr$); in the second sidelobe and beyond, our deconvolution depth of 0.5 \uJy\ {\em apparent} flux 
-then actually corresponds to 0.5 \underline{milli}Jansky {\em intrinsic} flux. Referring back to Fig.~\ref{fig:F(S)}, we can then see that an appreciable fraction of SCN (i.e. about 20\%, at 0.5 mJy depth) becomes ``locked in'', in the sense that the sources contributing it are individually swallowed by thermal noise (while the sum of their contributions may remain well be above the thermal noise!)
+Let us consider what ``fully deconvolving all sources'' really means. Figure~\ref{fig:F(S)} suggests that the fraction of SCN contributed by sources below 1 \uJy\ is vanishingly small (and in fact $F(1\mu\mathrm{Jy}\simeq0.983$, and $F(0.1\mu\mathrm{Jy}\simeq0.997$), so ``all'' can perhaps be taken to mean all sources brighter than some threshold in the sub-\uJy\ range. Ignoring the problem of classical confusion for the time being, and assuming an all-powerful deconvolution algorithm, the sources to be deconvolved still must, as a minimum, be detectable above the thermal noise. Let us then conservatively assume that for 0.1 \uJy\ thermal noise, we can deconvolve down to a depth of 0.5 \uJy. Assuming a single pointing, the latter number actually refers to {\em apparent} rather than intrinsic flux. From Fig.~\ref{fig:power-beam} we can see that attenuation by the power beam quickly drops below $10^{-3}$ beyond the first sidelobe ($r>2\degr$); in the second sidelobe and beyond, our deconvolution depth of 0.5 \
+uJy\ {\em apparent} flux 
+then actually corresponds to 0.5 \underline{milli}Jansky {\em intrinsic} flux. Referring back to Fig.~\ref{fig:F(S)}, we can then see that an appreciable fraction of SCN (i.e. about 20\%, at 0.5 mJy depth) becomes ``locked in'', in the sense that the sources contributing it are individually swallowed by the thermal noise (while the sum of their contributions may remain well above the thermal noise!)
 
 \begin{figure}
 \includegraphics[width=\columnwidth]{power-beam-radial}
@@ -686,7 +697,8 @@ The asymptotic SCN limit appears to be fundamental, but as derived above, it onl
 % plot-cc.py horizon-masked/MeerKAT64*natural* -t - --x0 1 --x0 2 --x1 90 --simulation-cutoff 0.5 -o costcurve-survey-1uJy -t - --deconvolution-cutoff 1e-7 --intrinsic-cutoff
 \end{figure}
 
-The resulting cost curves for $S_0=1$ \uJy\ are shown in Fig.~\ref{fig:cc-survey-1uJy}. (Note that ``cost'' now comes to mean survey area cost, rather than imaging and deconvolution cost.) These still show an asymptotic limit, albeit setting in further out (at $r=10\degr$) and a factor of $\sim3$ deeper -- but ultimately, the $1-F(S_0)$ fraction of SCN ``frozen in'' at the near sidelobes still comes to dominate. Fig.~\ref{fig:cc-survey-multi} shows the offset Gregorian curve for a range of $S_0$ values. Note that the $0.1$ \uJy\ limit remains out of reach even with a full survey to that depth (the red curve shows that knowing the sky {\em a priori} down to 0.1 \uJy\ doesn't even reduce SCN itself to that level, making the survey itself intrinsically impossible!) And on the other hand, as we saw above, 1 \uJy\ can be achieved with a single pointing. This suggests that deep large-area surveys cannot substantially lower the SCN limit -- the gains to be had add up to a factor of few at most, and only at very considerable expense.
+The resulting cost curves for $S_0=1$ \uJy\ are shown in Fig.~\ref{fig:cc-survey-1uJy}. (Note that ``cost'' now comes to mean survey area cost, rather than imaging and deconvolution cost.) These still show an asymptotic limit, albeit setting in further out (at $r=10\degr$) and a factor of $\sim3$ deeper -- but ultimately, the $1-F(S_0)$ fraction of SCN ``frozen in'' at the near sidelobes still comes to dominate. Fig.~\ref{fig:cc-survey-multi} shows the offset Gregorian curve for a range of $S_0$ values. Note that the $0.1$ \uJy\ limit remains out of reach even with a full survey to that depth (the red curve shows that knowing the sky {\em a priori} down to 0.1 \uJy\ doesn't even reduce SCN itself to that level, making the survey itself intrinsically impossible!) And on the other hand, as we saw above, 1 \uJy\ can be achieved with a single pointing. This suggests that deep large-area surveys cannot substantially lower the SCN limit -- the gains to be had add up to a factor of few at most, and only at very 
+considerable expense.
 
 \begin{figure}
 \includegraphics[width=\columnwidth]{costcurve-survey-multiple}
@@ -696,9 +708,10 @@ The resulting cost curves for $S_0=1$ \uJy\ are shown in Fig.~\ref{fig:cc-survey
 
 We should also note that accurate subtraction of a global sky model requires a correspondingly accurate global PB model. In real life, PB's are subject to pointing error and mechanical deformation of the antennas, which means that beyond the first few sidelobes, there's little hope for any accuracy at all. However, the asymptotic nature of our SCN curves suggests that this hardly matters, as fundamental SCN limits are fully determined within the first few sidelobes. There is truly nothing to be gained from subtracting GSM sources (the A-team excepted) more than a few degrees away from the centre of the field.
 
-\subsection{Intrinsic SCN}
+\subsection{Raw SCN}
 
-Given the considerations above
+From the discussions above, it follows that the ``raw'' SCN curve of Fig.~\ref{fig:cc-main} is of largely academic interest, and cannot be attained in actual practice.
+
 
 The most striking feature of this plot is the completely different character of SCN as a function of $r_0$ for the PF and OG type dishes. The OG curves have an almost flat ``plateau'' between 10$\degr$ and 75$\degr$ (less than a factor of 2 change), while the PF curves maintain nearly constant slope all the way out to 90$\degr$. This is no doubt due to the different dominant features of their PB patterns (Fig.~\ref{fig:pb180}). The PF designs pick up most of their SCN via the X-shaped sidelobes associated with the feed supports, which are significant at all radii. In contrast, the OG designs pick up a fair chunk of SCN via the sub-reflector spill-over patch between $75\degr$ and $90\degr$, and then pick up relatively little all the way in to $10\degr$. 
 
@@ -717,12 +730,8 @@ A few other interesting points arise from this plot:
   SCN levels of $0.1 \mu\mathrm{Jy}$ are achieved at the same radius (provided sidelobe randomization through surface variations can actually be done this close in), which halves the required imaging area, compared to the default OG design. Once again, this has to be weighed against the extra calibration costs associated with higher close-in sidelobes.
 \end{itemize}
 
-\subsection{Full sky models and horizon masking}
-\label{sec:horizon-masking}
-
-Most of the simulations presented here are simplified in one important respect: the sky models are restricted to a single full hemisphere (``half-sky'') centred on the pointing direction -- thus essentially ignoring the backlobe of the primary beam -- and no horizon masking is applied. When pointed at a source below zenith, a real-life dish sees both more and less of the sky: some sources in the sidelobes which would otherwise have contributed to SCN are masked by the horizon, while on the opposite side, part of the sky beyond the hemisphere contributes to SCN via the backlobes of the primary beam pattern.\footnote{In addition, ``hot'' ground radiation is picked up via sidelobes and backlobes. This effectively increases the thermal noise level, but is independent of the SCN problem, and so will not be considered here further.} Since sidelobes are generally much higher than backlobes, one would in principle expect pointing to zenith to be the worst case as far as SCN is concerned. 
-
-Since our simulated beam patterns extend to a full sphere (Fig.~\ref{fig:pb180}), and the BeamSims simulator is capable of both applying horizon masking, and using full-sphere sky models, we can also properly simulate the full-sky case. However, this results in a significant increase in computation time due both to the larger number of sources that need to be simulated, and the extra coordinate conversions required to determine which sources lie below the horizon at any given time. Using a half-sky model and no horizon masking produces significantly faster simulations. To investigate whether this is a valid approximation, we have performed a restricted set of full-sky horizon-masked simulations, and compared the results to the half-sky, unmasked case (Fig.~\ref{fig:cc-hm}). This shows that the difference is indeed negligible, and we are fully justified in using the faster half-sky approach in other simulations. 
+\subsection{SCN and horizon masking}
+\label{sec:results-horizon-masking}
 
 \begin{figure}
   \includegraphics[width=\columnwidth]{cc-horizonmasked}\hfill
@@ -733,6 +742,10 @@ Since our simulated beam patterns extend to a full sphere (Fig.~\ref{fig:pb180})
 % plot-cc.py horizon-masked/MeerKAT64*briggs_r0* -f 10 -t - --x0 1 -a "30/1e-7/-/red/-MeerKAT 5000h" --x0 2 --x1 90 -o costcurve-main-robust
 \end{figure}
 % plot-cc.py MK64/MeerKAT64_8h60s_20M8ch_og.natural_512_32.cost.txt:o:none:"OG half-sky" MK64/hm/MeerKAT64_8h60s_20M8ch_hm_og.natural_512_32.cost.txt:x:none:"OG full-sky"  --x1 150 --r1 150 MK64/MeerKAT64_8h60s_20M8ch_pf.natural_512_32.cost.txt:s:none:"PF half-sky" MK64/hm/MeerKAT64_8h60s_20M8ch_hm_pf.natural_512_32.cost.txt:+:none:"PF full-sky"  -t ""
+
+
+Before we proceed, it is worth wrapping up a loose end raised in Sect.~\ref{sec:horizon-masking}, concerning horizon masking (or rather the lack thereof) in our simulations. To determine whether this affects our SCN results, we have performed a restricted set of full-sky horizon-masked simulations. Figure~\ref{fig:cc-hm} presents a comparison of the raw cost curves for the horizon-masked and non-masked case. This shows that the difference is entirely negligible. This is hardly surprising -- as we have established above, distant sidelobes play very little role in SCN -- and it is only them that are really affected by horizon masking.
+
 
 \section{SCN suppression}
 
